@@ -241,17 +241,46 @@ for l in range(8):
     lz = 4.0 + (l * 0.38)
     add_box(col_roof, f"Facade_Louver_{l}", 0.6, -0.3, lz, 4.4, -0.15, lz + 0.08, "Mat_WoodLouverFacade")
 
-# 5. LIGHTING & CAMERAS
+# 5. LIGHTING & CAMERAS & WORLD
+# World Sky
+world = bpy.context.scene.world
+if not world:
+    world = bpy.data.worlds.new("Fullhouse_World")
+    bpy.context.scene.world = world
+world.use_nodes = True
+bg_node = world.node_tree.nodes.get("Background")
+if bg_node:
+    bg_node.inputs["Color"].default_value = (0.75, 0.85, 0.95, 1.0)
+    bg_node.inputs["Strength"].default_value = 1.0
+
+# Sun Light
 bpy.ops.object.light_add(type='SUN', location=(20, -18, 25))
 sun = bpy.context.active_object
 sun.name = "Sun_Warm"
-sun.data.energy = 4.0
-sun.data.color = (1.0, 0.95, 0.88)
+sun.data.energy = 4.5
+sun.data.color = (1.0, 0.96, 0.88)
 sun.rotation_euler = (math.radians(50), math.radians(15), math.radians(-40))
 for col in sun.users_collection: col.objects.unlink(sun)
 col_lights.objects.link(sun)
 
-bpy.ops.object.camera_add(location=(-18.0, -22.0, 18.0))
+# Interior Warm Lights
+def add_point_light(name, location, energy=80.0, color=(1.0, 0.75, 0.45)):
+    bpy.ops.object.light_add(type='POINT', location=location)
+    p = bpy.context.active_object
+    p.name = name
+    p.data.energy = energy
+    p.data.color = color
+    p.data.shadow_soft_size = 0.5
+    for col in p.users_collection: col.objects.unlink(p)
+    col_lights.objects.link(p)
+
+add_point_light("Light_LivingRoom", (2.5, 3.0, 2.5), 100.0)
+add_point_light("Light_Altar", (3.8, 0.8, 2.0), 40.0, (1.0, 0.8, 0.3))
+add_point_light("Light_Kitchen", (2.5, 16.0, 2.5), 80.0)
+add_point_light("Light_MasterBed", (2.5, 3.0, 5.5), 100.0)
+
+# Main Camera
+bpy.ops.object.camera_add(location=(-16.0, -20.0, 16.0))
 cam = bpy.context.active_object
 cam.name = "Cam_Beauty_Master"
 cam.rotation_euler = (math.radians(58), 0, math.radians(-38))
@@ -260,7 +289,13 @@ for col in cam.users_collection: col.objects.unlink(cam)
 col_lights.objects.link(cam)
 bpy.context.scene.camera = cam
 
+# Save native .blend file
+import os
+save_dir = os.path.dirname(os.path.abspath(__file__)) if "__file__" in locals() else r"C:\Users\Conghau\Desktop\My Home"
+blend_path = os.path.join(save_dir, "Fullhouse_Model.blend")
+bpy.ops.wm.save_as_mainfile(filepath=blend_path)
+
 print("="*60)
-print("SUCCESS: Fullhouse Architectural Master Model created in Blender!")
-print("Switch Viewport Shading to 'Material Preview' (press Z) to view textures.")
+print(f"SUCCESS: Saved native Blender file to: {blend_path}")
+print("You can now DOUBLE CLICK 'Fullhouse_Model.blend' directly!")
 print("="*60)
