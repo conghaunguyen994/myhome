@@ -1,0 +1,172 @@
+
+newmtl Mat_WallWarmWhite
+Kd 0.96 0.95 0.93
+Ks 0.1 0.1 0.1
+Ns 15
+
+newmtl Mat_WallFacadeWarm
+Kd 0.85 0.82 0.78
+Ks 0.15 0.15 0.15
+Ns 20
+
+newmtl Mat_DarkGreyStone
+Kd 0.22 0.24 0.27
+Ks 0.3 0.3 0.3
+Ns 40
+
+newmtl Mat_FloorTileCream
+Kd 0.94 0.92 0.88
+Ks 0.3 0.3 0.3
+Ns 50
+
+newmtl Mat_AntiSlipPavers
+Kd 0.62 0.60 0.58
+Ks 0.1 0.1 0.1
+Ns 10
+
+newmtl Mat_GrassGreen
+Kd 0.18 0.55 0.22
+Ks 0.05 0.05 0.05
+Ns 5
+
+newmtl Mat_FoliageGreen
+Kd 0.15 0.65 0.20
+Ks 0.1 0.1 0.1
+Ns 10
+
+newmtl Mat_FoliageDark
+Kd 0.08 0.45 0.14
+Ks 0.1 0.1 0.1
+Ns 10
+
+newmtl Mat_TreeTrunk
+Kd 0.36 0.25 0.18
+Ks 0.05 0.05 0.05
+Ns 5
+
+newmtl Mat_FlowerPink
+Kd 0.92 0.25 0.45
+Ks 0.2 0.2 0.2
+Ns 20
+
+newmtl Mat_WhiteMarble
+Kd 0.96 0.97 0.98
+Ks 0.5 0.5 0.5
+Ns 80
+
+newmtl Mat_WoodOakTable
+Kd 0.70 0.50 0.32
+Ks 0.2 0.2 0.2
+Ns 25
+
+newmtl Mat_WoodOakCabinet
+Kd 0.74 0.54 0.36
+Ks 0.2 0.2 0.2
+Ns 25
+
+newmtl Mat_WoodOakDark
+Kd 0.35 0.22 0.14
+Ks 0.2 0.2 0.2
+Ns 25
+
+newmtl Mat_WoodLouverFacade
+Kd 0.68 0.48 0.30
+Ks 0.25 0.25 0.25
+Ns 30
+
+newmtl Mat_WoodStairTreads
+Kd 0.65 0.45 0.28
+Ks 0.2 0.2 0.2
+Ns 25
+
+newmtl Mat_BuddhaGold
+Kd 0.95 0.78 0.18
+Ks 0.8 0.7 0.3
+Ns 100
+
+newmtl Mat_FabricSofaWarm
+Kd 0.78 0.76 0.72
+Ks 0.05 0.05 0.05
+Ns 5
+
+newmtl Mat_BeddingComfort
+Kd 0.94 0.94 0.94
+Ks 0.05 0.05 0.05
+Ns 5
+
+newmtl Mat_GlassClear
+Kd 0.85 0.92 0.96
+Ks 0.95 0.95 0.95
+Ns 120
+d 0.35
+
+newmtl Mat_BalconyGlassBronze
+Kd 0.60 0.70 0.75
+Ks 0.9 0.9 0.9
+Ns 100
+d 0.5
+
+newmtl Mat_PianoBlackGloss
+Kd 0.02 0.02 0.02
+Ks 0.95 0.95 0.95
+Ns 150
+
+newmtl Mat_TVScreenBlack
+Kd 0.05 0.05 0.05
+Ks 0.9 0.9 0.9
+Ns 120
+
+newmtl Mat_YogaMatPastel
+Kd 0.75 0.60 0.88
+Ks 0.1 0.1 0.1
+Ns 10
+
+newmtl Mat_MetalStainless
+Kd 0.86 0.87 0.88
+Ks 0.9 0.9 0.9
+Ns 90
+
+newmtl Mat_BronzeGateMetal
+Kd 0.30 0.24 0.18
+Ks 0.6 0.5 0.4
+Ns 70
+
+newmtl Mat_SolarPVPanels
+Kd 0.12 0.18 0.30
+Ks 0.8 0.8 0.9
+Ns 100
+
+newmtl Mat_RoadAsphalt
+Kd 0.18 0.18 0.20
+Ks 0.05 0.05 0.05
+Ns 5
+
+newmtl Mat_Sidewalk
+Kd 0.75 0.75 0.75
+Ks 0.1 0.1 0.1
+Ns 10
+
+newmtl Mat_PlanterWood
+Kd 0.48 0.32 0.20
+Ks 0.1 0.1 0.1
+Ns 15
+
+newmtl Mat_CarBlue
+Kd 0.15 0.38 0.85
+Ks 0.8 0.8 0.8
+Ns 80
+
+newmtl Mat_AntiSlipWoodTile
+Kd 0.72 0.56 0.40
+Ks 0.2 0.2 0.2
+Ns 20
+
+newmtl Mat_AntiSlipTileGrey
+Kd 0.42 0.44 0.46
+Ks 0.15 0.15 0.15
+Ns 20
+
+newmtl Mat_AntiSlipOutdoorTile
+Kd 0.56 0.54 0.52
+Ks 0.1 0.1 0.1
+Ns 15
