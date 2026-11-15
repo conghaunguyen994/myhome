@@ -3,17 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fullhouse 3D Villa - Phối Cảnh Chi Tiết & Cảnh Quan Xanh</title>
+  <title>Fullhouse 3D Villa - Phối Cảnh Kiến Trúc & Nội Thất Chi Tiết</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #0d1117;
+      background: #090d16;
       color: #e6edf3;
       overflow: hidden;
       height: 100vh;
       width: 100vw;
+      user-select: none;
     }
     #canvas-container {
       width: 100%;
@@ -25,7 +26,7 @@
     }
     /* Modern Glassmorphism UI */
     .glass {
-      background: rgba(18, 24, 38, 0.78);
+      background: rgba(15, 23, 42, 0.82);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border: 1px solid rgba(255, 255, 255, 0.12);
@@ -38,7 +39,7 @@
       left: 20px;
       z-index: 10;
       padding: 16px 22px;
-      max-width: 440px;
+      max-width: 460px;
       pointer-events: auto;
     }
     .header-card h1 {
@@ -61,150 +62,176 @@
       letter-spacing: 0.5px;
     }
     .header-card p {
-      font-size: 13px;
+      font-size: 12.5px;
       color: #94a3b8;
       margin-top: 6px;
       line-height: 1.5;
     }
-    /* Floating Navigation Dock */
-    .dock {
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .stat-val {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #f1f5f9;
+    }
+    .stat-lbl {
+      font-size: 10.5px;
+      color: #64748b;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    /* Right Quick Navigation Panel */
+    .nav-panel {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 10;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-width: 250px;
+    }
+    .panel-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #38bdf8;
+      margin-bottom: 2px;
+    }
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 8px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      text-align: left;
+    }
+    .nav-btn:hover {
+      background: rgba(56, 189, 248, 0.18);
+      border-color: rgba(56, 189, 248, 0.4);
+      color: #ffffff;
+      transform: translateX(-3px);
+    }
+    .nav-btn.active {
+      background: #0284c7;
+      border-color: #38bdf8;
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    /* Bottom Control Bar */
+    .bottom-bar {
       position: absolute;
       bottom: 24px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 10;
-      padding: 8px 12px;
+      padding: 8px 14px;
       display: flex;
       align-items: center;
       gap: 8px;
-      max-width: 95vw;
-      overflow-x: auto;
     }
-    .btn {
+    .ctrl-btn {
       background: rgba(255, 255, 255, 0.06);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #cbd5e1;
-      padding: 8px 14px;
+      color: #e2e8f0;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 9px 15px;
       border-radius: 10px;
-      font-size: 12.5px;
-      font-weight: 500;
       cursor: pointer;
-      display: inline-flex;
+      display: flex;
       align-items: center;
-      gap: 6px;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      white-space: nowrap;
+      gap: 7px;
+      transition: all 0.2s;
     }
-    .btn:hover {
-      background: rgba(255, 255, 255, 0.15);
-      color: #fff;
-      transform: translateY(-2px);
+    .ctrl-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.2);
     }
-    .btn.active {
-      background: linear-gradient(135deg, #3b82f6, #2563eb);
-      border-color: #60a5fa;
+    .ctrl-btn.active {
+      background: linear-gradient(135deg, #0284c7, #0369a1);
+      border-color: #38bdf8;
       color: #ffffff;
-      box-shadow: 0 4px 16px rgba(37, 99, 235, 0.4);
     }
     .divider {
       width: 1px;
-      height: 22px;
+      height: 24px;
       background: rgba(255, 255, 255, 0.15);
       margin: 0 4px;
     }
-    /* Side Control & Room Focus Panel */
-    .side-panel {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      width: 320px;
-      z-index: 10;
-      padding: 18px;
-      max-height: calc(100vh - 40px);
-      overflow-y: auto;
-    }
-    .section-title {
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: #60a5fa;
-      margin-bottom: 10px;
+
+    /* Slider styling */
+    .slider-wrap {
       display: flex;
       align-items: center;
-      gap: 6px;
-    }
-    .room-btn-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 6px;
-      margin-bottom: 16px;
-    }
-    .room-btn {
-      text-align: left;
-      padding: 8px 12px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 8px;
-      color: #cbd5e1;
-      font-size: 12px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      transition: all 0.2s;
-    }
-    .room-btn:hover {
-      background: rgba(59, 130, 246, 0.15);
-      border-color: #3b82f6;
-      color: #fff;
-    }
-    .room-btn span.icon {
-      font-size: 14px;
-      margin-right: 8px;
-    }
-    .slider-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
-      font-size: 12px;
+      gap: 8px;
+      padding: 0 8px;
+      font-size: 11px;
       color: #94a3b8;
     }
-    .slider-row input[type="range"] {
-      width: 170px;
-      accent-color: #3b82f6;
+    .slider-wrap input[type=range] {
+      accent-color: #38bdf8;
       cursor: pointer;
+      width: 85px;
     }
-    /* Tips tooltip */
-    .tips {
+
+    /* Tooltip Helper */
+    .tooltip {
       position: absolute;
-      bottom: 24px;
-      right: 24px;
+      bottom: 84px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
       font-size: 11px;
-      color: #64748b;
-      z-index: 5;
+      color: #94a3b8;
+      background: rgba(0, 0, 0, 0.65);
+      padding: 5px 12px;
+      border-radius: 20px;
       pointer-events: none;
+      letter-spacing: 0.2px;
     }
-    /* Loading screen */
+
+    /* Loader */
     #loader {
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: #0d1117;
+      background: #090d16;
+      z-index: 100;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      z-index: 100;
-      transition: opacity 0.5s ease;
+      gap: 16px;
+      transition: opacity 0.5s ease-out;
     }
     .spinner {
       width: 44px;
       height: 44px;
-      border: 3px solid rgba(59, 130, 246, 0.2);
-      border-top-color: #3b82f6;
+      border: 3px solid rgba(56, 189, 248, 0.2);
+      border-top-color: #38bdf8;
       border-radius: 50%;
-      animation: spin 1s linear infinite;
+      animation: spin 0.8s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
@@ -216,140 +243,79 @@
 
   <div id="loader">
     <div class="spinner"></div>
-    <p style="margin-top: 14px; font-size: 13px; color: #94a3b8;">Đang tải ngôi nhà Fullhouse & cảnh quan cây xanh...</p>
+    <div style="font-weight: 600; font-size: 15px; color: #f1f5f9; letter-spacing: -0.2px;">Đang tải phối cảnh 3D Fullhouse...</div>
+    <div style="font-size: 12px; color: #64748b;">Khởi tạo kiến trúc 2 tầng & nội thất chi tiết</div>
   </div>
 
   <div id="canvas-container"></div>
 
-  <!-- Header -->
-  <div class="glass header-card">
-    <h1>🏡 Fullhouse Villa <span class="badge">Ngang 5m × Dài 18m</span></h1>
-    <p>Kiến trúc nhiệt đới tối giản (Japandi Tropical). Đường luồng 2m đón gió mát, sân trước rợp bóng cây, đàn Piano, Yoga & Tắm trăng lầu 2.</p>
+  <!-- Header Info Card -->
+  <div class="header-card glass">
+    <h1>🏡 FULLHOUSE 3D VILLA <span class="badge">5M × 16M</span></h1>
+    <p>Tổ ấm bình an của Ba Mẹ và 3 chị em. Mặt tiền đường Quốc lộ, hướng Đông đón nắng sớm mát mẻ. Sân trước 18m, đường luồng 2m và sân sau vườn rau 7m.</p>
+    <div class="stats-row">
+      <div class="stat-item">
+        <span class="stat-val">5 Phòng</span>
+        <span class="stat-lbl">Quy mô phòng</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-val">175 m² Sàn</span>
+        <span class="stat-lbl">Diện tích GFA</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-val">1,2 - 1,3 Tỷ</span>
+        <span class="stat-lbl">Ngân sách chuẩn</span>
+      </div>
+    </div>
   </div>
 
-  <!-- Main Dock (Tầng & Chế độ xem) -->
-  <div class="glass dock">
-    <button class="btn active" onclick="setViewMode('all', this)">🏢 Toàn Cảnh 3D</button>
-    <button class="btn" onclick="setViewMode('fl1', this)">🛋️ Tầng 1 (Trệt)</button>
-    <button class="btn" onclick="setViewMode('fl2', this)">🎹 Tầng 2 (Lầu 1 & Master)</button>
-    <button class="btn" onclick="setViewMode('roof', this)">☀️ Tầng Mái & Solar</button>
+  <!-- Quick Navigation Panel -->
+  <div class="nav-panel glass">
+    <div class="panel-title">Khám Phá Nhanh</div>
+    <button class="nav-btn" onclick="focusCamera('front')">🚗 Sân Trước & Cổng (18m)</button>
+    <button class="nav-btn" onclick="focusCamera('porch')">🍵 Hiên Trà Của Ba</button>
+    <button class="nav-btn" onclick="focusCamera('living')">🛋️ Phòng Khách</button>
+    <button class="nav-btn" onclick="focusCamera('altar')">🪷 Gian Thờ Bồ Tát Quan Âm</button>
+    <button class="nav-btn" onclick="focusCamera('study')">📚 Phòng Đọc Sách & Daybed</button>
+    <button class="nav-btn" onclick="focusCamera('kitchen')">🍰 Bếp & Đảo Làm Bánh</button>
+    <button class="nav-btn" onclick="focusCamera('garden')">🥬 Vườn Rau Sân Sau (7m)</button>
+    <button class="nav-btn" onclick="focusCamera('master')">🎹 Master: Piano & Yoga</button>
+    <button class="nav-btn" onclick="focusCamera('sisters')">🛏️ Phòng Chị Hai & Em Út</button>
+  </div>
+
+  <!-- Bottom Control Bar -->
+  <div class="bottom-bar glass">
+    <button class="ctrl-btn active" id="btn-all" onclick="setFloorMode('all')">Toàn Cảnh</button>
+    <button class="ctrl-btn" id="btn-fl1" onclick="setFloorMode('fl1')">Tầng 1 (Trệt)</button>
+    <button class="ctrl-btn" id="btn-fl2" onclick="setFloorMode('fl2')">Tầng 2 (Lầu)</button>
+    <button class="ctrl-btn" id="btn-roof" onclick="setFloorMode('roof')">Tầng Mái</button>
     <div class="divider"></div>
-    <button class="btn" onclick="flyTo('front')">🏛️ Mặt Tiền</button>
-    <button class="btn" onclick="flyTo('porch')">🍵 Hiên Trà Của Ba</button>
-    <button class="btn" onclick="flyTo('living')">🪵 Khách & Bàn Thờ</button>
-    <button class="btn" onclick="flyTo('kitchen')">🥐 Bếp Làm Bánh</button>
-    <button class="btn" onclick="flyTo('master')">✨ Phòng Master</button>
-    <button class="btn" onclick="flyTo('corridor')">🌿 Đường Luồng 2m</button>
+    <div class="slider-wrap">
+      <span>Tách Tầng</span>
+      <input type="range" id="explodeSlider" min="0" max="1" step="0.01" value="0" oninput="onExplodeChange(this.value)">
+    </div>
     <div class="divider"></div>
-    <button class="btn" onclick="toggleAtmosphere(this)">🌓 Đổi Buổi</button>
+    <button class="ctrl-btn" id="btn-time" onclick="toggleTimeOfDay()">☀️ Ban Ngày</button>
   </div>
 
-  <!-- Side Control & Room Navigation -->
-  <div class="glass side-panel">
-    <div class="section-title">🔍 Khám Phá Nhanh Các Phòng</div>
-    <div class="room-btn-grid">
-      <button class="room-btn" onclick="focusRoom('master')">
-        <div><span class="icon">🎹</span><b>Phòng Master (Của Bạn)</b></div>
-        <span style="font-size: 10px; color:#10b981;">Piano & Yoga</span>
-      </button>
-      <button class="room-btn" onclick="focusRoom('altar')">
-        <div><span class="icon">🪷</span><b>Gian Thờ Quan Âm</b></div>
-        <span style="font-size: 10px; color:#f59e0b;">Vách CNC</span>
-      </button>
-      <button class="room-btn" onclick="focusRoom('living')">
-        <div><span class="icon">🛋️</span><b>Phòng Khách Gia Đình</b></div>
-        <span style="font-size: 10px; color:#3b82f6;">Sofa & TV</span>
-      </button>
-      <button class="room-btn" onclick="focusRoom('kitchen')">
-        <div><span class="icon">🧁</span><b>Bếp Mở & Quầy Bánh</b></div>
-        <span style="font-size: 10px; color:#ec4899;">Bàn đảo đá</span>
-      </button>
-      <button class="room-btn" onclick="focusRoom('parents')">
-        <div><span class="icon">🛏️</span><b>Phòng Ngủ Ba Mẹ</b></div>
-        <span style="font-size: 10px; color:#8b5cf6;">Tầng trệt</span>
-      </button>
-      <button class="room-btn" onclick="focusRoom('reading')">
-        <div><span class="icon">📚</span><b>Phòng Đọc & Khách</b></div>
-        <span style="font-size: 10px; color:#6366f1;">Lưu niệm</span>
-      </button>
-      <button class="room-btn" onclick="focusRoom('sisters')">
-        <div><span class="icon">👭</span><b>Phòng Chị Hai & Em Út</b></div>
-        <span style="font-size: 10px; color:#14b8a6;">Lầu 1</span>
-      </button>
-      <button class="room-btn" onclick="focusRoom('garden')">
-        <div><span class="icon">🥬</span><b>Vườn Rau & Sân Sau</b></div>
-        <span style="font-size: 10px; color:#22c55e;">Xanh mát</span>
-      </button>
-    </div>
-
-    <div class="section-title">🎛️ Bóc Tách Tầng & Nắng</div>
-    <div class="slider-row">
-      <span>Tách tầng dọc:</span>
-      <input type="range" id="explodeSlider" min="0" max="8" step="0.1" value="0" oninput="onExplode(this.value)">
-    </div>
-    <div class="slider-row">
-      <span>Góc chiếu nắng:</span>
-      <input type="range" id="sunSlider" min="0" max="360" step="5" value="45" oninput="onSun(this.value)">
-    </div>
-
-    <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 11.5px; color: #94a3b8; line-height: 1.5;">
-      💡 <b>Thiết kế thực tế:</b> Sân trước lùi 5m cản bụi quốc lộ, tường đôi 220mm cách âm, lan can lầu 2 tích hợp lam gỗ xoay che nắng hướng Tây buổi sáng.
-    </div>
-  </div>
-
-  <div class="tips">Chuột trái: Xoay 360° | Chuột phải: Kéo dời | Cuộn chuột: Phóng to/nhỏ</div>
+  <div class="tooltip">Xoay: Chuột trái | Di chuyển: Chuột phải | Phóng to/thu nhỏ: Cuộn chuột</div>
 
   <script>
-    // ==========================================
-    // PROCEDURAL TEXTURE GENERATORS (HIGH RES)
-    // ==========================================
+    // =========================================================================
+    // 1. PROCEDURAL TEXTURES (NO EXTERNAL FILES REQUIRED)
+    // =========================================================================
     function createWoodTexture() {
       const c = document.createElement('canvas');
       c.width = 512; c.height = 512;
       const ctx = c.getContext('2d');
-      ctx.fillStyle = '#b6895d';
+      ctx.fillStyle = '#b68453';
       ctx.fillRect(0, 0, 512, 512);
+      ctx.fillStyle = 'rgba(74, 45, 23, 0.15)';
       for (let i = 0; i < 400; i++) {
-        ctx.fillStyle = (i % 2 === 0) ? '#a2754c' : '#c99a6d';
-        ctx.fillRect(0, Math.random() * 512, 512, Math.random() * 4 + 1);
+        ctx.fillRect(0, Math.random() * 512, 512, Math.random() * 3 + 1);
       }
       const tex = new THREE.CanvasTexture(c);
       tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-      return tex;
-    }
-
-    function createTileTexture(color1, color2, size = 64) {
-      const c = document.createElement('canvas');
-      c.width = 256; c.height = 256;
-      const ctx = c.getContext('2d');
-      ctx.fillStyle = color1;
-      ctx.fillRect(0, 0, 256, 256);
-      ctx.strokeStyle = color2;
-      ctx.lineWidth = 3;
-      for (let x = 0; x <= 256; x += size) {
-        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 256); ctx.stroke();
-      }
-      for (let y = 0; y <= 256; y += size) {
-        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(256, y); ctx.stroke();
-      }
-      const tex = new THREE.CanvasTexture(c);
-      tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-      return tex;
-    }
-
-    function createGrassTexture() {
-      const c = document.createElement('canvas');
-      c.width = 256; c.height = 256;
-      const ctx = c.getContext('2d');
-      ctx.fillStyle = '#2d6a4f';
-      ctx.fillRect(0, 0, 256, 256);
-      for (let i = 0; i < 3000; i++) {
-        ctx.fillStyle = ['#40916c', '#52b788', '#1b4332', '#74c69d'][Math.floor(Math.random()*4)];
-        ctx.fillRect(Math.random() * 256, Math.random() * 256, 2, Math.random() * 4 + 1);
-      }
-      const tex = new THREE.CanvasTexture(c);
-      tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-      tex.repeat.set(8, 8);
       return tex;
     }
 
@@ -359,13 +325,12 @@
       const ctx = c.getContext('2d');
       ctx.fillStyle = '#f8fafc';
       ctx.fillRect(0, 0, 512, 512);
-      ctx.strokeStyle = '#cbd5e1';
-      ctx.lineWidth = 2;
-      ctx.filter = 'blur(2px)';
+      ctx.strokeStyle = 'rgba(148, 163, 184, 0.22)';
+      ctx.lineWidth = 3;
       for (let i = 0; i < 8; i++) {
         ctx.beginPath();
         ctx.moveTo(Math.random() * 512, 0);
-        ctx.bezierCurveTo(Math.random() * 512, 180, Math.random() * 512, 340, Math.random() * 512, 512);
+        ctx.bezierCurveTo(Math.random() * 512, 160, Math.random() * 512, 340, Math.random() * 512, 512);
         ctx.stroke();
       }
       const tex = new THREE.CanvasTexture(c);
@@ -373,16 +338,66 @@
       return tex;
     }
 
-    // ==========================================
-    // THREE.JS SCENE SETUP
-    // ==========================================
+    function createTileTexture() {
+      const c = document.createElement('canvas');
+      c.width = 256; c.height = 256;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#f1ece4';
+      ctx.fillRect(0, 0, 256, 256);
+      ctx.strokeStyle = 'rgba(180, 170, 160, 0.35)';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(0, 0, 256, 256);
+      const tex = new THREE.CanvasTexture(c);
+      tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+      tex.repeat.set(6, 16);
+      return tex;
+    }
+
+    const woodTex = createWoodTexture();
+    const marbleTex = createMarbleTexture();
+    const tileTex = createTileTexture();
+
+    // =========================================================================
+    // 2. MATERIALS
+    // =========================================================================
+    const mats = {
+      wallWhite: new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.8 }),
+      wallCream: new THREE.MeshStandardMaterial({ color: 0xf5eee6, roughness: 0.75 }),
+      wallStone: new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.5 }),
+      road: new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.85 }),
+      paver: new THREE.MeshStandardMaterial({ color: 0x64748b, roughness: 0.8 }),
+      floorTile: new THREE.MeshStandardMaterial({ map: tileTex, roughness: 0.35 }),
+      woodOak: new THREE.MeshStandardMaterial({ map: woodTex, roughness: 0.4 }),
+      woodDark: new THREE.MeshStandardMaterial({ color: 0x2e1a0f, roughness: 0.4 }),
+      whiteMarble: new THREE.MeshStandardMaterial({ map: marbleTex, roughness: 0.15 }),
+      glassClear: new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.05, transmission: 0.9, transparent: true, opacity: 0.35 }),
+      glassBronze: new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.1, transmission: 0.75, transparent: true, opacity: 0.45 }),
+      metalBlack: new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.35, metalness: 0.8 }),
+      metalStainless: new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.2, metalness: 0.9 }),
+      gold: new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.25, metalness: 0.9 }),
+      pianoGloss: new THREE.MeshStandardMaterial({ color: 0x050505, roughness: 0.05, metalness: 0.2 }),
+      fabricWarm: new THREE.MeshStandardMaterial({ color: 0xd6cfc4, roughness: 0.85 }),
+      fabricNavy: new THREE.MeshStandardMaterial({ color: 0x1e3a5f, roughness: 0.8 }),
+      fabricMustard: new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: 0.8 }),
+      grass: new THREE.MeshStandardMaterial({ color: 0x2d6a4f, roughness: 0.9 }),
+      foliageGreen: new THREE.MeshStandardMaterial({ color: 0x1b4332, roughness: 0.7 }),
+      foliageLime: new THREE.MeshStandardMaterial({ color: 0x52b788, roughness: 0.7 }),
+      trunk: new THREE.MeshStandardMaterial({ color: 0x5c4033, roughness: 0.9 }),
+      ledGlow: new THREE.MeshBasicMaterial({ color: 0xfef08a }),
+      carPaint: new THREE.MeshStandardMaterial({ color: 0x1d4ed8, roughness: 0.2, metalness: 0.85 }),
+      tire: new THREE.MeshStandardMaterial({ color: 0x111827, roughness: 0.9 })
+    };
+
+    // =========================================================================
+    // 3. THREE.JS SCENE SETUP
+    // =========================================================================
     const container = document.getElementById('canvas-container');
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x0f172a);
-    scene.fog = new THREE.FogExp2(0x0f172a, 0.012);
+    scene.background = new THREE.Color(0x090d16);
+    scene.fog = new THREE.FogExp2(0x090d16, 0.012);
 
-    const camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(-22, 20, -20);
+    const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(-26, 24, -14);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -396,284 +411,45 @@
     const controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
-    controls.maxPolarAngle = Math.PI / 2 + 0.02; // Don't go below ground
-    controls.target.set(3.5, 3.5, 9.0);
+    controls.maxPolarAngle = Math.PI / 2 + 0.02;
+    controls.target.set(3.5, 3.5, 8.0);
 
-    // ==========================================
-    // LIGHTING & ATMOSPHERE
-    // ==========================================
-    const hemiLight = new THREE.HemisphereLight(0xfff7ed, 0x1e293b, 0.7);
+    // Lights
+    const hemiLight = new THREE.HemisphereLight(0xfff7ed, 0x1e293b, 0.65);
     scene.add(hemiLight);
 
     const sunLight = new THREE.DirectionalLight(0xfffaed, 1.35);
-    sunLight.position.set(22, 28, -18);
+    sunLight.position.set(24, 30, -22); // East Morning Sun
     sunLight.castShadow = true;
     sunLight.shadow.mapSize.width = 2048;
     sunLight.shadow.mapSize.height = 2048;
     sunLight.shadow.camera.near = 0.5;
-    sunLight.shadow.camera.far = 90;
-    sunLight.shadow.bias = -0.0003;
-    const d = 24;
-    sunLight.shadow.camera.left = -d;
-    sunLight.shadow.camera.right = d;
-    sunLight.shadow.camera.top = d;
-    sunLight.shadow.camera.bottom = -d;
+    sunLight.shadow.camera.far = 120;
+    sunLight.shadow.camera.left = -25;
+    sunLight.shadow.camera.right = 25;
+    sunLight.shadow.camera.top = 25;
+    sunLight.shadow.camera.bottom = -25;
+    sunLight.shadow.bias = -0.0005;
     scene.add(sunLight);
 
-    // Warm Interior Pointlights (Tạo ánh sáng ấm cúng về đêm)
+    // Warm Interior Lights
     const interiorLights = [];
-    function addWarmLight(x, y, z, intensity = 1.2, dist = 9) {
+    function addWarmLight(x, y, z, intensity = 1.4, dist = 9) {
       const pl = new THREE.PointLight(0xffaa44, intensity, dist);
       pl.position.set(x, z, y); // Three.js Y is Up
       scene.add(pl);
       interiorLights.push(pl);
       return pl;
     }
-    // Living room warm light
-    addWarmLight(2.2, 1.9, 2.8, 1.2, 8);
-    // Altar warm sacred glow (parallel to TV, inside curtain sanctuary)
-    addWarmLight(3.9, 4.18, 2.4, 1.4, 6);
-    // Kitchen pendant warm light
-    addWarmLight(2.5, 16.0, 2.8, 1.1, 7);
-    // Master bedroom warm cozy light
-    addWarmLight(2.5, 3.0, 5.8, 1.2, 8);
-    // Porch tea night light (moved to Right side X=3.75)
-    addWarmLight(3.75, -2.35, 2.7, 0.9, 6);
+    addWarmLight(1.8, 2.0, 2.8, 1.5);   // Living
+    addWarmLight(4.0, 2.6, 2.8, 1.2);   // Altar
+    addWarmLight(1.8, 5.5, 2.8, 1.2);   // Parents
+    addWarmLight(2.5, 8.8, 2.8, 1.3);   // Study
+    addWarmLight(2.6, 12.5, 2.8, 1.6);  // Kitchen
+    addWarmLight(2.5, 13.0, 6.2, 1.6);  // Master
+    addWarmLight(1.0, 11.8, 6.2, 1.2);  // Piano
 
-    // ==========================================
-    // RICH PBR MATERIALS
-    // ==========================================
-    const woodTex = createWoodTexture();
-    const grassTex = createGrassTexture();
-    const creamTileTex = createTileTexture('#faf8f5', '#e2d9cc', 64);
-    const greyTileTex = createTileTexture('#475569', '#334155', 48);
-    const outdoorPaverTex = createTileTexture('#78716c', '#57534e', 64);
-    const marbleTex = createMarbleTexture();
-
-    const mats = {
-      wallWhite: new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.8 }),
-      wallWarmCream: new THREE.MeshStandardMaterial({ color: 0xf5f0e8, roughness: 0.75 }),
-      wallFacadeAccent: new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.5 }),
-      woodOak: new THREE.MeshStandardMaterial({ map: woodTex, roughness: 0.45 }),
-      woodDark: new THREE.MeshStandardMaterial({ color: 0x3e2723, roughness: 0.4 }),
-      woodLouver: new THREE.MeshStandardMaterial({ color: 0xa87747, roughness: 0.4 }),
-      grass: new THREE.MeshStandardMaterial({ map: grassTex, roughness: 0.9 }),
-      floorCream: new THREE.MeshStandardMaterial({ map: creamTileTex, roughness: 0.3 }),
-      floorWood: new THREE.MeshStandardMaterial({ map: woodTex, roughness: 0.4 }),
-      floorPaver: new THREE.MeshStandardMaterial({ map: outdoorPaverTex, roughness: 0.85 }),
-      floorBath: new THREE.MeshStandardMaterial({ map: greyTileTex, roughness: 0.7 }),
-      marble: new THREE.MeshStandardMaterial({ map: marbleTex, roughness: 0.2 }),
-      glassClear: new THREE.MeshPhysicalMaterial({ color: 0xe0f2fe, transparent: true, opacity: 0.35, roughness: 0.05, transmission: 0.9 }),
-      glassBalcony: new THREE.MeshPhysicalMaterial({ color: 0xbae6fd, transparent: true, opacity: 0.5, roughness: 0.1, transmission: 0.8 }),
-      metalBlack: new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.3, metalness: 0.7 }),
-      metalBronze: new THREE.MeshStandardMaterial({ color: 0x785336, roughness: 0.35, metalness: 0.8 }),
-      metalGold: new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.25, metalness: 0.9 }),
-      metalStainless: new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.25, metalness: 0.85 }),
-      pianoGloss: new THREE.MeshStandardMaterial({ color: 0x09090b, roughness: 0.08, metalness: 0.3 }),
-      sofaFabric: new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.9 }),
-      sofaCushion: new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.85 }),
-      bedLinen: new THREE.MeshStandardMaterial({ color: 0xf1f5f9, roughness: 0.85 }),
-      bedRunner: new THREE.MeshStandardMaterial({ color: 0x0284c7, roughness: 0.8 }),
-      foliageGreen: new THREE.MeshStandardMaterial({ color: 0x22c55e, roughness: 0.7 }),
-      foliageDark: new THREE.MeshStandardMaterial({ color: 0x15803d, roughness: 0.75 }),
-      treeTrunk: new THREE.MeshStandardMaterial({ color: 0x5c4033, roughness: 0.85 }),
-      flowerPink: new THREE.MeshStandardMaterial({ color: 0xf43f5e, roughness: 0.6 }),
-      solarPanel: new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.2, metalness: 0.8 }),
-      carPaint: new THREE.MeshStandardMaterial({ color: 0x2563eb, roughness: 0.2, metalness: 0.85 }),
-      yogaMat: new THREE.MeshStandardMaterial({ color: 0xc084fc, roughness: 0.8 }),
-    };
-
-    // ==========================================
-    // MESH BUILDER UTILITIES
-    // ==========================================
-    function addBox(parent, minX, minY, minZ, maxX, maxY, maxZ, mat) {
-      const dx = maxX - minX;
-      const dy = maxY - minY;
-      const dz = maxZ - minZ;
-      const geo = new THREE.BoxGeometry(dx, dz, dy); // Three.js Y is Up
-      const mesh = new THREE.Mesh(geo, mat);
-      mesh.position.set(minX + dx/2, minZ + dz/2, minY + dy/2);
-      mesh.castShadow = true;
-      mesh.receiveShadow = true;
-      parent.add(mesh);
-      return mesh;
-    }
-
-    // Realistic Foliage & Tree Generator
-    function createTree(parent, x, y, z, scale = 1.0, type = 'broadleaf') {
-      const treeGroup = new THREE.Group();
-      treeGroup.position.set(x, z, y);
-
-      // Trunk
-      const trunkGeo = new THREE.CylinderGeometry(0.12 * scale, 0.18 * scale, 2.5 * scale, 8);
-      const trunk = new THREE.Mesh(trunkGeo, mats.treeTrunk);
-      trunk.position.y = 1.25 * scale;
-      trunk.castShadow = true;
-      treeGroup.add(trunk);
-
-      // Clustered Leaves (Tán lá tròn bồng bềnh hữu cơ)
-      const foliageMat = (Math.random() > 0.5) ? mats.foliageGreen : mats.foliageDark;
-      const clusters = [
-        { x: 0, y: 2.8 * scale, z: 0, r: 1.1 * scale },
-        { x: 0.45 * scale, y: 3.1 * scale, z: 0.3 * scale, r: 0.9 * scale },
-        { x: -0.4 * scale, y: 3.0 * scale, z: -0.2 * scale, r: 0.85 * scale },
-        { x: 0.2 * scale, y: 3.5 * scale, z: -0.3 * scale, r: 0.8 * scale },
-        { x: -0.3 * scale, y: 3.6 * scale, z: 0.2 * scale, r: 0.75 * scale },
-      ];
-
-      clusters.forEach(c => {
-        const leafGeo = new THREE.DodecahedronGeometry(c.r, 1);
-        const leafMesh = new THREE.Mesh(leafGeo, foliageMat);
-        leafMesh.position.set(c.x, c.y, c.z);
-        leafMesh.castShadow = true;
-        leafMesh.receiveShadow = true;
-        treeGroup.add(leafMesh);
-      });
-
-      parent.add(treeGroup);
-      return treeGroup;
-    }
-
-    // Potted Ornamental Plant (Cây cảnh chậu hoa)
-    function createPottedPlant(parent, x, y, z, r = 0.3, h = 0.9) {
-      const potGroup = new THREE.Group();
-      potGroup.position.set(x, z, y);
-      // Pot
-      const potGeo = new THREE.CylinderGeometry(r * 0.9, r * 0.7, r * 1.5, 12);
-      const pot = new THREE.Mesh(potGeo, mats.wallWhite);
-      pot.position.y = (r * 1.5) / 2;
-      pot.castShadow = true;
-      potGroup.add(pot);
-      // Plant leaves
-      const plantGeo = new THREE.SphereGeometry(r * 1.2, 8, 8);
-      plantGeo.scale(1, 1.4, 1);
-      const plant = new THREE.Mesh(plantGeo, mats.foliageGreen);
-      plant.position.y = r * 1.5 + (r * 0.8);
-      plant.castShadow = true;
-      potGroup.add(plant);
-
-      parent.add(potGroup);
-    }
-
-    // Flower Bed Border (Viền hoa rực rỡ)
-    function createFlowerBed(parent, minX, minY, minZ, maxX, maxY, maxZ) {
-      addBox(parent, minX, minY, minZ, maxX, maxY, maxZ, mats.foliageDark);
-      const dx = maxX - minX;
-      const dy = maxY - minY;
-      const count = Math.floor((dx * dy) * 4);
-      for (let i = 0; i < count; i++) {
-        const fx = minX + Math.random() * dx;
-        const fy = minY + Math.random() * dy;
-        const flowerGeo = new THREE.SphereGeometry(0.12, 6, 6);
-        const flower = new THREE.Mesh(flowerGeo, (i % 2 === 0) ? mats.flowerPink : mats.metalGold);
-        flower.position.set(fx, maxZ + 0.08, fy);
-        parent.add(flower);
-      }
-    }
-
-    // Detailed Upright Acoustic Piano (Đàn Piano của bạn - 52 phím trắng + 36 phím đen)
-    function createDetailedPiano(parent, x, y, z) {
-      const p = new THREE.Group();
-      p.position.set(x, z, y);
-      // Orient piano along left wall facing +X
-      p.rotation.y = Math.PI / 2;
-
-      // Main Case & Top Lid
-      const caseMesh = new THREE.Mesh(new THREE.BoxGeometry(1.46, 1.18, 0.42), mats.pianoGloss);
-      caseMesh.position.set(0, 0.62, 0);
-      caseMesh.castShadow = true;
-      p.add(caseMesh);
-      const topLid = new THREE.Mesh(new THREE.BoxGeometry(1.50, 0.04, 0.46), mats.pianoGloss);
-      topLid.position.set(0, 1.22, 0.01);
-      p.add(topLid);
-
-      // Keyboard shelf
-      const shelf = new THREE.Mesh(new THREE.BoxGeometry(1.44, 0.08, 0.28), mats.pianoGloss);
-      shelf.position.set(0, 0.70, 0.30);
-      shelf.castShadow = true;
-      p.add(shelf);
-
-      // 52 White keys & 36 Black keys
-      const keySpan = 1.32;
-      const wkW = keySpan / 52;
-      for (let k = 0; k < 52; k++) {
-        const kx = -keySpan / 2 + k * wkW + wkW / 2;
-        const wk = new THREE.Mesh(new THREE.BoxGeometry(wkW * 0.88, 0.025, 0.21), mats.wallWhite);
-        wk.position.set(kx, 0.75, 0.32);
-        p.add(wk);
-      }
-      const blackPattern = [0, 1, 3, 4, 5];
-      for (let oct = 0; oct < 7; oct++) {
-        blackPattern.forEach(bp => {
-          const idx = oct * 7 + bp;
-          if (idx < 51) {
-            const kx = -keySpan / 2 + (idx + 0.85) * wkW;
-            const bk = new THREE.Mesh(new THREE.BoxGeometry(wkW * 0.6, 0.025, 0.13), mats.pianoGloss);
-            bk.position.set(kx, 0.77, 0.27);
-            p.add(bk);
-          }
-        });
-      }
-
-      // Music stand with open sheet music
-      const stand = new THREE.Mesh(new THREE.BoxGeometry(0.64, 0.24, 0.02), mats.pianoGloss);
-      stand.position.set(0, 0.96, 0.22);
-      stand.rotation.x = -0.15;
-      p.add(stand);
-      const sheet = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.20, 0.025), mats.wallWarmCream);
-      sheet.position.set(0, 0.96, 0.23);
-      sheet.rotation.x = -0.15;
-      p.add(sheet);
-
-      // 3 Gold Pedals
-      [-0.10, 0, 0.10].forEach(px => {
-        const pedal = new THREE.Mesh(new THREE.BoxGeometry(0.035, 0.03, 0.12), mats.metalGold);
-        pedal.position.set(px, 0.05, 0.22);
-        p.add(pedal);
-      });
-
-      // Tufted Piano Bench
-      const bench = new THREE.Mesh(new THREE.BoxGeometry(0.76, 0.46, 0.36), mats.woodDark);
-      bench.position.set(0, 0.23, 0.72);
-      bench.castShadow = true;
-      p.add(bench);
-
-      parent.add(p);
-    }
-
-    function createDetailedBed(parent, cx, cy, z, w, l, runnerMat) {
-      const x0 = cx - l / 2, x1 = cx + l / 2;
-      const y0 = cy - w / 2, y1 = cy + w / 2;
-      // Frame & Headboard
-      addBox(parent, x0, y0, z + 0.06, x1, y1, z + 0.28, mats.woodOak);
-      addBox(parent, x0 - 0.02, y0 - 0.06, z, x0 + 0.06, y1 + 0.06, z + 1.15, mats.woodOak);
-      for (let c = 0; c < 6; c++) {
-        const cw = (w - 0.08) / 6;
-        const cy0 = y0 + 0.04 + c * cw;
-        addBox(parent, x0 + 0.06, cy0 + 0.01, z + 0.30, x0 + 0.13, cy0 + cw - 0.01, z + 1.08, mats.wallWarmCream);
-      }
-      // Mattress, Duvet & Runner
-      addBox(parent, x0 + 0.10, y0 + 0.04, z + 0.28, x1 - 0.04, y1 - 0.04, z + 0.54, mats.bedLinen);
-      addBox(parent, x0 + 0.50, y0 + 0.02, z + 0.32, x1 - 0.02, y1 - 0.02, z + 0.58, mats.wallWarmCream);
-      addBox(parent, x1 - 0.52, y0 + 0.01, z + 0.34, x1 - 0.08, y1 - 0.01, z + 0.60, runnerMat);
-      // 4 Pillows + 2 Cushions
-      const pw = (w - 0.24) / 2;
-      for (let p = 0; p < 2; p++) {
-        const py = y0 + 0.12 + pw / 2 + p * (pw + 0.04);
-        addBox(parent, x0 + 0.14, py - pw * 0.42, z + 0.54, x0 + 0.35, py + pw * 0.42, z + 0.70, mats.bedLinen);
-        addBox(parent, x0 + 0.30, py - pw * 0.38, z + 0.54, x0 + 0.48, py + pw * 0.38, z + 0.68, mats.wallWarmCream);
-        addBox(parent, x0 + 0.42, py - 0.16, z + 0.55, x0 + 0.55, py + 0.16, z + 0.72, runnerMat);
-      }
-      // 2 Nightstands & Lamps
-      [y0 - 0.28, y1 + 0.28].forEach(ny => {
-        addBox(parent, x0 + 0.04, ny - 0.20, z, x0 + 0.46, ny + 0.20, z + 0.50, mats.woodOak);
-        addBox(parent, x0 + 0.18, ny - 0.08, z + 0.50, x0 + 0.32, ny + 0.08, z + 0.78, mats.metalGold);
-      });
-    }
-
-    // ==========================================
-    // MASTER HIERARCHY GROUPS
-    // ==========================================
+    // Hierarchy Groups
     const groupSite = new THREE.Group();
     const groupFl1 = new THREE.Group();
     const groupFl2 = new THREE.Group();
@@ -683,502 +459,495 @@
     scene.add(groupFl2);
     scene.add(groupRoof);
 
-    // ------------------------------------------
-    // 1. SITE, LANDSCAPE & GREENERY
-    // ------------------------------------------
-    // Road & Sidewalk
-    addBox(groupSite, -4, -12, -0.4, 12, -6, -0.25, mats.wallFacadeAccent);
-    addBox(groupSite, -2, -6, -0.25, 10, -5, 0.0, mats.wallWhite); // Sidewalk curb
-    // Front Yard (7m wide x 5m deep) with Grass & Stepping Pavers
-    addBox(groupSite, 0, -5, 0.0, 7, 0, 0.1, mats.floorPaver);
-    addBox(groupSite, 2.55, -4.75, 0.11, 4.95, -0.25, 0.13, mats.grass); // Green lawn patch on Right for Tea Porch
-    // 2m Side Corridor with Stepping Pavers & Green grass border
-    addBox(groupSite, 5.0, 0, 0.0, 7.0, 18.0, 0.1, mats.floorPaver);
-    addBox(groupSite, 6.4, 0.2, 0.11, 6.9, 17.8, 0.13, mats.grass); // Green strip along side fence
+    // Helper Primitive
+    function addBox(parent, minX, minY, minZ, maxX, maxY, maxZ, mat) {
+      const dx = Math.max(maxX - minX, 0.01);
+      const dy = Math.max(maxY - minY, 0.01);
+      const dz = Math.max(maxZ - minZ, 0.01);
+      const cx = (minX + maxX) / 2;
+      const cy = (minY + maxY) / 2;
+      const cz = (minZ + maxZ) / 2;
+      const mesh = new THREE.Mesh(new THREE.BoxGeometry(dx, dz, dy), mat);
+      mesh.position.set(cx, cz, cy);
+      mesh.castShadow = true;
+      mesh.receiveShadow = true;
+      parent.add(mesh);
+      return mesh;
+    }
 
-    // Rear Yard & Vegetable Garden (Luống rau xanh)
-    addBox(groupSite, 0, 18.0, 0.0, 7.0, 20.0, 0.1, mats.floorPaver);
-    addBox(groupSite, 0, 20.0, 0.0, 7.0, 22.8, 0.1, mats.grass); // Raised vegetable beds
-    // 4 Raised Timber Planter Boxes for Vegetables
+    function addTree(parent, x, y, z, scale = 1.0) {
+      const g = new THREE.Group();
+      const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.12 * scale, 0.16 * scale, 2.0 * scale, 8), mats.trunk);
+      trunk.position.set(0, 1.0 * scale, 0);
+      trunk.castShadow = true;
+      g.add(trunk);
+      const canopy = new THREE.Mesh(new THREE.SphereGeometry(1.2 * scale, 8, 8), mats.foliageGreen);
+      canopy.position.set(0, 2.4 * scale, 0);
+      canopy.castShadow = true;
+      g.add(canopy);
+      g.position.set(x, z, y);
+      parent.add(g);
+    }
+
+    // =========================================================================
+    // 4. SITE & LANDSCAPE (7m x 41m: SÂN TRƯỚC 18m, NHÀ 16m, SÂN SAU 7m)
+    // =========================================================================
+    // Front Highway & Sidewalk (Y = -24..-18)
+    addBox(groupSite, -4, -24, -0.35, 11, -18.8, -0.20, mats.road);
+    addBox(groupSite, -2, -18.8, -0.20, 9, -18.0, 0.0, mats.wallWhite);
+
+    // Front Yard 18m (Y = -18..0, X = 0..7)
+    addBox(groupSite, 0, -18, 0.0, 7, 0, 0.15, mats.paver);
+    addBox(groupSite, 2.8, -17.5, 0.15, 6.8, -6.0, 0.17, mats.grass);
+    addTree(groupSite, 4.8, -14.0, 0.15, 1.3);
+    addTree(groupSite, 5.2, -8.5, 0.15, 1.1);
+
+    // Boundary Fences & Gate (Y = -18)
+    addBox(groupSite, -0.18, -18, 0, 0, 23, 2.35, mats.wallWhite);
+    addBox(groupSite, 7.0, -18, 0, 7.18, 23, 2.35, mats.wallWhite);
+    addBox(groupSite, -0.18, 23, 0, 7.18, 23.18, 2.35, mats.wallWhite);
+    // Gate Pillars & Slats
+    addBox(groupSite, -0.18, -18.15, 0, 0.35, -17.85, 2.65, mats.wallStone);
+    addBox(groupSite, 2.65, -18.15, 0, 2.95, -17.85, 2.65, mats.wallStone);
+    addBox(groupSite, 6.85, -18.15, 0, 7.18, -17.85, 2.65, mats.wallStone);
+    addBox(groupSite, 0.35, -18.0, 0.2, 2.65, -17.95, 2.2, mats.metalBlack);
+    addBox(groupSite, 2.95, -18.0, 0.2, 6.85, -17.95, 2.2, mats.metalBlack);
+
+    // Family SUV parked in front driveway (Y = -11.5)
+    const carGroup = new THREE.Group();
+    addBox(carGroup, -0.95, -2.15, 0.18, 0.95, 2.15, 0.75, mats.carPaint);
+    addBox(carGroup, -0.85, -0.95, 0.75, 0.85, 1.25, 1.48, mats.carPaint);
+    addBox(carGroup, -0.82, -0.88, 0.80, 0.82, -0.45, 1.42, mats.glassClear);
+    [-0.98, 0.98].forEach(wx => {
+      [-1.35, 1.35].forEach(wy => {
+        const wh = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 0.25, 12), mats.tire);
+        wh.rotation.z = Math.PI / 2;
+        wh.position.set(wx, 0.35, wy);
+        carGroup.add(wh);
+      });
+    });
+    carGroup.position.set(1.45, 0.15, -11.5);
+    groupSite.add(carGroup);
+
+    // DAD'S TEA & BBQ PORCH (X = 2.4..4.9, Y = -4.8..-0.6)
+    addBox(groupSite, 2.45, -4.8, 0.15, 4.95, -0.6, 0.22, mats.woodOak);
+    // Pergola posts & rafters & glass roof
+    [2.52, 4.88].forEach(px => {
+      [-4.7, -0.7].forEach(py => {
+        addBox(groupSite, px - 0.05, py - 0.05, 0.22, px + 0.05, py + 0.05, 2.85, mats.metalBlack);
+      });
+    });
+    for (let r = 0; r < 9; r++) {
+      const ry = -4.8 + r * 0.52;
+      addBox(groupSite, 2.4, ry, 2.85, 5.0, ry + 0.1, 2.95, mats.woodOak);
+    }
+    addBox(groupSite, 2.35, -4.95, 2.95, 5.05, -0.55, 2.99, mats.glassBronze);
+    // Table & 4 Chairs + Teapot + Beer
+    addBox(groupSite, 3.2, -3.3, 0.90, 4.2, -2.1, 0.96, mats.whiteMarble);
+    addBox(groupSite, 3.45, -3.0, 0.22, 3.95, -2.4, 0.90, mats.woodDark);
+    addBox(groupSite, 2.85, -2.9, 0.22, 3.15, -2.5, 0.75, mats.fabricMustard);
+    addBox(groupSite, 4.25, -2.9, 0.22, 4.55, -2.5, 0.75, mats.fabricMustard);
+    addBox(groupSite, 3.5, -3.7, 0.22, 3.9, -3.4, 0.75, mats.fabricMustard);
+    addBox(groupSite, 3.5, -2.0, 0.22, 3.9, -1.7, 0.75, mats.fabricMustard);
+    // Teapot & Beer
+    addBox(groupSite, 3.6, -2.8, 0.96, 3.8, -2.6, 1.08, mats.wallWhite);
+    addBox(groupSite, 3.35, -2.4, 0.96, 3.45, -2.3, 1.08, mats.fabricMustard);
+    addBox(groupSite, 3.95, -2.4, 0.96, 4.05, -2.3, 1.08, mats.fabricMustard);
+
+    // Side 2m Corridor (X = 5..7, Y = 0..16)
+    addBox(groupSite, 5.0, 0.0, 0.0, 7.0, 16.0, 0.15, mats.paver);
+    for (let s = 0; s < 12; s++) {
+      const sy = 0.8 + s * 1.25;
+      addBox(groupSite, 5.35, sy, 0.15, 6.1, sy + 0.65, 0.175, mats.wallWhite);
+    }
+
+    // Rear Yard 7m (Y = 16..23)
+    addBox(groupSite, 0, 16, 0.0, 7, 19.5, 0.15, mats.paver);
+    addBox(groupSite, 0, 19.5, 0.0, 7, 23.0, 0.15, mats.grass);
+    // 3 Raised Veg Beds
     for (let r = 0; r < 3; r++) {
-      const vy = 20.3 + (r * 0.8);
-      addBox(groupSite, 0.5, vy, 0.1, 4.5, vy + 0.55, 0.35, mats.woodOak);
-      addBox(groupSite, 0.6, vy + 0.05, 0.35, 4.4, vy + 0.5, 0.42, mats.foliageGreen); // Lush organic veggies
-    }
-
-    // Boundary Fences & Gates
-    addBox(groupSite, -0.15, -5.0, 0.0, 0.0, 22.8, 2.3, mats.wallWarmCream);
-    addBox(groupSite, 7.0, -5.0, 0.0, 7.15, 22.8, 2.3, mats.wallWarmCream);
-    addBox(groupSite, -0.15, 22.8, 0.0, 7.15, 22.95, 2.4, mats.wallWarmCream);
-    // Front Gate Pillars & Sliding Bronze Gate (Car Gate on Left, Porch Fence in Middle, Side Corridor Gate on Right)
-    addBox(groupSite, -0.15, -5.1, 0.0, 0.35, -4.8, 2.7, mats.wallFacadeAccent);
-    addBox(groupSite, 2.40, -5.1, 0.0, 2.80, -4.8, 2.7, mats.wallFacadeAccent);
-    addBox(groupSite, 4.70, -5.1, 0.0, 5.05, -4.8, 2.7, mats.wallFacadeAccent);
-    addBox(groupSite, 6.8, -5.1, 0.0, 7.15, -4.8, 2.7, mats.wallFacadeAccent);
-    addBox(groupSite, 0.35, -5.0, 0.0, 2.40, -4.95, 2.3, mats.metalBronze); // Main Car Gate (Left)
-    addBox(groupSite, 2.80, -5.0, 0.0, 4.70, -4.95, 2.3, mats.metalBronze); // Porch Fence
-    addBox(groupSite, 5.05, -5.0, 0.0, 6.8, -4.95, 2.3, mats.metalBronze); // Side Corridor Gate
-
-    // Hiên Trà & Nhậu Ngoài Trời Của Ba (Đã đổi sang bên Phải X = 2.65..4.88 để ngồi Sofa trong nhà nhìn thẳng ra hóng chuyện!)
-    addBox(groupSite, 2.65, -3.95, 0.12, 4.88, -0.65, 0.20, mats.floorWood); // Wooden deck
-    addBox(groupSite, 2.60, -4.2, 2.7, 4.92, -0.4, 2.85, mats.woodLouver);  // Pergola canopy
-    // Solid Granite Tea Table and 4 Chairs (Centered at X = 3.75, Y = -2.35)
-    addBox(groupSite, 3.25, -2.95, 0.20, 4.25, -1.75, 0.88, mats.marble);
-    addBox(groupSite, 2.75, -2.65, 0.20, 3.12, -2.05, 0.55, mats.woodOak);
-    addBox(groupSite, 4.38, -2.65, 0.20, 4.75, -2.05, 0.55, mats.woodOak);
-    addBox(groupSite, 3.50, -3.45, 0.20, 4.00, -3.08, 0.55, mats.woodOak);
-    addBox(groupSite, 3.50, -1.62, 0.20, 4.00, -1.25, 0.55, mats.woodOak);
-    // Tea set on table
-    addBox(groupSite, 3.55, -2.55, 0.88, 3.95, -2.15, 0.96, mats.wallWhite);
-
-    // LUSH TREES & SHRUBS IN SITE
-    createTree(groupSite, 4.55, -4.1, 0.1, 1.35); // Large shade tree shading Tea Porch on Right
-    createTree(groupSite, 6.2, 19.5, 0.1, 1.2);  // Fruit tree in rear yard
-    createTree(groupSite, 6.2, 21.8, 0.1, 1.1);  // Banana/Papaya tree in rear garden
-    createFlowerBed(groupSite, 4.5, -4.8, 0.1, 4.9, -0.4, 0.5); // Front flower bed
-    createFlowerBed(groupSite, 6.4, 2.0, 0.1, 6.9, 8.0, 0.4);  // Side corridor flower strip
-    createFlowerBed(groupSite, 6.4, 10.0, 0.1, 6.9, 16.0, 0.4);
-
-    // Car Parked on LEFT Side of Front Yard (X = 0.55..2.15)
-    addBox(groupSite, 0.55, -4.5, 0.18, 2.15, -0.8, 1.05, mats.carPaint);
-    addBox(groupSite, 0.68, -3.5, 1.00, 2.02, -1.2, 1.52, mats.carPaint);
-    addBox(groupSite, 0.65, -3.55, 1.02, 2.05, -1.25, 1.46, mats.glassClear);
-
-    // ------------------------------------------
-    // 2. FLOOR 1 (TẦNG TRỆT) - ARCHITECTURE & INTERIOR
-    // ------------------------------------------
-    addBox(groupFl1, 0, 0, 0.1, 5, 18, 0.25, mats.floorCream);
-
-    // External Acoustic 220mm Walls
-    addBox(groupFl1, 0.0, 0.0, 0.25, 0.22, 18.0, 3.6, mats.wallWarmCream); // Left party wall
-    // Right wall facing 2m corridor (Solid wall at Y = 3.35..5.0 behind Sacred Altar!)
-    addBox(groupFl1, 4.78, 0.0, 0.25, 5.0, 0.35, 3.6, mats.wallWarmCream);
-    addBox(groupFl1, 4.86, 0.35, 0.85, 4.94, 1.35, 2.65, mats.glassClear); // Front-right Living Window
-    addBox(groupFl1, 4.78, 0.35, 0.25, 5.0, 1.35, 0.85, mats.wallWarmCream);
-    addBox(groupFl1, 4.78, 0.35, 2.65, 5.0, 1.35, 3.6, mats.wallWarmCream);
-    addBox(groupFl1, 4.78, 1.35, 0.25, 5.0, 8.5, 3.6, mats.wallWarmCream);
-    addBox(groupFl1, 4.86, 8.5, 1.0, 4.94, 10.5, 2.4, mats.glassClear); // Win Parents
-    addBox(groupFl1, 4.78, 8.5, 0.25, 5.0, 10.5, 1.0, mats.wallWarmCream);
-    addBox(groupFl1, 4.78, 8.5, 2.4, 5.0, 10.5, 3.6, mats.wallWarmCream);
-    addBox(groupFl1, 4.78, 10.5, 0.25, 5.0, 12.0, 3.6, mats.wallWarmCream);
-    addBox(groupFl1, 4.86, 12.0, 1.0, 4.94, 14.0, 2.4, mats.glassClear); // Win Reading
-    addBox(groupFl1, 4.78, 12.0, 0.25, 5.0, 14.0, 1.0, mats.wallWarmCream);
-    addBox(groupFl1, 4.78, 12.0, 2.4, 5.0, 14.0, 3.6, mats.wallWarmCream);
-    addBox(groupFl1, 4.78, 14.0, 0.25, 5.0, 18.0, 3.6, mats.wallWarmCream);
-
-    // Front Soundproof Entrance Door (4 cánh nhôm kính xingfa cách âm mở rộng)
-    addBox(groupFl1, 0.0, 0.0, 0.25, 0.65, 0.22, 3.6, mats.wallFacadeAccent);
-    addBox(groupFl1, 4.45, 0.0, 0.25, 5.0, 0.22, 3.6, mats.wallFacadeAccent);
-    addBox(groupFl1, 0.65, 0.05, 0.25, 4.45, 0.15, 2.75, mats.glassClear);
-    addBox(groupFl1, 0.65, 0.0, 2.75, 4.45, 0.22, 3.6, mats.wallFacadeAccent);
-
-    // Rear Facade Opening to Kitchen & Patio
-    addBox(groupFl1, 0.0, 17.78, 0.25, 2.0, 18.0, 3.6, mats.wallWarmCream);
-    addBox(groupFl1, 3.8, 17.78, 0.25, 5.0, 18.0, 3.6, mats.wallWarmCream);
-    addBox(groupFl1, 2.0, 17.85, 1.1, 3.8, 17.95, 2.4, mats.glassClear);
-    addBox(groupFl1, 2.0, 17.78, 0.25, 3.8, 18.0, 1.1, mats.wallWarmCream);
-    addBox(groupFl1, 2.0, 17.78, 2.4, 3.8, 18.0, 3.6, mats.wallWarmCream);
-
-    // Interior Partitions Ground Floor
-    addBox(groupFl1, 0.22, 5.0, 0.25, 2.5, 5.15, 3.6, mats.wallWarmCream);
-    addBox(groupFl1, 0.22, 7.6, 0.25, 3.8, 7.75, 3.6, mats.wallWarmCream);
-    addBox(groupFl1, 3.65, 7.75, 0.25, 3.8, 11.4, 3.6, mats.wallWarmCream);
-    addBox(groupFl1, 0.22, 11.4, 0.25, 3.8, 11.55, 3.6, mats.wallWarmCream);
-    addBox(groupFl1, 3.65, 11.55, 0.25, 3.8, 14.5, 3.6, mats.wallWarmCream);
-    addBox(groupFl1, 0.22, 14.5, 0.25, 3.8, 14.65, 3.6, mats.wallWarmCream);
-
-    // Staircase & Giếng trời trung tâm
-    for (let i = 0; i < 18; i++) {
-      const sz = 0.25 + (i * 3.35 / 18);
-      const sy = 5.2 + (i * 2.2 / 18);
-      addBox(groupFl1, 0.3, sy, 0.25, 1.4, sy + 0.22, sz, mats.woodOak);
-    }
-    // Stair wooden balustrade
-    addBox(groupFl1, 1.35, 5.2, 1.2, 1.4, 7.4, 2.2, mats.woodOak);
-
-    // Rear WC & Covered Laundry
-    addBox(groupFl1, 0.2, 18.0, 0.2, 2.2, 20.2, 2.7, mats.wallWarmCream);
-    addBox(groupFl1, 0.3, 18.1, 0.21, 2.1, 20.1, 0.25, mats.floorBath);
-    addBox(groupFl1, 2.3, 18.0, 2.6, 5.0, 20.2, 2.7, mats.glassClear); // Glass laundry canopy
-
-    // --- INTERIOR FURNITURE (TẦNG 1 - PHÒNG KHÁCH HƯỚNG RA SÂN TRÀ & GIAN THỜ SONG SONG TV CÓ MÀN NGĂN) ---
-    // 1. Living Room L-Sofa at Front (Y = 0.55..3.25) — Ngồi Sofa nhìn thẳng ra bàn trà ngoài sân!
-    addBox(groupFl1, 0.45, 0.55, 0.25, 3.45, 3.30, 0.27, mats.wallWarmCream); // Woven Rug
-    addBox(groupFl1, 0.32, 0.55, 0.30, 1.26, 2.45, 0.40, mats.woodOak);
-    addBox(groupFl1, 0.32, 2.45, 0.30, 2.15, 3.25, 0.40, mats.woodOak);
-    addBox(groupFl1, 0.32, 0.55, 0.40, 0.52, 3.25, 1.02, mats.sofaFabric);
-    addBox(groupFl1, 0.32, 0.50, 0.40, 1.26, 0.70, 0.85, mats.sofaFabric);
-    addBox(groupFl1, 0.32, 3.08, 0.40, 1.55, 3.28, 0.85, mats.sofaFabric);
-    for (let sc = 0; sc < 3; sc++) {
-      const sy0 = 0.70 + sc * 0.58;
-      addBox(groupFl1, 0.52, sy0 + 0.01, 0.40, 1.25, sy0 + 0.57, 0.66, mats.sofaFabric);
-      addBox(groupFl1, 0.52, sy0 + 0.02, 0.66, 0.72, sy0 + 0.56, 1.06, mats.sofaFabric);
-      addBox(groupFl1, 0.72, sy0 + 0.12, 0.66, 0.88, sy0 + 0.44, 0.94, mats.sofaCushion);
-    }
-    addBox(groupFl1, 0.52, 2.46, 0.40, 2.12, 3.08, 0.66, mats.sofaFabric);
-    // Dual Coffee Tables + Vase + Books
-    addBox(groupFl1, 1.72, 1.15, 0.27, 2.48, 1.92, 0.64, mats.marble);
-    addBox(groupFl1, 2.15, 1.82, 0.27, 2.72, 2.38, 0.70, mats.woodOak);
-    addBox(groupFl1, 2.36, 2.02, 0.70, 2.50, 2.16, 0.96, mats.flowerPink);
-    // TV Media Wall, Fluted Wood Backdrop, Console, 65" OLED TV & Soundbar (Y = 1.38..3.28, facing -X)
-    addBox(groupFl1, 4.66, 1.38, 0.25, 4.76, 3.30, 3.45, mats.woodLouver);
-    addBox(groupFl1, 4.60, 1.55, 0.85, 4.66, 3.12, 2.95, mats.marble);
-    addBox(groupFl1, 4.10, 1.42, 0.40, 4.65, 3.26, 0.82, mats.woodOak);
-    addBox(groupFl1, 4.08, 1.40, 0.82, 4.66, 3.28, 0.86, mats.marble);
-    addBox(groupFl1, 4.35, 1.62, 1.02, 4.41, 3.06, 1.92, mats.pianoGloss);
-    addBox(groupFl1, 4.16, 1.90, 0.86, 4.24, 2.78, 0.92, mats.metalBlack);
-
-    // 2. GIAN THỜ PHẬT QUAN ÂM & GIA TIÊN (SONG SONG VỚI TV tại Y = 3.35..4.98, X = 3.28..4.76, Có Màn Ngăn Ấm Cúng Thiêng Liêng)
-    // Back Walnut Panel & Golden Halo
-    addBox(groupFl1, 4.68, 3.38, 0.25, 4.76, 4.96, 3.45, mats.woodDark);
-    const haloGeo = new THREE.CylinderGeometry(0.40, 0.40, 0.03, 24);
-    haloGeo.rotateZ(Math.PI / 2);
-    const haloMesh = new THREE.Mesh(haloGeo, mats.metalGold);
-    haloMesh.position.set(4.66, 2.12, 4.18);
-    groupFl1.add(haloMesh);
-
-    // 2 CNC Lattice Wing Screens (at Y = 3.35 separating from TV, and Y = 4.96)
-    [3.35, 4.96].forEach(wy => {
-      addBox(groupFl1, 3.28, wy - 0.03, 0.25, 3.36, wy + 0.03, 3.45, mats.woodDark);
-      addBox(groupFl1, 4.66, wy - 0.03, 0.25, 4.76, wy + 0.03, 3.45, mats.woodDark);
-      addBox(groupFl1, 3.28, wy - 0.03, 0.25, 4.76, wy + 0.03, 0.36, mats.woodDark);
-      addBox(groupFl1, 3.28, wy - 0.03, 3.32, 4.76, wy + 0.03, 3.45, mats.woodDark);
-      for (let s = 0; s < 11; s++) {
-        const sx = 3.42 + s * 0.115;
-        addBox(groupFl1, sx, wy - 0.015, 0.36, sx + 0.025, wy + 0.015, 3.32, mats.woodLouver);
+      const vy = 20.0 + r * 0.95;
+      addBox(groupSite, 0.5, vy, 0.15, 4.8, vy + 0.65, 0.42, mats.woodDark);
+      for (let vx = 0; vx < 8; vx++) {
+        const sx = 0.85 + vx * 0.5;
+        const sh = new THREE.Mesh(new THREE.SphereGeometry(0.14, 6, 6), vx % 2 === 0 ? mats.foliageLime : mats.foliageGreen);
+        sh.position.set(sx, 0.52, vy + 0.32);
+        groupSite.add(sh);
       }
-      for (let h = 0; h < 7; h++) {
-        const hz = 0.70 + h * 0.40;
-        addBox(groupFl1, 3.34, wy - 0.018, hz, 4.68, wy + 0.018, hz + 0.022, mats.woodLouver);
-      }
-    });
+    }
+    addTree(groupSite, 6.0, 21.2, 0.15, 1.2);
 
-    // Màn Ngăn Phòng Thờ Ấm Cúng Thiêng Liêng (Carved Valance + Bamboo Veil + Golden-Cream Draped Curtains + Hanging Lotus Lanterns)
-    addBox(groupFl1, 3.28, 3.35, 2.75, 3.36, 4.99, 3.45, mats.woodDark);     // Carved wooden valance
-    addBox(groupFl1, 3.27, 3.40, 2.78, 3.29, 4.94, 2.82, mats.metalGold);    // Gold trim
-    addBox(groupFl1, 3.31, 3.42, 2.38, 3.33, 4.92, 2.75, mats.woodLouver);   // Bamboo upper veil
-    // Left & Right Pleated Sanctuary Curtains with Gold Tie-backs
-    [3.58, 4.78].forEach(cyBase => {
-      for (let p = 0; p < 6; p++) {
-        const py = cyBase + (p - 2.5) * 0.055;
-        addBox(groupFl1, 3.28, py - 0.022, 0.27, 3.36, py + 0.022, 2.74, (p % 2 === 0) ? mats.sofaCushion : mats.wallWarmCream);
-      }
-      addBox(groupFl1, 3.26, cyBase - 0.16, 1.28, 3.38, cyBase + 0.16, 1.33, mats.metalGold);
-    });
-    // 2 Hanging Lotus Lanterns
-    [3.80, 4.56].forEach(ly => {
-      addBox(groupFl1, 3.35, ly - 0.06, 2.25, 3.45, ly + 0.06, 2.42, mats.metalGold);
-    });
+    // =========================================================================
+    // 5. FLOOR 1 ARCHITECTURE & INTERIOR (16m: Y = 0..16)
+    // =========================================================================
+    const Z1 = 0.25;
+    const H1 = 3.60;
+    addBox(groupFl1, 0, 0, 0.1, 5.0, 16.0, Z1, mats.floorTile);
 
-    // Two-Tier Carved Walnut Altar Table Inside Sanctuary (facing -X, parallel to TV!)
-    addBox(groupFl1, 3.92, 3.56, 1.30, 4.65, 4.80, 1.37, mats.woodDark);
-    addBox(groupFl1, 4.30, 3.68, 1.37, 4.66, 4.68, 1.54, mats.woodDark);
-    addBox(groupFl1, 4.02, 3.66, 0.35, 4.62, 4.70, 1.05, mats.woodOak);
-    // Golden Statue of Quan Yin Buddha on Lotus Pedestal + Lotus Vases + Incense Burner
-    const buddhaGeo = new THREE.ConeGeometry(0.15, 0.52, 12);
-    const buddha = new THREE.Mesh(buddhaGeo, mats.metalGold);
-    buddha.position.set(4.48, 1.82, 4.18);
+    // Walls
+    addBox(groupFl1, 0, 0, Z1, 0.22, 16.0, Z1 + 0.45, mats.wallWhite); // Cutaway left
+    addBox(groupFl1, 4.78, 0, Z1, 5.0, 16.0, H1, mats.wallWhite);      // Right exterior
+    addBox(groupFl1, 0, 0, Z1, 5.0, 0.22, H1, mats.wallWhite);         // Front
+    addBox(groupFl1, 0, 15.78, Z1, 5.0, 16.0, H1, mats.wallWhite);     // Rear
+
+    // Partitions
+    addBox(groupFl1, 0.22, 3.8, Z1, 3.72, 3.92, H1, mats.wallWhite);  // Living / Parents
+    addBox(groupFl1, 3.72, 3.8, Z1, 3.84, 7.2, H1, mats.wallWhite);   // Parents Hall
+    addBox(groupFl1, 0.22, 7.2, Z1, 3.72, 7.32, H1, mats.wallWhite);  // Parents / Stair
+    addBox(groupFl1, 0.22, 10.4, Z1, 2.6, 10.52, H1, mats.wallWhite); // Stair / Kitchen
+    addBox(groupFl1, 0.22, 14.2, Z1, 2.4, 14.32, H1, mats.wallWhite); // Kitchen / Bath
+    addBox(groupFl1, 2.4, 14.2, Z1, 2.52, 15.78, H1, mats.wallWhite); // Bath side
+
+    // Windows & Doors on Right Wall opening to 2m corridor
+    addBox(groupFl1, 4.76, 0.4, 0.85, 4.80, 1.4, 2.65, mats.glassClear);
+    addBox(groupFl1, 4.76, 4.6, 0.95, 4.80, 6.4, 2.55, mats.glassClear);
+    addBox(groupFl1, 4.76, 8.2, 0.95, 4.80, 9.8, 2.55, mats.glassClear);
+    addBox(groupFl1, 4.76, 11.2, 0.95, 4.80, 12.8, 2.55, mats.glassClear);
+
+    // Front Sliding Entrance Door (Y = 0..0.22)
+    addBox(groupFl1, 0.65, 0.08, Z1, 4.35, 0.14, 2.75, mats.glassClear);
+
+    // A. LIVING ROOM (Y = 0.3..3.8, X = 0.3..3.2)
+    addBox(groupFl1, 0.4, 0.5, Z1, 3.1, 3.4, Z1 + 0.015, mats.fabricWarm);
+    addBox(groupFl1, 0.35, 0.6, Z1 + 0.06, 1.15, 2.5, Z1 + 0.14, mats.woodOak);
+    addBox(groupFl1, 0.35, 2.5, Z1 + 0.06, 2.05, 3.25, Z1 + 0.14, mats.woodOak);
+    addBox(groupFl1, 0.35, 0.6, Z1 + 0.14, 0.55, 3.25, Z1 + 0.78, mats.fabricWarm);
+    addBox(groupFl1, 0.52, 0.65, Z1 + 0.14, 1.15, 2.45, Z1 + 0.42, mats.fabricWarm);
+    addBox(groupFl1, 0.52, 2.45, Z1 + 0.14, 2.00, 3.20, Z1 + 0.42, mats.fabricWarm);
+    // Coffee Table & TV Wall
+    addBox(groupFl1, 1.8, 1.4, Z1 + 0.02, 2.3, 2.1, Z1 + 0.42, mats.whiteMarble);
+    addBox(groupFl1, 2.9, 0.9, Z1 + 0.15, 3.15, 2.7, Z1 + 0.55, mats.woodOak);
+    addBox(groupFl1, 3.0, 1.1, Z1 + 0.75, 3.04, 2.5, Z1 + 1.60, mats.metalBlack);
+
+    // B. SACRED QUAN YIN ALTAR (X = 3.25..4.76, Y = 1.35..3.75)
+    // CNC Wooden screen
+    for (let s = 0; s < 8; s++) {
+      const sy = 1.45 + s * 0.28;
+      addBox(groupFl1, 3.25, sy, Z1, 3.29, sy + 0.04, 3.25, mats.woodDark);
+    }
+    // Altar Table & Quan Yin Statue
+    addBox(groupFl1, 3.9, 2.0, Z1 + 0.1, 4.65, 3.4, Z1 + 1.05, mats.woodDark);
+    addBox(groupFl1, 4.25, 2.2, Z1 + 1.05, 4.65, 3.2, Z1 + 1.25, mats.woodDark);
+    // Golden Statue & Halo
+    const lotusBase = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.2, 0.1, 12), mats.gold);
+    lotusBase.position.set(4.45, Z1 + 1.30, 2.7);
+    groupFl1.add(lotusBase);
+    const buddha = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.45, 12), mats.gold);
+    buddha.position.set(4.45, Z1 + 1.55, 2.7);
     groupFl1.add(buddha);
-    addBox(groupFl1, 4.42, 3.76, 1.54, 4.54, 3.88, 1.86, mats.flowerPink);
-    addBox(groupFl1, 4.42, 4.48, 1.54, 4.54, 4.60, 1.86, mats.flowerPink);
-    addBox(groupFl1, 4.06, 4.10, 1.37, 4.20, 4.26, 1.52, mats.metalGold);
-    // Kneeling Prayer Mat (Bồ đoàn)
-    addBox(groupFl1, 2.85, 3.65, 0.25, 3.85, 4.70, 0.27, mats.flowerPink);
-    addBox(groupFl1, 2.98, 4.00, 0.27, 3.32, 4.36, 0.36, mats.sofaCushion);
+    const halo = new THREE.Mesh(new THREE.CylinderGeometry(0.38, 0.38, 0.02, 24), mats.ledGlow);
+    halo.rotation.z = Math.PI / 2;
+    halo.position.set(4.66, Z1 + 1.82, 2.7);
+    groupFl1.add(halo);
+    // Incense & Fruit
+    addBox(groupFl1, 4.05, 2.65, Z1 + 1.05, 4.15, 2.75, Z1 + 1.18, mats.gold);
+    addBox(groupFl1, 4.05, 2.30, Z1 + 1.05, 4.15, 2.40, Z1 + 1.12, mats.woodDark);
+    // Kneeling cushion
+    const prayerPad = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.08, 16), mats.fabricMustard);
+    prayerPad.position.set(3.55, Z1 + 0.05, 2.7);
+    groupFl1.add(prayerPad);
 
-    // Parents Bedroom (Tầng trệt - Giường Queen chi tiết, 2 tab đèn ngủ, Tủ áo kịch trần)
-    createDetailedBed(groupFl1, 1.35, 9.45, 0.25, 1.65, 2.0, mats.sofaCushion);
-    addBox(groupFl1, 0.35, 10.75, 0.25, 2.55, 11.33, 2.80, mats.woodOak); // Wardrobe
-    addBox(groupFl1, 1.85, 7.70, 0.25, 3.25, 8.15, 1.05, mats.woodOak);   // Dresser
+    // C. PARENTS' BEDROOM (Y = 3.8..7.2, X = 0.22..3.72)
+    addBox(groupFl1, 0.45, 4.5, Z1, 2.45, 6.5, Z1 + 0.55, mats.fabricWarm); // Bed
+    addBox(groupFl1, 0.40, 4.4, Z1, 0.48, 6.6, Z1 + 1.15, mats.woodOak);   // Headboard
+    addBox(groupFl1, 0.35, 6.75, Z1, 2.2, 7.15, Z1 + 2.5, mats.woodOak);   // Wardrobe
 
-    // Reading & Guest Memory Room (Kệ sách kịch trần 5 khoang + 60 cuốn sách, Daybed, Bàn học)
-    addBox(groupFl1, 0.35, 11.58, 0.25, 3.15, 11.95, 2.85, mats.woodOak);
-    for (let sh = 1; sh <= 5; sh++) {
-      const sz = 0.25 + sh * 0.42;
-      for (let bk = 0; bk < 12; bk++) {
-        const bx = 0.45 + bk * 0.21;
-        const bMat = [mats.flowerPink, mats.bedRunner, mats.sofaCushion, mats.foliageGreen][bk % 4];
-        addBox(groupFl1, bx, 11.62, sz, bx + 0.14, 11.92, sz + 0.28, bMat);
-      }
+    // D. STAIRCASE & STUDY / GUEST DAYBED (Y = 7.2..10.4)
+    // Stairs U-turn
+    for (let s = 0; s < 10; s++) {
+      const sy = 7.25 + s * 0.20;
+      const sz = Z1 + (s + 1) * 0.177;
+      addBox(groupFl1, 0.24, sy, sz - 0.04, 1.18, sy + 0.22, sz, mats.woodOak);
     }
-    addBox(groupFl1, 0.35, 13.38, 0.25, 2.25, 14.28, 0.72, mats.sofaFabric); // Daybed
-    addBox(groupFl1, 2.85, 12.45, 0.25, 3.45, 13.70, 0.98, mats.woodOak);    // Study desk
+    addBox(groupFl1, 0.24, 9.25, 1.96, 2.22, 9.85, 2.04, mats.woodOak); // Landing
+    addBox(groupFl1, 1.18, 7.25, Z1 + 0.2, 1.20, 9.25, Z1 + 1.25, mats.glassClear);
+    // Bookshelves & Daybed for overnight guests
+    addBox(groupFl1, 3.45, 7.5, Z1, 3.70, 9.8, 2.65, mats.woodOak);
+    for (let sh = 0; sh < 5; sh++) {
+      addBox(groupFl1, 3.46, 7.52, Z1 + 0.45 + sh * 0.44, 3.69, 9.78, Z1 + 0.48 + sh * 0.44, mats.woodOak);
+    }
+    // Daybed
+    addBox(groupFl1, 1.35, 7.6, Z1, 2.35, 9.2, Z1 + 0.45, mats.fabricWarm);
+    addBox(groupFl1, 1.38, 8.4, Z1 + 0.45, 2.32, 9.18, Z1 + 0.48, mats.fabricMustard);
 
-    // Open Kitchen, Pastry Baking Island & 6-Seat Dining Table
-    // Fridge + Oven Tower
-    addBox(groupFl1, 0.24, 14.68, 0.25, 0.98, 15.42, 2.10, mats.metalStainless);
-    addBox(groupFl1, 0.24, 15.44, 0.25, 0.88, 16.05, 2.55, mats.woodOak);
-    // Main L-Counter + Upper Cabinets + Sink + Hob
-    addBox(groupFl1, 0.24, 16.05, 0.25, 0.92, 17.75, 1.12, mats.marble);
-    addBox(groupFl1, 0.92, 17.08, 0.25, 2.95, 17.75, 1.12, mats.marble);
-    addBox(groupFl1, 0.24, 16.05, 1.80, 0.62, 17.75, 2.55, mats.wallWhite);
-    // Pastry Baking Island with Stand Mixer, Croissant Tray & Cake Dome
-    addBox(groupFl1, 1.60, 14.84, 0.25, 3.30, 15.50, 1.12, mats.woodOak);
-    addBox(groupFl1, 1.54, 14.78, 1.12, 3.36, 15.62, 1.18, mats.marble);
-    addBox(groupFl1, 1.78, 15.05, 1.18, 2.08, 15.28, 1.52, mats.flowerPink); // Stand Mixer
-    addBox(groupFl1, 2.80, 14.92, 1.18, 3.22, 15.26, 1.22, mats.metalBlack); // Croissant Tray
-    addBox(groupFl1, 2.38, 15.35, 1.18, 2.60, 15.55, 1.42, mats.bedLinen);   // Cake Stand
-    // 6-Seat Dining Table & Chairs
-    addBox(groupFl1, 2.65, 15.95, 0.96, 4.45, 16.85, 1.02, mats.woodOak);
-    [2.98, 3.55, 4.12].forEach(cx => {
-      addBox(groupFl1, cx - 0.20, 15.55, 0.25, cx + 0.20, 15.90, 0.72, mats.woodOak);
-      addBox(groupFl1, cx - 0.20, 16.90, 0.25, cx + 0.20, 17.25, 0.72, mats.woodOak);
+    // E. KITCHEN & DINING ROOM (Y = 10.4..14.2)
+    // L-Kitchen
+    addBox(groupFl1, 0.35, 10.6, Z1, 1.05, 14.1, Z1 + 0.86, mats.woodOak);
+    addBox(groupFl1, 0.32, 10.55, Z1 + 0.86, 1.08, 14.15, Z1 + 0.90, mats.whiteMarble);
+    addBox(groupFl1, 0.35, 13.35, Z1, 1.15, 14.15, Z1 + 1.95, mats.metalStainless); // Fridge
+    // Baking Island
+    addBox(groupFl1, 1.48, 11.85, Z1, 2.62, 13.15, Z1 + 0.86, mats.woodOak);
+    addBox(groupFl1, 1.42, 11.80, Z1 + 0.86, 2.68, 13.20, Z1 + 0.90, mats.whiteMarble);
+    // Stand Mixer & Pastry board
+    addBox(groupFl1, 1.65, 12.1, Z1 + 0.90, 1.85, 12.35, Z1 + 1.15, mats.fabricMustard);
+    addBox(groupFl1, 2.1, 12.2, Z1 + 0.90, 2.5, 12.8, Z1 + 0.92, mats.metalStainless);
+    // Dining Table (Aligned with sightline to front!)
+    addBox(groupFl1, 3.25, 11.4, Z1 + 0.72, 4.35, 13.0, Z1 + 0.76, mats.woodOak);
+    [3.35, 4.25].forEach(lx => {
+      [11.5, 12.9].forEach(ly => {
+        addBox(groupFl1, lx - 0.03, ly - 0.03, Z1, lx + 0.03, ly + 0.03, Z1 + 0.72, mats.woodDark);
+      });
+    });
+    // Dining Chairs
+    [11.7, 12.2, 12.7].forEach(cy => {
+      addBox(groupFl1, 2.9, cy - 0.18, Z1, 3.2, cy + 0.18, Z1 + 0.75, mats.fabricWarm);
+      addBox(groupFl1, 4.4, cy - 0.18, Z1, 4.7, cy + 0.18, Z1 + 0.75, mats.fabricWarm);
     });
 
-    // ------------------------------------------
-    // 3. FLOOR 2 (LẦU 1) - ARCHITECTURE & MASTER SUITE
-    // ------------------------------------------
-    addBox(groupFl2, 0, -1.8, 3.6, 5, 5.2, 3.8, mats.floorWood);
-    addBox(groupFl2, 2.2, 5.2, 3.6, 5, 7.4, 3.8, mats.floorWood);
-    addBox(groupFl2, 0, 7.4, 3.6, 5, 18, 3.8, mats.floorWood);
+    // F. BATHROOM & REAR PORCH
+    addBox(groupFl1, 0.25, 14.3, Z1, 2.35, 15.7, Z1 + 0.85, mats.wallWhite); // Vanity & Shower
+    addBox(groupFl1, 1.1, 14.3, Z1, 1.12, 15.7, Z1 + 2.1, mats.glassClear);  // Shower glass
+    // Rear breeze-catching table & Scooter
+    addBox(groupFl1, 3.2, 14.6, Z1 + 0.65, 3.8, 15.2, Z1 + 0.70, mats.woodOak);
+    addBox(groupFl1, 4.2, 14.5, Z1, 4.5, 15.4, Z1 + 0.85, mats.wallWhite);  // Scooter
 
-    // Front Balcony (Ngắm sao & Tắm trăng)
-    addBox(groupFl2, 0, -1.8, 3.8, 5, 0, 3.82, mats.floorPaver);
-    addBox(groupFl2, 0, -1.8, 3.82, 5, -1.75, 4.95, mats.glassBalcony); // Glass balustrade
-    addBox(groupFl2, 0, -1.8, 4.92, 5, -1.73, 4.97, mats.metalBronze);  // Handrail
-    // Balcony Rattan Lounge Chairs (Fixed Z coordinates!)
-    addBox(groupFl2, 0.55, -1.35, 3.82, 1.35, -0.50, 4.18, mats.woodOak);
-    addBox(groupFl2, 0.60, -1.30, 4.18, 1.30, -0.55, 4.28, mats.bedLinen);
-    addBox(groupFl2, 1.85, -1.35, 3.82, 2.65, -0.50, 4.18, mats.woodOak);
-    addBox(groupFl2, 1.90, -1.30, 4.18, 2.60, -0.55, 4.28, mats.bedLinen);
-    // Planters on Balcony
-    createPottedPlant(groupFl2, 3.8, -1.2, 3.82, 0.28, 0.8);
-    createPottedPlant(groupFl2, 4.5, -1.2, 3.82, 0.25, 0.7);
+    // =========================================================================
+    // 6. FLOOR 2 ARCHITECTURE & MASTER SUITE (Y = 0..16 + Balconies)
+    // =========================================================================
+    const Z2 = 3.85;
+    const H2 = 7.20;
+    addBox(groupFl2, 0, -1.6, Z2 - 0.15, 5.0, 18.0, Z2, mats.floorTile);
 
-    // Master Bedroom Sliding Glass Door
-    addBox(groupFl2, 0.8, 0.05, 3.8, 4.2, 0.15, 6.4, mats.glassClear);
-    addBox(groupFl2, 0, 0, 3.8, 0.8, 0.22, 7.2, mats.wallWarmCream);
-    addBox(groupFl2, 4.2, 0, 3.8, 5, 0.22, 7.2, mats.wallWarmCream);
+    // Walls
+    addBox(groupFl2, 0, 0, Z2, 0.22, 16.0, Z2 + 0.45, mats.wallWhite); // Cutaway left
+    addBox(groupFl2, 4.78, 0, Z2, 5.0, 16.0, H2, mats.wallWhite);      // Right exterior
+    addBox(groupFl2, 0, 0, Z2, 5.0, 0.22, H2, mats.wallWhite);         // Front
+    addBox(groupFl2, 0, 15.78, Z2, 5.0, 16.0, H2, mats.wallWhite);     // Rear
 
-    // Walls Floor 2
-    addBox(groupFl2, 0, 0, 3.8, 0.22, 18, 7.2, mats.wallWarmCream);
-    addBox(groupFl2, 4.78, 0, 3.8, 5, 18, 7.2, mats.wallWarmCream);
-    // Side Windows for bedrooms opening to 2m corridor
-    addBox(groupFl2, 4.86, 1.8, 4.8, 4.94, 3.5, 6.3, mats.glassClear); // Master
-    addBox(groupFl2, 4.86, 8.5, 4.8, 4.94, 10.5, 6.3, mats.glassClear); // Chị Hai
-    addBox(groupFl2, 4.86, 12.2, 4.8, 4.94, 14.0, 6.3, mats.glassClear); // Em Út
+    // Front & Rear Glass Railings
+    addBox(groupFl2, 0, -1.6, Z2, 5.0, -1.55, Z2 + 1.15, mats.glassBronze);
+    addBox(groupFl2, 0, 17.95, Z2, 5.0, 18.0, Z2 + 1.15, mats.glassBronze);
 
-    // Partitions Floor 2
-    addBox(groupFl2, 0.22, 5.2, 3.8, 3.5, 5.35, 7.2, mats.wallWarmCream);
-    // Master En-suite Bathroom (Bathtub, Glass Shower, Vanity, Mirror)
-    addBox(groupFl2, 3.0, 3.4, 3.8, 3.15, 5.2, 7.0, mats.wallWarmCream);
-    addBox(groupFl2, 3.0, 3.4, 3.8, 4.8, 3.55, 7.0, mats.wallWarmCream);
-    addBox(groupFl2, 3.15, 3.55, 3.81, 4.78, 5.2, 3.85, mats.floorBath);
-    addBox(groupFl2, 3.3, 3.7, 3.85, 4.0, 4.5, 5.8, mats.glassClear);
-    addBox(groupFl2, 3.4, 4.55, 3.85, 4.65, 5.12, 4.42, mats.wallWhite); // Freestanding Bathtub
-    addBox(groupFl2, 4.2, 3.65, 3.85, 4.72, 4.35, 4.65, mats.woodOak);   // Vanity
+    // Partitions
+    addBox(groupFl2, 0.22, 3.8, Z2, 3.72, 3.92, H2, mats.wallWhite);  // Youngest / Older
+    addBox(groupFl2, 3.72, 0.0, Z2, 3.84, 7.2, H2, mats.wallWhite);   // Sisters Hall
+    addBox(groupFl2, 0.22, 7.2, Z2, 3.72, 7.32, H2, mats.wallWhite);  // Older / Stair
+    addBox(groupFl2, 2.4, 7.4, Z2, 4.78, 7.52, H2, mats.wallWhite);   // Shared Bath front
+    addBox(groupFl2, 2.4, 7.4, Z2, 2.52, 9.4, H2, mats.wallWhite);    // Shared Bath side
+    addBox(groupFl2, 0.22, 10.4, Z2, 4.78, 10.52, H2, mats.wallWhite);// Master suite entry
+    addBox(groupFl2, 2.7, 13.8, Z2, 4.78, 13.92, H2, mats.wallWhite); // Master bath front
+    addBox(groupFl2, 2.7, 13.8, Z2, 2.82, 15.78, H2, mats.wallWhite); // Master bath side
 
-    // Bedrooms 4 & 5 Partitions
-    addBox(groupFl2, 0.22, 7.6, 3.8, 3.8, 7.75, 7.2, mats.wallWarmCream);
-    addBox(groupFl2, 3.65, 7.75, 3.8, 3.8, 11.4, 7.2, mats.wallWarmCream);
-    addBox(groupFl2, 0.22, 11.4, 3.8, 3.8, 11.55, 7.2, mats.wallWarmCream);
-    addBox(groupFl2, 3.65, 11.55, 3.8, 3.8, 14.8, 7.2, mats.wallWarmCream);
-    addBox(groupFl2, 0.22, 14.8, 3.8, 5.0, 14.95, 7.2, mats.wallWarmCream);
+    // Windows on Right Wall
+    addBox(groupFl2, 4.76, 0.6, Z2 + 0.95, 4.80, 2.2, Z2 + 2.45, mats.glassClear);
+    addBox(groupFl2, 4.76, 4.6, Z2 + 0.95, 4.80, 6.2, Z2 + 2.45, mats.glassClear);
+    addBox(groupFl2, 4.76, 11.2, Z2 + 0.95, 4.80, 14.2, Z2 + 2.45, mats.glassClear);
 
-    // Rear Balcony (Tập Gym: Máy chạy bộ, Ghế tập tạ & Giàn phơi an toàn)
-    addBox(groupFl2, 0, 15.0, 3.8, 5.0, 18.0, 3.82, mats.floorPaver);
-    addBox(groupFl2, 0, 17.9, 3.82, 5.0, 18.0, 5.3, mats.glassBalcony);
-    addBox(groupFl2, 0.55, 15.65, 3.82, 1.35, 17.35, 4.02, mats.metalBlack); // Treadmill deck
-    addBox(groupFl2, 0.55, 17.05, 4.02, 1.35, 17.32, 5.15, mats.metalBlack); // Treadmill console
-    addBox(groupFl2, 1.85, 15.80, 3.82, 2.35, 17.05, 4.28, mats.woodDark);   // Workout bench
+    // Front Stargazing Balcony (Y = -1.6..0)
+    addBox(groupFl2, 1.2, -1.25, Z2, 1.8, -0.65, Z2 + 0.75, mats.fabricWarm);
+    addBox(groupFl2, 3.2, -1.25, Z2, 3.8, -0.65, Z2 + 0.75, mats.fabricWarm);
+    addBox(groupFl2, 2.3, -1.05, Z2, 2.7, -0.65, Z2 + 0.45, mats.woodOak);
 
-    // --- PHÒNG MASTER CỦA BẠN (ĐÀN PIANO 88 PHÍM, YOGA & GIƯỜNG KING) ---
-    createDetailedBed(groupFl2, 1.30, 3.35, 3.82, 1.75, 2.05, mats.bedRunner);
-    createDetailedPiano(groupFl2, 0.45, 1.06, 3.82);
-    // Yoga & Meditation Mat + Zafu Cushion + Singing Bowl + Full Mirror
-    addBox(groupFl2, 3.35, 0.65, 3.82, 4.05, 2.45, 3.85, mats.yogaMat);
-    addBox(groupFl2, 3.50, 2.60, 3.82, 3.90, 2.95, 3.98, mats.foliageGreen);
-    addBox(groupFl2, 4.55, 1.35, 3.82, 4.65, 2.05, 5.60, mats.metalGold);
-    // Walk-in Glass Wardrobe
-    addBox(groupFl2, 0.28, 4.65, 3.82, 2.22, 5.15, 6.45, mats.woodOak);
+    // Youngest Sister Bed (Y = 0.5..3.5)
+    addBox(groupFl2, 0.45, 1.0, Z2, 2.45, 2.8, Z2 + 0.55, mats.fabricWarm);
+    addBox(groupFl2, 0.35, 3.15, Z2, 2.2, 3.65, Z2 + 2.5, mats.woodOak);
+    addBox(groupFl2, 3.0, 1.5, Z2, 3.6, 2.7, Z2 + 0.75, mats.woodOak); // Desk
 
-    // Bedrooms Chị Hai & Em Út Detailed Furniture
-    createDetailedBed(groupFl2, 1.35, 9.30, 3.82, 1.60, 2.0, mats.flowerPink);
-    addBox(groupFl2, 0.35, 10.62, 3.82, 2.50, 11.35, 6.35, mats.woodOak);
-    addBox(groupFl2, 2.95, 8.65, 3.82, 3.55, 9.85, 4.58, mats.woodOak);
+    // Older Sister Bed (Y = 4.2..6.8)
+    addBox(groupFl2, 0.45, 4.5, Z2, 2.45, 6.3, Z2 + 0.55, mats.fabricWarm);
+    addBox(groupFl2, 0.35, 6.55, Z2, 2.2, 7.05, Z2 + 2.5, mats.woodOak);
+    addBox(groupFl2, 3.0, 5.0, Z2, 3.6, 6.2, Z2 + 0.75, mats.woodOak); // Desk
 
-    createDetailedBed(groupFl2, 1.35, 12.95, 3.82, 1.60, 2.0, mats.foliageGreen);
-    addBox(groupFl2, 0.35, 14.25, 3.82, 2.50, 14.78, 6.35, mats.woodOak);
-    addBox(groupFl2, 2.95, 12.35, 3.82, 3.55, 13.55, 4.58, mats.woodOak);
+    // Shared Bath Floor 2 (Y = 7.5..9.3)
+    addBox(groupFl2, 2.6, 7.6, Z2, 4.6, 9.2, Z2 + 0.85, mats.wallWhite);
 
-    // ------------------------------------------
-    // 4. ROOF SLAB & SOLAR ENERGY SYSTEM
-    // ------------------------------------------
-    addBox(groupRoof, 0, -1.8, 7.2, 5, 5.4, 7.35, mats.wallWarmCream);
-    addBox(groupRoof, 2.0, 5.4, 7.2, 5, 7.2, 7.35, mats.wallWarmCream);
-    addBox(groupRoof, 0, 7.2, 7.2, 5, 18, 7.35, mats.wallWarmCream);
+    // MASTER SUITE (Y = 10.5..16.0)
+    // 1. UPRIGHT PIANO (facing +X against wall at X = 0.35, Y = 11.8)
+    function createPiano(parent, x, y, z) {
+      const p = new THREE.Group();
+      p.position.set(x, z, y);
+      p.rotation.y = Math.PI / 2;
+      addBox(p, -0.74, -0.21, 0.04, 0.74, 0.21, 1.20, mats.pianoGloss); // Body
+      addBox(p, -0.72, 0.19, 0.68, 0.72, 0.45, 0.76, mats.pianoGloss);  // Keybed
+      addBox(p, -0.60, 0.21, 0.76, 0.60, 0.42, 0.785, mats.wallWhite);  // Keys
+      addBox(p, -0.32, 0.20, 0.88, 0.32, 0.22, 1.08, mats.pianoGloss);  // Music stand
+      addBox(p, -0.24, 0.22, 0.90, 0.24, 0.23, 1.06, mats.wallCream);   // Sheet music
+      // Bench
+      addBox(p, -0.38, 0.65, 0.0, 0.38, 0.95, 0.48, mats.woodDark);
+      parent.add(p);
+    }
+    createPiano(groupFl2, 0.35, 11.8, Z2);
 
-    // Parapet Wall (Chống bão)
-    addBox(groupRoof, -0.1, -1.9, 7.35, 5.1, -1.75, 8.1, mats.wallWarmCream);
-    addBox(groupRoof, -0.1, -1.9, 7.35, 0.05, 18.1, 8.1, mats.wallWarmCream);
-    addBox(groupRoof, 4.95, -1.9, 7.35, 5.1, 18.1, 8.1, mats.wallWarmCream);
-    addBox(groupRoof, -0.1, 17.95, 7.35, 5.1, 18.1, 8.1, mats.wallWarmCream);
+    // 2. YOGA & MEDITATION STUDIO (X = 0.8..2.2, Y = 13.2..15.2)
+    addBox(groupFl2, 0.85, 13.2, Z2, 1.65, 15.0, Z2 + 0.015, mats.fabricWarm); // Cork mat
+    const zafu = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.1, 16), mats.fabricMustard);
+    zafu.position.set(1.25, Z2 + 0.05, 14.7);
+    groupFl2.add(zafu);
+    const singingBowl = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.09, 0.08, 12), mats.gold);
+    singingBowl.position.set(1.65, Z2 + 0.05, 14.7);
+    groupFl2.add(singingBowl);
+    addBox(groupFl2, 0.36, 13.6, Z2 + 0.2, 0.38, 14.6, Z2 + 1.85, mats.whiteMarble); // Mirror
 
-    // Central Glass Skylight with Air-venting Louvers
-    addBox(groupRoof, 0.35, 5.35, 7.35, 2.05, 7.25, 7.8, mats.metalBlack);
-    addBox(groupRoof, 0.3, 5.3, 7.8, 2.1, 7.3, 7.9, mats.glassClear);
+    // 3. KING BED & MASTER WARDROBE
+    addBox(groupFl2, 1.7, 11.0, Z2, 3.7, 13.0, Z2 + 0.55, mats.fabricWarm); // King Bed
+    addBox(groupFl2, 1.6, 10.9, Z2, 3.8, 11.0, Z2 + 1.25, mats.woodOak);    // Headboard
+    addBox(groupFl2, 3.85, 10.6, Z2, 4.7, 13.2, Z2 + 2.55, mats.glassBronze); // Glass Wardrobe
 
-    // Stainless Steel 1500L Water Tank
-    const tankGeo = new THREE.CylinderGeometry(0.65, 0.65, 1.6, 16);
-    tankGeo.rotateZ(Math.PI / 2);
-    const tank = new THREE.Mesh(tankGeo, mats.metalStainless);
-    tank.position.set(1.2, 8.15, 12.8);
-    tank.castShadow = true;
+    // 4. MASTER EN-SUITE BATHROOM
+    addBox(groupFl2, 2.9, 14.0, Z2, 4.6, 15.6, Z2 + 0.85, mats.whiteMarble); // Luxury fixtures
+
+    // REAR BALCONY (Y = 16..18) - Gym, Moon-bathing & Smart drying
+    addBox(groupFl2, 0.55, 16.3, Z2 + 0.06, 1.35, 17.65, Z2 + 0.18, mats.metalBlack); // Treadmill
+    addBox(groupFl2, 0.55, 17.45, Z2 + 1.15, 1.35, 17.70, Z2 + 1.35, mats.metalBlack);
+    // Drying rack & clothes
+    addBox(groupFl2, 3.2, 16.5, H2 - 0.75, 4.4, 16.52, H2 - 0.73, mats.metalStainless);
+    addBox(groupFl2, 3.3, 16.48, H2 - 1.45, 3.7, 16.54, H2 - 0.78, mats.wallWhite);
+    addBox(groupFl2, 3.9, 16.48, H2 - 1.45, 4.3, 16.54, H2 - 0.78, mats.fabricMustard);
+
+    // =========================================================================
+    // 7. ROOF & SOLAR TECHNICAL (Z = 7.35)
+    // =========================================================================
+    const ZR = 7.35;
+    addBox(groupRoof, -0.15, -0.15, ZR, 5.15, 16.15, ZR + 0.15, mats.wallWhite);
+    addBox(groupRoof, 1.6, 7.8, ZR + 0.15, 3.4, 9.4, ZR + 0.45, mats.glassClear); // Skylight
+
+    // 1500L Stainless Tank & Thái Dương Năng
+    const tank = new THREE.Mesh(new THREE.CylinderGeometry(0.65, 0.65, 1.4, 16), mats.metalStainless);
+    tank.rotation.z = Math.PI / 2;
+    tank.position.set(1.25, ZR + 0.95, 13.5);
     groupRoof.add(tank);
+    addBox(groupRoof, 2.4, 13.2, ZR + 0.95, 3.8, 13.6, ZR + 1.35, mats.metalStainless);
+    addBox(groupRoof, 2.45, 13.6, ZR + 0.30, 3.75, 15.0, ZR + 0.95, mats.metalBlack);
 
-    // Solar Water Heater (Thái Dương Năng)
-    addBox(groupRoof, 2.2, 12.0, 7.35, 4.5, 13.8, 8.2, mats.metalStainless);
-
-    // Solar PV Panels (Pin năng lượng mặt trời tiết kiệm điện)
-    for (let sp = 0; sp < 4; sp++) {
-      const spy = 14.3 + (sp * 0.85);
-      const panel = addBox(groupRoof, 0.6, spy, 7.45, 4.4, spy + 0.75, 7.6, mats.solarPanel);
-      panel.rotation.x = -0.1;
+    // Solar PV Panels
+    for (let p = 0; p < 3; p++) {
+      const py = 2.5 + p * 1.55;
+      addBox(groupRoof, 0.6, py, ZR + 0.2, 2.2, py + 1.35, ZR + 0.3, mats.metalBlack);
+      addBox(groupRoof, 2.8, py, ZR + 0.2, 4.4, py + 1.35, ZR + 0.3, mats.metalBlack);
     }
 
-    // Modern Wooden Sunshade Louvers on Front Facade (Lam chắn nắng hướng Tây sáng)
-    for (let l = 0; l < 8; l++) {
-      const lz = 4.0 + (l * 0.38);
-      addBox(groupRoof, 0.6, -0.3, lz, 4.4, -0.15, lz + 0.08, mats.woodLouver);
-    }
+    // Hide loader when scene ready
+    setTimeout(() => {
+      const loader = document.getElementById('loader');
+      loader.style.opacity = '0';
+      setTimeout(() => loader.style.display = 'none', 500);
+    }, 400);
 
-    // Hide loader
-    document.getElementById('loader').style.opacity = '0';
-    setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 500);
-
-    // ==========================================
-    // INTERACTION & CAMERA ANIMATION
-    // ==========================================
-    function setViewMode(mode, btn) {
-      document.querySelectorAll('.dock .btn').forEach(b => b.classList.remove('active'));
-      if (btn) btn.classList.add('active');
-
-      if (mode === 'all') {
-        groupSite.visible = true;
-        groupFl1.visible = true;
-        groupFl2.visible = true;
-        groupRoof.visible = true;
-      } else if (mode === 'fl1') {
-        groupSite.visible = true;
-        groupFl1.visible = true;
-        groupFl2.visible = false;
-        groupRoof.visible = false;
-        animateCameraTo(2.5, 12, 9, 2.5, 0, 9);
-      } else if (mode === 'fl2') {
-        groupSite.visible = false;
-        groupFl1.visible = false;
-        groupFl2.visible = true;
-        groupRoof.visible = false;
-        animateCameraTo(2.5, 14, 9, 2.5, 4.5, 9);
-      } else if (mode === 'roof') {
-        groupSite.visible = true;
-        groupFl1.visible = true;
-        groupFl2.visible = true;
-        groupRoof.visible = true;
-        animateCameraTo(2.5, 16, 14, 2.5, 7.5, 14);
-      }
-    }
-
+    // =========================================================================
+    // 8. INTERACTIVE VIEW CONTROLS & CAMERA ANIMATIONS
+    // =========================================================================
     function animateCameraTo(cx, cy, cz, tx, ty, tz, duration = 1200) {
       new TWEEN.Tween(camera.position)
         .to({ x: cx, y: cy, z: cz }, duration)
         .easing(TWEEN.Easing.Cubic.Out)
         .start();
-
       new TWEEN.Tween(controls.target)
         .to({ x: tx, y: ty, z: tz }, duration)
         .easing(TWEEN.Easing.Cubic.Out)
         .start();
     }
 
-    function flyTo(spot) {
-      if (spot === 'front') {
-        animateCameraTo(2.5, 3.2, -15, 2.5, 3.5, 0);
-      } else if (spot === 'porch') {
-        animateCameraTo(4.2, 1.8, -5.2, 3.75, 0.9, -2.35);
-      } else if (spot === 'living') {
-        setViewMode('fl1');
-        animateCameraTo(1.2, 1.8, 1.8, 3.8, 1.3, 2.2);
-      } else if (spot === 'kitchen') {
-        setViewMode('fl1');
-        animateCameraTo(2.5, 3.0, 13.5, 2.5, 1.5, 16.5);
-      } else if (spot === 'master') {
-        setViewMode('fl2');
-        animateCameraTo(2.5, 6.2, -1.5, 2.5, 4.8, 3.2);
-      } else if (spot === 'corridor') {
-        animateCameraTo(6.0, 2.5, -4.0, 6.0, 2.0, 9.0);
+    function setFloorMode(mode) {
+      document.querySelectorAll('.bottom-bar .ctrl-btn').forEach(b => b.classList.remove('active'));
+      const activeBtn = document.getElementById('btn-' + mode);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      document.getElementById('explodeSlider').value = 0;
+      groupFl1.position.y = 0;
+      groupFl2.position.y = 0;
+      groupRoof.position.y = 0;
+
+      if (mode === 'all') {
+        groupSite.visible = true;
+        groupFl1.visible = true;
+        groupFl2.visible = true;
+        groupRoof.visible = true;
+        animateCameraTo(-26, 24, -14, 3.5, 3.5, 8.0);
+      } else if (mode === 'fl1') {
+        groupSite.visible = true;
+        groupFl1.visible = true;
+        groupFl2.visible = false;
+        groupRoof.visible = false;
+        animateCameraTo(-12, 16, 8.0, 2.5, 1.8, 8.0);
+      } else if (mode === 'fl2') {
+        groupSite.visible = false;
+        groupFl1.visible = false;
+        groupFl2.visible = true;
+        groupRoof.visible = false;
+        animateCameraTo(-12, 18, 8.0, 2.5, 5.2, 8.0);
+      } else if (mode === 'roof') {
+        groupSite.visible = true;
+        groupFl1.visible = true;
+        groupFl2.visible = true;
+        groupRoof.visible = true;
+        animateCameraTo(3.5, 24, 8.0, 3.5, 7.5, 8.0);
       }
     }
 
-    function focusRoom(room) {
-      if (room === 'master') {
-        setViewMode('fl2');
-        animateCameraTo(1.2, 5.8, 1.0, 1.0, 4.4, 4.2); // Look directly at Piano
-      } else if (room === 'altar') {
-        setViewMode('fl1');
-        animateCameraTo(1.5, 1.8, 3.8, 4.2, 1.6, 4.18);
-      } else if (room === 'living') {
-        flyTo('living');
-      } else if (room === 'kitchen') {
-        flyTo('kitchen');
-      } else if (room === 'parents') {
-        setViewMode('fl1');
-        animateCameraTo(3.5, 3.0, 8.5, 1.5, 1.5, 9.5);
-      } else if (room === 'reading') {
-        setViewMode('fl1');
-        animateCameraTo(3.5, 3.0, 12.0, 1.5, 1.5, 13.0);
-      } else if (room === 'sisters') {
-        setViewMode('fl2');
-        animateCameraTo(4.2, 6.5, 10.0, 1.5, 4.8, 11.0);
-      } else if (room === 'garden') {
-        animateCameraTo(3.5, 4.5, 25.0, 3.5, 1.0, 20.0);
-      }
-    }
-
-    function onExplode(val) {
+    function onExplodeChange(val) {
       const v = parseFloat(val);
-      groupFl2.position.y = v * 1.3;
-      groupRoof.position.y = v * 2.8;
+      groupSite.visible = true;
+      groupFl1.visible = true;
+      groupFl2.visible = true;
+      groupRoof.visible = true;
+      groupFl1.position.y = v * 2.0;
+      groupFl2.position.y = v * 6.5;
+      groupRoof.position.y = v * 11.5;
     }
 
-    function onSun(val) {
-      const rad = (parseFloat(val) * Math.PI) / 180;
-      sunLight.position.x = 28 * Math.cos(rad);
-      sunLight.position.z = 28 * Math.sin(rad);
+    function focusCamera(spot) {
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+
+      if (spot === 'front') {
+        setFloorMode('all');
+        animateCameraTo(3.5, 4.5, -24.0, 3.5, 2.0, -10.0);
+      } else if (spot === 'porch') {
+        setFloorMode('fl1');
+        animateCameraTo(5.5, 3.2, -6.5, 3.7, 1.2, -2.7);
+      } else if (spot === 'living') {
+        setFloorMode('fl1');
+        animateCameraTo(-2.5, 3.8, 0.8, 2.0, 1.4, 2.0);
+      } else if (spot === 'altar') {
+        setFloorMode('fl1');
+        animateCameraTo(1.6, 2.8, 2.7, 4.2, 1.8, 2.7);
+      } else if (spot === 'study') {
+        setFloorMode('fl1');
+        animateCameraTo(-1.5, 3.8, 8.8, 2.5, 1.5, 8.8);
+      } else if (spot === 'kitchen') {
+        setFloorMode('fl1');
+        animateCameraTo(-1.8, 4.0, 12.5, 2.6, 1.5, 12.5);
+      } else if (spot === 'garden') {
+        setFloorMode('fl1');
+        animateCameraTo(3.5, 6.5, 26.0, 3.5, 1.0, 19.5);
+      } else if (spot === 'master') {
+        setFloorMode('fl2');
+        animateCameraTo(-2.5, 7.5, 12.5, 2.5, 5.2, 12.5);
+      } else if (spot === 'sisters') {
+        setFloorMode('fl2');
+        animateCameraTo(-2.5, 7.5, 4.0, 2.5, 5.2, 4.0);
+      }
     }
 
-    let isNightMode = false;
-    function toggleAtmosphere(btn) {
-      isNightMode = !isNightMode;
-      if (isNightMode) {
+    let isNight = false;
+    function toggleTimeOfDay() {
+      isNight = !isNight;
+      const btn = document.getElementById('btn-time');
+      if (isNight) {
+        btn.innerText = '🌙 Ban Đêm';
+        scene.background.set(0x060911);
+        scene.fog.color.set(0x060911);
+        sunLight.intensity = 0.15;
+        sunLight.color.set(0x60a5fa); // Cool moonlight
+        hemiLight.intensity = 0.2;
+        interiorLights.forEach(l => l.intensity = 2.6);
+      } else {
+        btn.innerText = '☀️ Ban Ngày';
         scene.background.set(0x090d16);
         scene.fog.color.set(0x090d16);
-        sunLight.intensity = 0.15;
-        sunLight.color.set(0x93c5fd);
-        hemiLight.intensity = 0.18;
-        hemiLight.color.set(0x1e293b);
-        interiorLights.forEach(l => l.intensity = 2.4);
-        btn.textContent = '☀️ Ban Ngày';
-      } else {
-        scene.background.set(0x0f172a);
-        scene.fog.color.set(0x0f172a);
         sunLight.intensity = 1.35;
         sunLight.color.set(0xfffaed);
-        hemiLight.intensity = 0.7;
-        hemiLight.color.set(0xfff7ed);
-        interiorLights.forEach(l => l.intensity = 1.1);
-        btn.textContent = '🌓 Ban Đêm';
+        hemiLight.intensity = 0.65;
+        interiorLights.forEach(l => l.intensity = 1.4);
       }
     }
 
-    // Window Resize
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    // Animation Loop
     function animate(time) {
       requestAnimationFrame(animate);
       TWEEN.update(time);
