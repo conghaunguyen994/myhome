@@ -388,7 +388,7 @@
   <div id="loader">
     <div class="spinner"></div>
     <div style="font-weight: 700; font-size: 16px; color: #f8fafc; letter-spacing: -0.2px;">Đang khởi tạo Fullhouse 3D Villa (Mặt bằng phác thảo mới)...</div>
-    <div style="font-size: 12px; color: #64748b;">Mái che sân trước 18m, Bàn trà áp tường, Master phía trước, Khối phụ trợ sân sau</div>
+    <div style="font-size: 12px; color: #64748b;">Mái che 1/2 sân trước (9m), Bàn trà áp tường, Master phía trước, Khối phụ trợ sân sau</div>
   </div>
 
   <div id="canvas-container"></div>
@@ -397,11 +397,11 @@
   <!-- Header Info Card -->
   <div class="header-card glass">
     <h1>🏡 FULLHOUSE 3D VILLA <span class="badge">5M × 16M</span> <span class="badge badge-smart">MẶT BẰNG MỚI</span></h1>
-    <p>Cập nhật theo phác thảo mới: Sân trước 18m có mái che kín toàn bộ, Bàn trà của Ba áp sát tường trái. Master đưa ra trước tầng 2 có ban công ngắm sao & piano. Sân sau dãy WC/Tắm/Giặt/Phơi áp tường trái cạnh vườn rau.</p>
+    <p>Cập nhật theo yêu cầu: Sân trước 18m giảm mái che còn 1/2 (dài 9m từ mặt tiền), 9m ngoài sân thoáng lộ thiên đón nắng tự nhiên. Bàn trà của Ba áp sát tường trái. Master đưa ra trước tầng 2 có ban công ngắm sao & piano. Sân sau dãy WC/Tắm/Giặt/Phơi áp tường trái cạnh vườn rau.</p>
     <div class="stats-row">
       <div class="stat-item">
-        <span class="stat-val">18m Mái</span>
-        <span class="stat-lbl">Che Kín Sân Trước</span>
+        <span class="stat-val">9m Mái Che</span>
+        <span class="stat-lbl">Che 1/2 Sân Trước</span>
       </div>
       <div class="stat-item">
         <span class="stat-val">Master Trước</span>
@@ -438,8 +438,8 @@
         <div class="sh-chip-desc">Tủ MDB gầm thang, Inverter 5kW, Sạc EV sân trước</div>
       </div>
       <div class="sh-chip" onclick="inspectSmartSystem('canopy', this)">
-        <div class="sh-chip-top"><span>🏗️ Mái Che Sân 18m</span><span class="sh-dot"></span></div>
-        <div class="sh-chip-desc">Mái che kín 18m chống mưa nắng + Bàn trà áp vách</div>
+        <div class="sh-chip-top"><span>🏗️ Mái Che 1/2 Sân (9m)</span><span class="sh-dot"></span></div>
+        <div class="sh-chip-desc">Mái che 9m che xe + Bàn trà, 9m ngoài sân thoáng tự nhiên</div>
       </div>
       <div class="sh-chip" onclick="inspectSmartSystem('master', this)">
         <div class="sh-chip-top"><span>🎹 Master Suite Trước</span><span class="sh-dot"></span></div>
@@ -447,20 +447,21 @@
       </div>
       <div class="sh-chip" onclick="inspectSmartSystem('lighting', this)">
         <div class="sh-chip-top"><span>💡 Đèn LED Ban Đêm</span><span class="sh-dot"></span></div>
-        <div class="sh-chip-desc">LED mái che 18m, lam gỗ, hắt trần, bếp, cầu thang</div>
+        <div class="sh-chip-desc">LED mái che 9m, lam gỗ, hắt trần, bếp, cầu thang</div>
       </div>
     </div>
     <div class="sh-detail-box" id="sh-detail-text">
-      <strong>📍 Quy hoạch Mái Che Sân Trước 18m & Bàn Trà Của Ba:</strong><br>
-      • <strong>Mái che dài 18m che kín:</strong> Hệ khung thép hộp sơn tĩnh điện kết hợp mái kính cường lực dán phim cách nhiệt phủ kín từ cổng chính tới hiên nhà, che râm mát cho ô tô và lối đi.<br>
-      • <strong>Bàn trà của Ba áp sát vách tường trái:</strong> Kê sát tường rào trái (Y=-3.5m), có ghế băng và ghế đơn, tận dụng tối đa không gian sân để xe ô tô đỗ bên phải thuận tiện.
+      <strong>📍 Quy hoạch Mái Che Sân Trước 9m (Che 1/2 Sân) & Bàn Trà Của Ba:</strong><br>
+      • <strong>Mái che giảm còn 9m (che 1/2 sân):</strong> Che phần sân giáp nhà (từ Y=-9m đến Y=0m), che mát cho ô tô SUV và góc bàn trà của Ba. Phần 9m phía ngoài giáp cổng (từ Y=-18m đến Y=-9m) là sân thoáng lộ thiên đón nắng gió tự nhiên cho cây cảnh.<br>
+      • <strong>Bàn trà của Ba áp sát vách tường trái:</strong> Kê sát tường rào trái dưới mái che 9m râm mát, không sợ mưa tạt nắng hắt.<br>
+      • <strong>Đèn LED ban đêm:</strong> Dải đèn LED thanh ấm gắn dưới các thanh xà gồ rọi sáng khu vực mái che 9m.
     </div>
   </div>
 
   <!-- Quick Navigation Panel -->
   <div class="nav-panel glass">
     <div class="panel-title">Khám Phá Mặt Bằng Mới</div>
-    <button class="nav-btn" onclick="focusCamera('frontCanopy', event)">🚗 Sân Trước Mái Che Kín 18m</button>
+    <button class="nav-btn" onclick="focusCamera('frontCanopy', event)">🚗 Sân Trước Mái Che 1/2 (9m)</button>
     <button class="nav-btn" onclick="focusCamera('dadTeaWall', event)">🍵 Bàn Trà Của Ba (Áp Vách Tường)</button>
     <button class="nav-btn" onclick="focusCamera('livingNew', event)">🛋️ Phòng Khách (Bàn Thờ & TV Trái)</button>
     <button class="nav-btn" onclick="focusCamera('parentsBed', event)">🛏️ Phòng Ba Mẹ (Tầng 1 Thuận Tiện)</button>
@@ -707,23 +708,23 @@
     addBox(groupSite, 7.0, -18, 0, 7.18, 23, 2.35, mats.wallWhite);
     addBox(groupSite, -0.18, 23, 0, 7.18, 23.18, 2.35, mats.wallWhite);
 
-    // 🏗️ MÁI CHE SÂN TRƯỚC CHE KÍN TOÀN BỘ 18M (Y = -18..0, X = 0..5.2)
-    // Hệ cột thép chịu lực
-    [-17.8, -12.0, -6.0, -0.2].forEach(cy => {
+    // 🏗️ MÁI CHE SÂN TRƯỚC GIẢM CÒN 1/2 (Dài 9m từ Y = -9m đến Y = 0m; 9m phía ngoài từ Y = -18m đến -9m để thoáng lộ thiên)
+    // Hệ cột thép chịu lực cho phần mái 9m
+    [-9.0, -4.5, -0.2].forEach(cy => {
       [0.05, 5.05].forEach(cx => {
         addBox(groupSite, cx - 0.06, cy - 0.06, 0.15, cx + 0.06, cy + 0.06, 3.25, mats.metalBlack);
       });
     });
-    // Khung kèo dầm chính dọc sân 18m
-    addBox(groupSite, 0.0, -18.0, 3.25, 0.12, 0.0, 3.38, mats.metalBlack);
-    addBox(groupSite, 5.0, -18.0, 3.25, 5.12, 0.0, 3.38, mats.metalBlack);
-    // Các xà gồ ngang & Đèn LED thanh hắt sáng ban đêm dưới mái che
-    for (let py = -18; py <= 0; py += 2.0) {
+    // Khung kèo dầm chính dọc sân che 9m
+    addBox(groupSite, 0.0, -9.0, 3.25, 0.12, 0.0, 3.38, mats.metalBlack);
+    addBox(groupSite, 5.0, -9.0, 3.25, 5.12, 0.0, 3.38, mats.metalBlack);
+    // Các xà gồ ngang & Đèn LED thanh hắt sáng ban đêm dưới mái che 9m
+    for (let py = -9.0; py <= 0; py += 1.8) {
       addBox(groupSite, 0.0, py - 0.05, 3.28, 5.12, py + 0.05, 3.36, mats.metalBlack);
-      addBox(groupSite, 0.5, py - 0.02, 3.24, 4.6, py + 0.02, 3.27, mats.ledWarmStrip); // LED rọi sáng toàn bộ sân 18m
+      addBox(groupSite, 0.5, py - 0.02, 3.24, 4.6, py + 0.02, 3.27, mats.ledWarmStrip); // LED rọi sáng mái che 9m
     }
-    // Mái kính cường lực dán phim cách nhiệt che kín 18m
-    addBox(groupSite, 0.0, -18.0, 3.38, 5.15, 0.0, 3.42, mats.canopyGlass);
+    // Mái kính cường lực dán phim cách nhiệt che 1/2 sân (9m)
+    addBox(groupSite, 0.0, -9.0, 3.38, 5.15, 0.0, 3.42, mats.canopyGlass);
 
     // 🍵 BÀN UỐNG NƯỚC CỦA BA: KÊ ÁP SÁT VÀO VÁCH TƯỜNG BÊN TRÁI (Y = -5.0..-2.2, X = 0.1..1.5)
     // Ghế băng gỗ dài áp vách tường trái
@@ -1026,12 +1027,12 @@
     // 9. SMART HOME PINS & VISUALS
     // =========================================================================
     const smartPinsData = [
-      { id: 'canopy', icon: '🏗️', title: 'MÁI CHE SÂN 18M & BÀN TRÀ', sub: 'Mái Che Kín 18m + Bàn Trà Áp Vách', pos: new THREE.Vector3(1.2, 1.5, -3.5), camKey: 'dadTeaWall' },
+      { id: 'canopy', icon: '🏗️', title: 'MÁI CHE 1/2 SÂN & BÀN TRÀ', sub: 'Mái Che 9m + Bàn Trà Áp Vách', pos: new THREE.Vector3(1.2, 1.5, -3.5), camKey: 'dadTeaWall' },
       { id: 'wifi', icon: '🛜', title: 'WIFI MESH 6E & SMART HUB', sub: 'Kệ TV T1 + 3 Node Xuyên Sàn', pos: new THREE.Vector3(0.5, 1.5, 1.8), camKey: 'livingNew' },
       { id: 'power', icon: '⚡', title: 'TỦ ĐIỆN TỔNG & INVERTER', sub: 'Gầm Thang T1 + Sạc EV Sân Trước', pos: new THREE.Vector3(3.9, 1.6, 9.5), camKey: 'stairMDB' },
       { id: 'master', icon: '🎹', title: 'MASTER PHÍA TRƯỚC TẦNG 2', sub: 'Piano, Yoga, Ban Công Sao, WC Riêng', pos: new THREE.Vector3(2.5, 5.5, 2.0), camKey: 'masterFront' },
       { id: 'camera', icon: '📷', title: '6 CAMERA AN NINH AI POE', sub: 'Quét Cổng, Sân Xe, Luồng 2m, Sân Sau', pos: new THREE.Vector3(4.85, 3.4, -0.1), camKey: 'frontCanopy' },
-      { id: 'lighting', icon: '💡', title: 'KỊCH BẢN ĐÈN ĐÊM LUNG LINH', sub: 'LED Mái Che 18m, Lam Gỗ, Bếp, Bậc Thang', pos: new THREE.Vector3(2.5, 3.3, -9.0), camKey: 'frontCanopy' }
+      { id: 'lighting', icon: '💡', title: 'KỊCH BẢN ĐÈN ĐÊM LUNG LINH', sub: 'LED Mái Che 9m, Lam Gỗ, Bếp, Bậc Thang', pos: new THREE.Vector3(2.5, 3.3, -4.5), camKey: 'frontCanopy' }
     ];
 
     const labelsContainer = document.getElementById('labels-container');
@@ -1090,10 +1091,11 @@
     }
 
     const smartSystemDetails = {
-      canopy: `<strong>🏗️ Mái Che Sân Trước 18m & Bàn Trà Áp Vách Tường:</strong><br>
-        • <strong>Mái che kín 18m:</strong> Toàn bộ chiều dài sân trước 18m được lợp mái che kín (khung thép hộp + kính cường lực dán phim cách nhiệt) từ cổng rào đến hiên nhà, mưa bão không ướt, nắng không chói.<br>
-        • <strong>Bàn trà của Ba áp vách tường trái:</strong> Kê áp sát tường rào bên trái (Y=-3.5m), có ghế băng gỗ và đệm ấm cúng, tối ưu luồng giao thông để xe ô tô đỗ thoải mái.<br>
-        • <strong>Hệ thống đèn LED ban đêm:</strong> Dải đèn LED thanh ấm gắn dưới các thanh xà gồ rọi sáng toàn bộ khoảng sân 18m.`,
+      canopy: `<strong>🏗️ Mái Che Sân Trước 9m (Che 1/2 Sân) & Bàn Trà Áp Vách Tường:</strong><br>
+        • <strong>Mái che dài 9m (che 1/2 sân):</strong> Giảm độ che phủ từ kín 18m xuống còn 9m (tính từ mặt tiền nhà Y=0m ra đến Y=-9m). Vừa đủ để che râm mát tuyệt đối cho ô tô SUV 7 chỗ và góc bàn trà của Ba.<br>
+        • <strong>Khoảng sân mở 9m phía ngoài (Y=-18m đến Y=-9m):</strong> Đón trọn nắng mai, gió trời tự nhiên và tạo không gian sân vườn thoáng đãng, cây cảnh và bonsai phát triển tươi tốt.<br>
+        • <strong>Bàn trà của Ba áp vách tường trái:</strong> Kê áp sát tường rào bên trái (Y=-3.5m) dưới bóng râm của mái che 9m, có ghế băng gỗ và đệm ấm cúng.<br>
+        • <strong>Hệ thống đèn LED ban đêm:</strong> Dải đèn LED thanh ấm gắn dưới các thanh xà gồ rọi sáng khu vực mái che 9m.`,
       wifi: `<strong>📍 Vị trí WiFi Mesh 6E & Màn Hình Trung Tâm Điều Khiển:</strong><br>
         • <strong>Node 1 (Router Chính):</strong> Đặt tại Kệ TV Phòng khách bên vách trái (Y=1.8m), kết nối cáp quang trực tiếp.<br>
         • <strong>Node 2 (Khu Bếp & Sân Sau):</strong> Gắn tường khu vực Bàn ăn / Cầu thang (Y=11.2m), phủ sóng trọn vẹn khu bếp và sân sau.<br>
@@ -1113,7 +1115,7 @@
         • <strong>Đàn Piano Upright & Góc Yoga:</strong> Bố trí trang trọng, đón ánh sáng tự nhiên.<br>
         • <strong>Khối WC Riêng & Phòng Thay Đồ:</strong> Tách biệt phía sau phòng ngủ, tiện nghi như resort.`,
       lighting: `<strong>💡 Kịch Bản Ánh Sáng Đêm Lung Linh (Warm 3000K):</strong><br>
-        • <strong>Ngoại thất:</strong> Dải LED xà gồ mái che 18m, đèn trụ đá cổng rào, đèn rọi gốc bonsai dọc lối đi 2m.<br>
+        • <strong>Ngoại thất:</strong> Dải LED xà gồ mái che 9m, đèn trụ đá cổng rào, đèn rọi gốc bonsai dọc lối đi 2m.<br>
         • <strong>Nội thất:</strong> LED hắt vách TV, hào quang Gian thờ, LED bậc cầu thang, LED gầm tủ bếp và đèn ngủ các phòng.`
     };
 

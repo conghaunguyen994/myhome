@@ -216,16 +216,16 @@ add_box(col_site, "Fence_Left", -0.18, -18.0, 0.0, 0.0, 24.0, 2.35, "Mat_WallWar
 add_box(col_site, "Fence_Right", 7.0, -18.0, 0.0, 7.18, 24.0, 2.35, "Mat_WallWarmWhite")
 add_box(col_site, "Fence_Rear", -0.18, 24.0, 0.0, 7.18, 24.18, 2.35, "Mat_WallWarmWhite")
 
-# 🏗️ MÁI CHE SÂN TRƯỚC PHỦ KÍN TOÀN BỘ 18M (Y = -18..0, X = 0..5.15)
-for cy in [-17.8, -12.0, -6.0, -0.2]:
+# 🏗️ MÁI CHE SÂN TRƯỚC GIẢM CÒN 1/2 (Dài 9m từ Y = -9.0..0.0, X = 0..5.15; Nửa ngoài 9m để sân thoáng lộ thiên)
+for cy in [-9.0, -4.5, -0.2]:
     for cx in [0.05, 5.05]:
         add_box(col_site, f"Canopy_Col_{cx:.1f}_{cy:.1f}", cx - 0.06, cy - 0.06, 0.15, cx + 0.06, cy + 0.06, 3.25, "Mat_MetalMatteBlack")
-add_box(col_site, "Canopy_Beam_L", 0.0, -18.0, 3.25, 0.12, 0.0, 3.38, "Mat_MetalMatteBlack")
-add_box(col_site, "Canopy_Beam_R", 5.0, -18.0, 3.25, 5.12, 0.0, 3.38, "Mat_MetalMatteBlack")
-for p_idx, py in enumerate(range(-18, 1, 2)):
+add_box(col_site, "Canopy_Beam_L", 0.0, -9.0, 3.25, 0.12, 0.0, 3.38, "Mat_MetalMatteBlack")
+add_box(col_site, "Canopy_Beam_R", 5.0, -9.0, 3.25, 5.12, 0.0, 3.38, "Mat_MetalMatteBlack")
+for p_idx, py in enumerate(range(-9, 1, 2)):
     add_box(col_site, f"Canopy_Rafter_{p_idx}", 0.0, py - 0.05, 3.28, 5.12, py + 0.05, 3.36, "Mat_MetalMatteBlack")
     add_box(col_lights, f"Canopy_LEDStrip_{p_idx}", 0.5, py - 0.02, 3.24, 4.6, py + 0.02, 3.27, "Mat_WarmLED")
-add_box(col_site, "Canopy_GlassRoof_18m", 0.0, -18.0, 3.38, 5.15, 0.0, 3.42, "Mat_CanopyGlass")
+add_box(col_site, "Canopy_GlassRoof_9m", 0.0, -9.0, 3.38, 5.15, 0.0, 3.42, "Mat_CanopyGlass")
 
 # 🍵 BÀN TRÀ CỦA BA KÊ ÁP SÁT VÁCH TƯỜNG TRÁI (Y = -5.0..-2.2, X = 0.05..1.35)
 add_box(col_site, "DadTea_Bench_Base", 0.05, -4.8, 0.15, 0.55, -2.4, 0.55, "Mat_WoodOakTable", bevel=0.01)
@@ -418,7 +418,7 @@ def add_warm_light(name, loc, energy=220.0, color=(1.0, 0.78, 0.45)):
     col_lights.objects.link(lo)
     return lo
 
-add_warm_light("Light_FrontCanopy", (2.5, -9.0, 3.2), 300.0)
+add_warm_light("Light_FrontCanopy", (2.5, -4.5, 3.2), 260.0)
 add_warm_light("Light_DadTeaWall", (0.8, -3.5, 2.0), 160.0)
 add_warm_light("Light_LivingNew", (2.5, 2.8, 3.1), 280.0)
 add_warm_light("Light_ParentsBed", (2.0, 7.4, 3.1), 220.0)
@@ -430,6 +430,18 @@ add_warm_light("Light_BalconyRear8m", (2.5, 19.5, 5.5), 200.0)
 save_dir = os.path.dirname(os.path.abspath(__file__)) if "__file__" in globals() else r"c:\Users\nconghau\Desktop\new fe\myhome\myhome"
 blend_path = os.path.join(save_dir, "Fullhouse_Model.blend")
 bpy.ops.wm.save_as_mainfile(filepath=blend_path)
+
+# Export OBJ
+obj_path = os.path.join(save_dir, "Fullhouse_Model.obj")
+try:
+    bpy.ops.wm.obj_export(filepath=obj_path)
+    print(f"Exported OBJ to {obj_path}")
+except Exception:
+    try:
+        bpy.ops.export_scene.obj(filepath=obj_path)
+        print(f"Exported OBJ via legacy to {obj_path}")
+    except Exception as e:
+        print("Note: OBJ export skipped in headless:", e)
 
 print("=" * 70)
 print(f"SUCCESS: Fullhouse New Layout Model saved to {blend_path}")

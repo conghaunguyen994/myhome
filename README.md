@@ -9,7 +9,7 @@
 
 - **Vị trí & Hướng nhà:** Mặt tiền đường Quốc lộ, hướng Đông (nhà nằm phía Tây đường; sáng đón ánh nắng bình minh hướng Đông dịu nhẹ, chiều râm mát).
 - **Kích thước khu đất:** Ngang **7.0m** × Dài **41.0m** (Tổng diện tích: **287 m²**):
-  - **Sân trước:** Dài **18.0m** — **Mái che kín toàn bộ 18.0m** (Đậu ô tô SUV 7 chỗ, trạm sạc EV Wallbox, góc **bàn nước của Ba đặt áp sát vách tường** dưới mái che râm mát, đệm cây cảnh bonsai cản bụi ồn).
+  - **Sân trước:** Dài **18.0m** — **Mái che giảm còn 1/2 (dài 9.0m)** (Nửa ngoài 9m để sân mở lộ thiên đón nắng tự nhiên; nửa trong 9m có mái che kiên cố bảo vệ ô tô SUV 7 chỗ, trạm sạc EV Wallbox, góc **bàn nước của Ba đặt áp sát vách tường** dưới mái che râm mát, đệm cây cảnh bonsai cản bụi ồn).
   - **Nhà chính (2 tầng):** Kích thước **5.0m × 16.0m** (Tổng diện tích sàn GFA gồm 2 ban công: ~**205 m²**).
   - **Đường luồng bên hông:** Rộng **2.0m** xuyên suốt từ cổng 2m phía trước ra tận sân sau (trải đá bước dặm & bonsai, dắt xe máy ra sau, mở cửa sổ hông đón gió mát).
   - **Sân sau:** Dài **12.0m** (gồm dãy công trình phụ WC - Tắm - Giặt - Phơi áp sát tường trái, bàn ngồi chill + chỗ để xe máy bên phải được che bởi ban công sau tầng 2, và vườn rau sạch hữu cơ $5\text{m} \times 4\text{m}$ cuối sân).

@@ -27,7 +27,9 @@
   - *Đặc điểm tự nhiên:* Buổi sáng có ánh nắng Đông ban mai chiếu vào dịu nhẹ; buổi chiều cả ngôi nhà hoàn toàn râm mát vì mặt trời lặn sau lưng nhà.
   - *Giải pháp thiết kế:* Mái hiên sâu dài rộng kết hợp hệ lam chắn nắng/rèm cuốn để cản bớt ánh nắng sớm chiếu thẳng vào cửa, chống chói và chống mưa tạt tuyệt đối.
 - **Tổng chiều dài mảnh đất:** **41.0m** (Tổng diện tích khu đất: $7.0\text{m} \times 41.0\text{m} = 287\text{ m}^2$).
-  - **Sân trước:** Dài **18.0m** $\times$ Ngang **7.0m** — **Mái che kín toàn bộ 18m** (Khoảng đệm cực kỳ giá trị để đậu ô tô, làm góc bàn uống nước cho Ba áp sát tường, trồng cây cảnh và bonsai, cản bụi ồn từ quốc lộ).
+  - **Sân trước:** Dài **18.0m** $\times$ Ngang **7.0m** — **Mái che giảm còn 1/2 (dài 9.0m)**:
+    - *Nửa trong 9m giáp nhà ($Y = -9\text{m}$ đến $0\text{m}$):* Có mái che kiên cố bảo vệ ô tô SUV 7 chỗ, che chắn trọn vẹn góc bàn uống nước của Ba áp sát tường và lối vào sảnh chính râm mát.
+    - *Nửa ngoài 9m giáp cổng ($Y = -18\text{m}$ đến $-9\text{m}$):* Sân mở lộ thiên thoáng đãng đón ánh nắng ban mai và gió trời tự nhiên, trồng cây cảnh bonsai, bồn hoa và đón gió trong lành.
   - **Khối nhà chính (2 tầng):** Kích thước **5.0m $\times$ 16.0m** (Diện tích xây dựng 1 sàn: $80\text{ m}^2$, tổng diện tích sàn xây dựng GFA gồm ban công: ~**200 - 210 $\text{m}^2$** với ban công sau $5\text{m} \times 8\text{m}$).
   - **Đường luồng bên hông:** Rộng đúng **2.0m**, chạy xuyên suốt từ cổng 2m phía trước ra tận sân sau (cho xe máy/xe đạp đi thẳng ra sau nhà, mở toàn bộ hệ cửa sổ hông đón gió tươi đối lưu).
   - **Sân sau:** Dài **12.0m** $\times$ Ngang **7.0m** (gồm dãy công trình phụ WC - Tắm - Giặt - Phơi áp sát tường trái, bàn ngồi chill + chỗ để xe máy bên phải được che bởi ban công sau tầng 2, và vườn rau sạch $5\text{m} \times 4\text{m}$ cuối sân).
@@ -51,10 +53,11 @@
 
 ```
 [MẶT TIỀN ĐƯỜNG QUỐC LỘ]
-  |--- SÂN TRƯỚC (Dài 18m x Ngang 7m) - MÁI CHE KÍN TOÀN BỘ 18M -----------------------------------|
+  |--- SÂN TRƯỚC (Dài 18m x Ngang 7m) - MÁI CHE GIẢM CÒN 1/2 (DÀI 9M) ------------------------------|
   |  - Cổng xe 3.6m bên trái & Cổng phụ 2.0m bên phải                                              |
-  |  - Đậu ô tô SUV 7 chỗ thoải mái bên trái (dưới mái che kín 18m)                                |
-  |  - Góc bàn ghế uống trà/chill của Ba: ÁP SÁT VÁCH TƯỜNG TRÁI (dưới mái che, không lo mưa nắng) |
+  |  - Khoảng 9m ngoài (Y = -18m đến -9m): Sân mở lộ thiên, đón nắng gió tự nhiên, cây cảnh bonsai |
+  |  - Khoảng 9m trong (Y = -9m đến 0m): Có MÁI CHE KÍNH kiên cố bảo vệ ô tô SUV & lối vào sảnh chính |
+  |  - Góc bàn ghế uống trà của Ba: ÁP SÁT VÁCH TƯỜNG TRÁI (dưới mái che 9m, không lo mưa nắng)    |
   |  - Đường luồng 2m bên phải: Trải đá bước dặm & cây cảnh bonsai, thông thẳng ra sân sau         |
   |--- NHÀ CHÍNH (5m x 16m) ------------------------------------------------------------------------|
   |  (Y = 0.0m - 5.8m)  : PHÒNG KHÁCH (5m x 5.8m):                                                  |
@@ -81,10 +84,12 @@
 ```
 
 #### Chi tiết từng khu vực Tầng 1:
-1. **Sân trước 18m có Mái che kín toàn bộ 18m:**
+1. **Sân trước 18m — Kết hợp Sân mở lộ thiên & Mái che 9m (1/2 sân):**
    - Chiều dài 18m tạo khoảng đệm hoàn hảo cản bụi và tiếng ồn từ quốc lộ.
-   - **Mái che kín 18m:** Toàn bộ sân 18m được che chắn kiên cố, vừa bảo vệ xe ô tô khỏi nắng mưa, vừa che chắn toàn diện cho hiên trà.
-   - **Bàn uống nước của Ba áp sát vách tường:** Được bố trí đặt áp sát vào vách tường bên trái, dưới bóng mát của mái che 18m. Ba có thể thảnh thơi ngồi ngắm cây cảnh, thưởng trà sáng, nhâm nhi cà phê hay trò chuyện với bạn bè làng xóm mà không sợ nắng rọi hay mưa hắt.
+   - **Mái che giảm còn 1/2 (dài 9m từ hiên nhà):** Thay vì che kín toàn bộ 18m, việc giảm mái che còn 1/2 tạo sự hài hòa tối đa cho cảnh quan:
+     + *9m phía ngoài giáp cổng rào:* Giữ lộ thiên để đón ánh nắng sớm dịu nhẹ, tạo khoảng không thoáng đãng cho ngôi nhà, giúp cây cảnh bonsai và thảm hoa sinh trưởng tươi tốt.
+     + *9m phía trong giáp nhà:* Có mái che khung thép hộp kết hợp kính dán an toàn/polycarbonate che mưa nắng tuyệt đối cho xe ô tô SUV 7 chỗ và tiền sảnh đón khách.
+   - **Bàn uống nước của Ba áp sát vách tường:** Được bố trí đặt áp sát vào vách tường bên trái, nằm trọn vẹn dưới bóng râm của mái che 9m. Ba có thể thảnh thơi ngồi ngắm cây cảnh sân trước, thưởng trà sáng, nhâm nhi cà phê hay trò chuyện với bạn bè làng xóm mà không sợ nắng rọi hay mưa hắt.
    - **Đường luồng 2m bên phải:** Lối đi phụ từ cổng 2m dẫn thẳng ra sân sau, lát đá bước dặm tự nhiên trên nền sỏi trắng, viền cây xanh và chậu bonsai trang nhã.
 2. **Phòng khách kiêm Gian thờ Phật Quan Âm ($5\text{m} \times 5.8\text{m}$):**
    - Vách tường bên trái tích hợp kệ TV treo tường tinh tế cùng Gian thờ Bồ Tát Quán Thế Âm trang nghiêm, ấm cúng.
@@ -241,11 +246,12 @@
                 |
   +--------------------------------+-------+
   | SÂN TRƯỚC (18m x 5m)           | LUỒNG |
-  | - MÁI CHE KÍN TOÀN BỘ 18M      | 2m    |
-  | - Đỗ ô tô SUV bên trái         | ĐÁ    |
-  | - BÀN NƯỚC CỦA BA ÁP SÁT TƯỜNG | BƯỚC  |
-  +--------------------------------+ DẶM   |
-  | NGÔI NHÀ 2 TẦNG (16m x 5m)     | BONSAI|
+  | - 9m ngoài: Sân mở lộ thiên    | 2m    |
+  | - 9m trong: MÁI CHE KÍNH 1/2   | ĐÁ    |
+  | - Đỗ ô tô SUV & BÀN TRÀ CỦA BA | BƯỚC  |
+  |   (ÁP SÁT VÁCH TƯỜNG TRÁI)     | DẶM   |
+  +--------------------------------+ BONSAI|
+  | NGÔI NHÀ 2 TẦNG (16m x 5m)     |       |
   | T1: PK, Thờ, Ngủ Ba Mẹ, Thang, |       |
   |     Bếp mở & Bàn ăn tròn       |       |
   | T2: Master Chị Ba (Piano/Yoga) |       |
@@ -261,9 +267,10 @@
     [TƯỜNG RÀO SAU KIÊN CỐ 2.2m]
 ```
 
-1. **Sân trước 18m có Mái che kín toàn bộ 18m:**
-   - Khoảng sân rộng thênh thang được bảo vệ toàn diện bởi mái che kín suốt 18m, lát gạch nhám chống rêu màu xám ghi sạch sẽ.
-   - Bên trái là khu vực đỗ xe ô tô SUV 7 chỗ cùng góc bàn trà của Ba được đặt **áp sát vào vách tường bên trái**, tạo cảm giác vững chãi, ấm cúng và kín gió mưa. Ba có thể thảnh thơi nhâm nhi trà sớm, trò chuyện cùng người thân mà hoàn toàn không lo mưa hắt.
+1. **Sân trước 18m — Kết hợp sân mở đón nắng & Mái che 9m (1/2 sân):**
+   - Khoảng sân rộng thênh thang lát gạch nhám chống rêu màu xám ghi sạch sẽ.
+   - 9m phía ngoài từ cổng rào giữ lộ thiên đón trọn ánh nắng ban mai và khí trời trong lành cho cây cảnh bonsai phát triển.
+   - 9m phía trong giáp nhà có mái che kiên cố bảo vệ xe ô tô SUV 7 chỗ và góc bàn trà của Ba được đặt **áp sát vào vách tường bên trái**, tạo cảm giác vững chãi, ấm cúng và kín gió mưa. Ba có thể thảnh thơi nhâm nhi trà sớm, trò chuyện cùng người thân mà hoàn toàn không lo mưa hắt.
 2. **Hành lang đường luồng 2m bên phải:**
    - Lối đi lát đá bước dặm tự nhiên xen lẫn cây cảnh bonsai và rãnh sỏi trắng, dẫn thẳng từ cổng 2m vào khu để xe máy và dãy công trình phụ sân sau.
    - Giúp xe cộ không đi qua phòng khách, giữ sàn nhà luôn sạch bong và không có mùi xăng xe.
