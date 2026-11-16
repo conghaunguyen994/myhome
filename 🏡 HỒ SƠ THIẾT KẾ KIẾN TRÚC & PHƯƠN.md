@@ -27,10 +27,10 @@
   - *Đặc điểm tự nhiên:* Buổi sáng có ánh nắng Đông ban mai chiếu vào dịu nhẹ; buổi chiều cả ngôi nhà hoàn toàn râm mát vì mặt trời lặn sau lưng nhà.
   - *Giải pháp thiết kế:* Mái hiên sâu dài rộng kết hợp hệ lam chắn nắng/rèm cuốn để cản bớt ánh nắng sớm chiếu thẳng vào cửa, chống chói và chống mưa tạt tuyệt đối.
 - **Tổng chiều dài mảnh đất:** **41.0m** (Tổng diện tích khu đất: $7.0\text{m} \times 41.0\text{m} = 287\text{ m}^2$).
-  - **Sân trước:** Dài **18.0m** $\times$ Ngang **7.0m** (Khoảng lùi đệm cực kỳ giá trị để đậu ô tô, làm hiên trà ngoài trời cho Ba, trồng cây xanh cản bụi ồn từ quốc lộ).
-  - **Khối nhà chính (2 tầng):** Kích thước **5.0m $\times$ 16.0m** (Diện tích xây dựng 1 sàn: $80\text{ m}^2$, tổng diện tích sàn xây dựng GFA gồm ban công: ~**170 - 175 $\text{m}^2$**).
-  - **Đường luồng bên hông:** Rộng đúng **2.0m**, chạy xuyên suốt từ cổng trước ra tận sân sau (cho xe máy/xe đạp đi thẳng ra sau nhà, mở toàn bộ hệ cửa sổ hông đón gió tươi đối lưu).
-  - **Sân sau:** Dài khoảng **7.0m** $\times$ Ngang **7.0m** (Khu giặt phơi có mái che, bàn hóng gió, chỗ để xe mát mẻ và vườn rau sạch gia đình).
+  - **Sân trước:** Dài **18.0m** $\times$ Ngang **7.0m** — **Mái che kín toàn bộ 18m** (Khoảng đệm cực kỳ giá trị để đậu ô tô, làm góc bàn uống nước cho Ba áp sát tường, trồng cây cảnh và bonsai, cản bụi ồn từ quốc lộ).
+  - **Khối nhà chính (2 tầng):** Kích thước **5.0m $\times$ 16.0m** (Diện tích xây dựng 1 sàn: $80\text{ m}^2$, tổng diện tích sàn xây dựng GFA gồm ban công: ~**200 - 210 $\text{m}^2$** với ban công sau $5\text{m} \times 8\text{m}$).
+  - **Đường luồng bên hông:** Rộng đúng **2.0m**, chạy xuyên suốt từ cổng 2m phía trước ra tận sân sau (cho xe máy/xe đạp đi thẳng ra sau nhà, mở toàn bộ hệ cửa sổ hông đón gió tươi đối lưu).
+  - **Sân sau:** Dài **12.0m** $\times$ Ngang **7.0m** (gồm dãy công trình phụ WC - Tắm - Giặt - Phơi áp sát tường trái, bàn ngồi chill + chỗ để xe máy bên phải được che bởi ban công sau tầng 2, và vườn rau sạch $5\text{m} \times 4\text{m}$ cuối sân).
 
 ### 2.2. Tiêu chí kỹ thuật cốt lõi
 1. **Độ bền vững trường tồn:** Kết cấu bê tông cốt thép chắc chắn, tường bao che kiên cố.
@@ -51,46 +51,60 @@
 
 ```
 [MẶT TIỀN ĐƯỜNG QUỐC LỘ]
-  |--- SÂN TRƯỚC (Dài 18m x Ngang 7m) -------------------------------------------------------------|
-  |  - Bên phải: Cổng chính & Đường xe ô tô vào đỗ thoải mái                                      |
-  |  - Bên trái: Hiên nhà dài rộng & Góc bàn ghế trà/nhậu ngoài trời của Ba (Có mái che chống tạt) |
-  |  - Đường luồng 2m: Chạy dọc bên hông nhà dẫn thẳng ra sân sau                                  |
+  |--- SÂN TRƯỚC (Dài 18m x Ngang 7m) - MÁI CHE KÍN TOÀN BỘ 18M -----------------------------------|
+  |  - Cổng xe 3.6m bên trái & Cổng phụ 2.0m bên phải                                              |
+  |  - Đậu ô tô SUV 7 chỗ thoải mái bên trái (dưới mái che kín 18m)                                |
+  |  - Góc bàn ghế uống trà/chill của Ba: ÁP SÁT VÁCH TƯỜNG TRÁI (dưới mái che, không lo mưa nắng) |
+  |  - Đường luồng 2m bên phải: Trải đá bước dặm & cây cảnh bonsai, thông thẳng ra sân sau         |
   |--- NHÀ CHÍNH (5m x 16m) ------------------------------------------------------------------------|
-  |  (Y = 0.0m - 3.8m)  : PHÒNG KHÁCH + GIAN THỜ BỒ TÁT QUAN ÂM & GIA TIÊN (Ngăn vách CNC ấm cúng)   |
-  |  (Y = 3.8m - 7.2m)  : PHÒNG NGỦ BA MẸ (Tầng trệt thuận tiện, cửa sổ mở ra đường luồng 2m)       |
-  |  (Y = 7.2m - 10.4m) : CẦU THANG AN TOÀN & PHÒNG ĐỌC SÁCH KỶ VẬT GẦM THANG (Kiêm chỗ ngủ khách)  |
-  |  (Y = 10.4m - 14.2m): BẾP MỞ & PHÒNG ĂN ẤM ÁP (Quầy làm bánh nướng, bàn ăn nhìn ra trước nhà)   |
-  |  (Y = 14.2m - 16.0m): Sau bếp: 1 bên là WC Tầng Trệt; 1 bên là Sảnh hiên sau để bàn hóng gió, |
-  |                       chỗ để xe máy mát mẻ có mái che mưa tạt, lối ra vườn rau                 |
-  |--- SÂN SAU (Dài ~7m x Ngang 7m) ----------------------------------------------------------------|
-  |  - Khu giặt phơi có mái che lấy sáng lấy gió chống mưa tạt                                     |
-  |  - Vườn rau hữu cơ xanh sạch gia đình                                                          |
-  |  - Tường rào sau cao 2.0m - 2.2m đảm bảo riêng tư tuyệt đối                                    |
+  |  (Y = 0.0m - 5.8m)  : PHÒNG KHÁCH (5m x 5.8m):                                                  |
+  |                       - Tường trái: Vách TV hiện đại & Bàn thờ Phật Bồ Tát Quan Âm trang nghiêm|
+  |                       - Ở giữa: Bộ sofa chữ I + bàn trà đối diện vách TV                       |
+  |                       - Phía trước: Cửa sổ bên trái nhìn ra sân, Cửa chính bên phải mở vào nhà |
+  |  (Y = 5.8m - 9.0m)  : PHÒNG NGỦ BA MẸ (4m x 3.2m):                                             |
+  |                       - Đặt ngay sau phòng khách, bên trái nhà                                 |
+  |                       - Vách ngăn phòng khách: Cửa sổ kính 3 tấm ngang lấy sáng gián tiếp      |
+  |                       - Cửa phòng mở ra hành lang 1m thông thoáng bên phải                     |
+  |  (Y = 9.0m - 12.2m) : CẦU THANG CHỮ U (Gập 2 vế chiếm ~4m bề ngang):                           |
+  |                       - Hành lang 1m bên phải đi thẳng xuống khu bếp                           |
+  |                       - Gầm thang: Tủ điện tổng MDB & Hệ biến tần Inverter Hybrid Solar 5kW    |
+  |  (Y = 12.2m - 16.0m): BẾP MỞ & PHÒNG ĂN ẤM ÁP (5m x 6.4m, tính cả khoang liên hoàn):           |
+  |                       - Hệ tủ bếp chữ I dài dọc theo vách tường trái                           |
+  |                       - Bàn ăn tròn ấm cúng 4-6 ghế đặt trung tâm                              |
+  |                       - 2 cửa sổ mở ra đường luồng 2m & Cửa kính hậu lớn mở ra sân sau         |
+  |--- SÂN SAU (Dài ~12m x Ngang 7m) ---------------------------------------------------------------|
+  |  - Dọc tường bên trái (Dãy công trình phụ tiện nghi):                                          |
+  |      [WC: 2.4m x 1.6m] -> [Phòng tắm: 2.4m x 1.6m] -> [Phòng giặt: 2.4m x 1.6m] -> [Sân phơi] |
+  |  - Phía bên phải: Bàn ngồi chill hóng mát + Chỗ để xe máy, xe đạp (Được che bởi ban công lầu 1) |
+  |  - Cuối sân: Vườn rau hữu cơ gia đình (5m x 4m) xanh tốt quanh năm                             |
   |-------------------------------------------------------------------------------------------------|
 ```
 
 #### Chi tiết từng khu vực Tầng 1:
-1. **Sân trước 18m & Hiên giao lưu ngoài trời:**
-   - Chiều dài 18m tạo một khoảng đệm sân vườn cực rộng. Đậu được xe ô tô 7 chỗ và nhiều xe khách đến chơi.
-   - **Góc bàn trà / bàn nhậu ngoài hiên của Ba:** Bố trí một bộ bàn ghế gỗ/đá nguyên khối dưới mái hiên dài rộng có nan lam và mái kính che mưa nắng. Ba và các chú, bạn bè có thể thoải mái ngồi trò chuyện, nhâm nhi tách trà sớm hoặc đôi ly bia chiều, nướng BBQ rôm rả. Mùi đồ ăn, khói và tiếng ồn hoàn toàn ở ngoài trời, không ảnh hưởng gì đến không gian yên tĩnh bên trong nhà dù có ngồi quá giờ.
-   - Phòng khách có hệ cửa kính lớn và cửa sổ nhìn song song thẳng ra góc hiên này: Người ngồi trong nhà và người ngồi ngoài sân vẫn nhìn thấy nhau, giao lưu gần gũi.
-2. **Phòng khách kiêm Gian thờ Phật Quan Âm & Gia tiên ($5\text{m} \times 3.8\text{m}$):**
-   - Không gian khách gọn gàng, tinh tế: Sofa nỉ mềm mại ấm cúng, bàn trà đôi, vách tivi ốp lam gỗ sồi kết hợp đá sáng hắt đèn LED nhẹ dịu.
-   - **Gian thờ trang nghiêm & ấm cúng:** Bàn thờ Phật Bồ Tát Quán Thế Âm và bàn thờ gia tiên đặt ở vị trí tôn nghiêm nhất, được ngăn cách ước lệ với phòng khách bằng vách nan gỗ CNC hoa văn nhẹ nhàng hoặc mành sáo thanh lịch. Không gian tâm linh giữ trọn sự thanh tịnh, thiêng liêng, trang nghiêm mà phòng khách vẫn giữ được sự thoải mái, gần gũi. Đây sẽ là nơi con cháu sau này luôn hướng về tưởng nhớ ông bà tổ tiên mỗi dịp lễ tết, giỗ chạp.
-3. **Phòng ngủ Ba Mẹ ($3.4\text{m} \times 3.4\text{m}$):**
-   - Đặt ngay tầng trệt giúp ba mẹ lớn tuổi không phải leo cầu thang mỗi ngày.
-   - Cửa sổ kính lớn mở thẳng ra hành lang 2m bên hông đón trọn luồng gió mát mẻ tự nhiên. Sàn lát gạch chống trơn vân gỗ ấm áp, giường ngủ êm ái, tủ quần áo âm tường.
-4. **Cầu thang an toàn & Không gian đọc sách kỷ vật gầm thang:**
-   - **Cầu thang:** Thiết kế 19-21 bậc (chuẩn cung Sinh), chiếu nghỉ vuông vắn; tay vịn gỗ tự nhiên bo tròn chống trượt tay, lan can kính cường lực phẳng phiu cực kỳ dễ lau chùi; mũi bậc gắn nẹp chống trơn trượt an toàn tuyệt đối cho người già và trẻ nhỏ.
-   - **Phòng đọc sách kỷ vật thư sinh & Tiếp khách ngủ lại:** Tận dụng thông minh không gian dưới gầm và khoang cạnh thang. Bố trí hệ kệ sách kịch trần trưng bày hàng trăm cuốn sách cùng những kỷ vật, quà tặng thân thương mà người thân, bạn bè trao tặng. Đặt một giường sofa daybed thông minh: Ban ngày là góc ngồi đọc sách trầm ngâm, tri thức; khi có khách quý hoặc bạn bè ngủ lại thì trở thành một chiếc giường ngủ lịch sự, ấm cúng và kín đáo.
-5. **Bếp mở & Phòng ăn ấm áp ($5\text{m} \times 3.8\text{m}$):**
-   - **Không gian làm bánh ngọt ngào:** Bếp mở hiện đại với hệ tủ chữ L và một **quầy đảo bếp ốp đá trắng nhân tạo chống ố** cực rộng. Đây là nơi chủ nhà thỏa sức nhào bột, tạo hình những chiếc bánh kem, bánh mì nướng thơm phức trong những bộ trang phục xinh đẹp.
-   - **Bàn ăn gia đình:** Bộ bàn ghế gỗ tự nhiên 6-8 chỗ ngồi ấm cúng, đặt ở vị trí chiến lược: Ngồi tại bàn ăn có thể nhìn dọc hành lang quan sát được toàn bộ phía trước nhà.
-   - Cửa sổ lớn và cửa phụ mở ra đường luồng 2m kết hợp máy hút mùi công suất lớn giúp không gian bếp luôn thơm tho, thông thoáng, không bao giờ ám mùi thức ăn vào phòng ngủ.
-6. **Khu phụ sau bếp & Sân sau 7m:**
-   - **Nhà vệ sinh tầng 1:** Bố trí gọn gàng về một phía sau bếp. Thiết kế vách kính cường lực phân chia rõ ràng khu tắm ướt và khu lavabo khô. Gạch lát nền nhám chống trơn chuẩn R11.
-   - **Sảnh hiên sau & Chỗ để xe mát mẻ:** Phía còn lại có mái hiên vươn dài che chắn mưa gió không tạt. Xe máy, xe đạp từ đường luồng 2m chạy thẳng vào đỗ râm mát, sạch sẽ. Bố trí thêm một bàn trà nhỏ hóng gió chiều ngắm nhìn ra vườn rau.
-   - **Khu giặt phơi & Vườn rau sạch:** Mái che kính/polycarbonate lấy sáng thông minh khử khuẩn quần áo mà mưa không tạt; vườn rau xanh hữu cơ với các luống đất nâng cao dễ chăm sóc, cung cấp rau sạch quanh năm cho gia đình.
+1. **Sân trước 18m có Mái che kín toàn bộ 18m:**
+   - Chiều dài 18m tạo khoảng đệm hoàn hảo cản bụi và tiếng ồn từ quốc lộ.
+   - **Mái che kín 18m:** Toàn bộ sân 18m được che chắn kiên cố, vừa bảo vệ xe ô tô khỏi nắng mưa, vừa che chắn toàn diện cho hiên trà.
+   - **Bàn uống nước của Ba áp sát vách tường:** Được bố trí đặt áp sát vào vách tường bên trái, dưới bóng mát của mái che 18m. Ba có thể thảnh thơi ngồi ngắm cây cảnh, thưởng trà sáng, nhâm nhi cà phê hay trò chuyện với bạn bè làng xóm mà không sợ nắng rọi hay mưa hắt.
+   - **Đường luồng 2m bên phải:** Lối đi phụ từ cổng 2m dẫn thẳng ra sân sau, lát đá bước dặm tự nhiên trên nền sỏi trắng, viền cây xanh và chậu bonsai trang nhã.
+2. **Phòng khách kiêm Gian thờ Phật Quan Âm ($5\text{m} \times 5.8\text{m}$):**
+   - Vách tường bên trái tích hợp kệ TV treo tường tinh tế cùng Gian thờ Bồ Tát Quán Thế Âm trang nghiêm, ấm cúng.
+   - Bộ sofa êm ái đặt đối diện, tạo tầm nhìn bao quát và thoáng đãng.
+   - Cửa chính đặt ở bên phải kết nối với hành lang 1m, cửa sổ lớn ở bên trái đón ánh sáng bình minh.
+3. **Phòng ngủ Ba Mẹ ($4\text{m} \times 3.2\text{m}$):**
+   - Đặt ngay tầng trệt phía sau phòng khách, bảo đảm việc sinh hoạt và nghỉ ngơi an dưỡng tốt nhất cho Ba Mẹ mà không phải leo cầu thang.
+   - Tường ngăn phòng khách bố trí hệ vách kính 3 tấm ngang lấy sáng gián tiếp nhẹ nhàng từ phòng khách.
+   - Cửa phòng mở ra hành lang 1m bên phải, đối lưu khí mát từ cửa chính tới khu bếp.
+4. **Cầu thang chữ U an toàn & Tủ kỹ thuật thông minh:**
+   - Hai vế thang gập lại, chiếm khoảng 4m bề ngang; hành lang 1m bên phải dẫn thẳng xuống phòng ăn.
+   - Gầm cầu thang tận dụng tối đa làm Tủ điện tổng MDB thông minh, hệ lưu trữ pin Lithium và biến tần Inverter Hybrid Solar 5kW an toàn, kín đáo.
+5. **Bếp mở & Phòng ăn gia đình ($5\text{m} \times 6.4\text{m}$):**
+   - Hệ tủ bếp dài thiết kế dọc tường bên trái với đầy đủ thiết bị hiện đại: bếp từ âm, chậu rửa nano, lò nướng làm bánh.
+   - Bàn ăn tròn gỗ sồi 4-6 ghế đặt ở vị trí trung tâm ấm cúng, là nơi cả gia đình quây quần sau một ngày dài.
+   - 2 cửa sổ mở sang đường luồng 2m đón gió đối lưu mát lành cùng cửa hậu kính lớn mở ra sân sau.
+6. **Sân sau đa năng & Dãy công trình phụ dọc tường trái:**
+   - **Dãy công trình phụ (vách tường trái):** Bố trí thành một chuỗi liên hoàn khép kín gồm Nhà vệ sinh ($2.4\text{m} \times 1.6\text{m}$) $\to$ Phòng tắm đứng độc lập ($2.4\text{m} \times 1.6\text{m}$) $\to$ Phòng giặt đồ ($2.4\text{m} \times 1.6\text{m}$) $\to$ Khu phơi đồ thoáng sáng ($2.4\text{m} \times 2.2\text{m}$). Việc bố trí tập trung này giúp hệ thống cấp thoát nước đi thẳng, cực kỳ dễ bảo trì và hạn chế tối đa độ ẩm vào nhà chính.
+   - **Bàn ngồi chill & Bãi đỗ xe máy bên phải:** Nằm dưới sàn ban công tầng 2 vươn ra 8m, vừa mát mẻ râm mát cả ngày, vừa che chắn tuyệt đối cho các phương tiện xe máy, xe đạp.
+   - **Vườn rau hữu cơ cuối sân ($5\text{m} \times 4\text{m}$):** Không gian xanh cung cấp rau sạch quanh năm, mang lại nguồn sinh khí trong lành cho tổ ấm.
 
 ---
 
@@ -98,43 +112,53 @@
 
 ```
 [MẶT TIỀN HƯỚNG ĐÔNG]
-  |--- BAN CÔNG TRƯỚC (Dài 1.6m x Ngang 5m) - Ngắm sao, nằm thư giãn, đàn hát -----------------------|
+  |--- BAN CÔNG TRƯỚC (Dài 1.6m x Ngang 5m) - Ngắm sao, chill nhạc, hóng gió ------------------------|
   |--- KHỐI NHÀ LẦU 1 (5m x 16m) -------------------------------------------------------------------|
-  |  (Y = 0.0m - 3.8m)  : PHÒNG NGỦ EM ÚT (Cửa sổ mở ra đường luồng 2m, bàn học, tủ áo)           |
-  |  (Y = 3.8m - 7.2m)  : PHÒNG NGỦ CHỊ HAI (Cửa sổ mở ra đường luồng 2m, bàn làm việc, tủ áo)     |
-  |  (Y = 7.2m - 10.4m) : CẦU THANG & GIẾNG TRỜI THÔNG TẦNG + WC CHUNG TẦNG 2                      |
-  |  (Y = 10.4m - 16.0m): PHÒNG NGỦ MASTER CỦA CHỦ NHÀ:                                             |
-  |                       - Đàn Piano Upright đen bóng du dương                                     |
-  |                       - Góc tập Yoga, Thiền định & đọc sách                                     |
-  |                       - Giường ngủ King size ấm áp, tủ kính sang trọng                          |
-  |                       - Nhà vệ sinh riêng khép kín cao cấp (vách kính tắm đứng/bồn nằm)         |
-  |                       - Tắm nắng ban mai mỗi ngày & tắm trăng mỗi đêm                           |
-  |--- BAN CÔNG SAU (Dài 2.0m x Ngang 5m) ---------------------------------------------------------|
-  |  - Góc tập thể dục, hít thở khí trời, ngắm trăng ngắm sao                                       |
-  |  - Khu giàn phơi đồ kín đáo có lam gió/lưới an toàn chắn gió (quần áo không bao giờ bị bay rơi)|
+  |  (Y = 0.0m - 5.8m)  : PHÒNG NGỦ MASTER CHỦ NHÀ (CHỊ BA) - ĐƯỢC ĐƯA RA TRƯỚC:                    |
+  |                       - Cửa kính lớn mở thẳng ra ban công trước ngắm sao                         |
+  |                       - Giường ngủ King size ấm áp; Phía sau đầu giường là:                     |
+  |                         + Nhà vệ sinh riêng (2m x 3.2m): bồn tắm nằm & tắm đứng kính cao cấp    |
+  |                         + Phòng thay đồ Walk-in Closet (1.8m x 3.2m): tủ áo âm tường sang trọng |
+  |                       - Đàn Piano Upright đặt sát tường phải                                     |
+  |                       - Góc thảm Yoga, đệm thiền định lắng đọng tâm hồn                          |
+  |  (Y = 5.8m - 9.0m)  : CẦU THANG CHỮ U & GIẾNG TRỜI THÔNG TẦNG Ở GIỮA NHÀ:                       |
+  |                       - Chiếu nghỉ & ô giếng trời kính thông tầng lấy sáng tự nhiên              |
+  |                       - Hành lang 1m kết nối liên thông các phòng ngủ                            |
+  |  (Y = 9.0m - 12.2m) : PHÒNG NGỦ EM ÚT (PHÒNG SẾU - 4m x 3.2m):                                   |
+  |                       - Nằm ở giữa, cửa mở ra hành lang 1m                                      |
+  |                       - Cửa sổ kính nhìn ra giếng trời và cửa sổ cao ở tường trái                |
+  |  (Y = 12.2m - 16.0m): PHÒNG NGỦ CHỊ HAI (4m x 3.2m):                                             |
+  |                       - Nằm ở phía sau nhà, yên tĩnh tuyệt đối                                   |
+  |                       - Cửa kính lớn mở trực tiếp ra Ban công sau rộng lớn                      |
+  |--- BAN CÔNG SAU SIÊU RỘNG (Dài 8.0m x Ngang 5m = 40m2) ------------------------------------------|
+  |  - Phủ lên toàn bộ sân sau tầng 1 (có cột đỡ chịu lực kiên cố)                                  |
+  |  - Không gian tập Yoga ngoài trời, tắm nắng ban mai & ngắm trăng thanh ban đêm                   |
+  |  - Khu vực phơi đồ kín đáo ở cuối ban công với lan can tường chắn gió an toàn                   |
   |-------------------------------------------------------------------------------------------------|
 ```
 
 #### Chi tiết từng khu vực Tầng 2:
 1. **Ban công trước ngắm sao ($5\text{m} \times 1.6\text{m}$):**
-   - Lan can kính cường lực tay vịn nhôm đúc sang trọng, sàn gạch vân gỗ chống trơn.
-   - Bố trí ghế lười thư giãn, bàn trà nhỏ, vài chậu hoa thơm. Nơi ba chị em hoặc bạn bè có thể cùng nhau ngồi ngắm sao đêm, hóng gió mát hoặc ôm đàn guitar hát vu vơ. Phía trên có hệ lam gỗ chắn nắng sớm hướng Đông.
-2. **Phòng ngủ Em Út & Phòng ngủ Chị Hai:**
-   - Mỗi phòng rộng khoảng $12\text{ m}^2$ vuông vức, bài trí tối giản: Giường ngủ êm ái, tủ quần áo kịch trần, bàn học/trang điểm.
-   - Toàn bộ phòng đều có cửa sổ kính mở thẳng ra hướng đường luồng 2m bên hông để lấy ánh sáng tự nhiên và luồng khí đối lưu trong lành.
-3. **Giải pháp Nhà vệ sinh Tầng 2 (Phân tích chi tiết theo mong muốn của bạn):**
-   - *Gợi ý của bạn:* Tầng 2 nên có 1 WC riêng trong phòng Master và **1 WC chung** cho hai phòng của Chị Hai & Em Út.
-   - *Đánh giá chuyên môn:* **Hoàn toàn chuẩn xác và rất nên làm!** Mặc dù hiện tại chị và em út ít ở nhà, nhưng trong tương lai khi các chị em lập gia đình, có thêm các cháu nhỏ hoặc khi cả nhà sum vầy dịp lễ Tết, việc có WC chung tầng 2 sẽ giúp sinh hoạt thuận tiện vô cùng, không phải chạy xuống tầng 1 hay chen chúc.
-   - *Phương án tối ưu chi phí:* Đặt WC chung Tầng 2 nằm đối xứng trục đứng với khu cấp thoát nước tầng trệt (ngay cạnh giếng trời và cầu thang). Cách bố trí này giúp đi chung hộp kỹ thuật (hộp gen), tiết kiệm tối đa đường ống và chi phí phát sinh (chỉ tốn thêm khoảng 25-30 triệu tiền thiết bị và gạch ốp lát nhưng giá trị sử dụng lâu dài là vô giá).
-4. **Phòng ngủ Master — Thiên đường bình an của chủ nhà ($5\text{m} \times 5.6\text{m} = \sim 28\text{ m}^2$):**
-   - **Góc Đàn Piano Upright:** Cây đàn piano sơn bóng đen sang trọng đặt tựa vào vách tường trang âm êm ái, nơi bạn lướt những phím đàn du dương sau ngày làm việc.
-   - **Góc Yoga & Thiền định:** Mặt sàn rộng rãi, trải thảm yoga cao cấp, gối thiền tròn Zafu, chuông xoay Tây Tạng và gương tròn viền LED. Không gian ngập tràn ánh sáng tự nhiên nhưng cực kỳ yên tĩnh.
-   - **Góc đọc sách thư thái:** Một chiếc ghế bành thư giãn cạnh cửa kính lớn nhìn ra ban công sau.
-   - **Nhà vệ sinh khép kín Master:** Thiết kế sang trọng như resort: Vách kính tắm đứng hoặc bồn tắm nằm thư giãn, lavabo đá, gương LED cảm ứng, gạch chống trượt R11 an toàn tuyệt đối.
-   - **Tắm nắng & Tắm trăng:** Phòng có hệ cửa kính lớn kết nối trực tiếp với ban công sau, buổi sáng mở rèm đón ánh nắng tinh khôi, buổi tối mở cửa ngắm ánh trăng bàng bạc chiếu vào phòng.
-5. **Ban công sau đa năng ($5\text{m} \times 2.0\text{m}$):**
-   - Không gian tập thể dục, yoga ngoài trời, hít thở không khí trong lành của vườn rau phía dưới.
-   - **Giải pháp phơi đồ an toàn:** Bố trí giàn phơi thông minh nâng hạ gắn trần. Bao quanh là hệ khung lam nhôm chắn gió chuyên dụng và lưới an toàn inox tàng hình: Vừa đón tối đa nắng và gió tự nhiên để đồ mau khô, vừa chắn các luồng gió lốc giật mạnh khiến quần áo không bao giờ bị rơi bay xuống sân dưới!
+   - Nhô ra phía trước mặt tiền 1.6m, vừa tạo điểm nhấn kiến trúc vừa đóng vai trò che mưa nắng cho cửa chính và bậc tam cấp Tầng 1.
+   - Lan can kính cường lực tay vịn sang trọng, sàn gỗ ngoài trời chống trơn. Nơi lý tưởng để đặt ghế lười ngắm bình minh hoặc ngắm sao trời ban đêm.
+2. **Phòng ngủ Master Chị Ba — Không gian nghệ thuật & Chữa lành ($4\text{m} \times 5.8\text{m}$):**
+   - **Vị trí mặt tiền:** Được đưa ra phía trước để sở hữu tầm nhìn thoáng đãng và kết nối trực tiếp với ban công trước.
+   - **Cây đàn Piano Upright:** Đặt áp sát tường bên phải với ánh sáng rọi nhẹ nhàng, là góc âm nhạc du dương mỗi buổi tối.
+   - **Góc Yoga & Thiền định:** Không gian mở ngập tràn ánh sáng tự nhiên với thảm tập cao cấp và gương viền LED.
+   - **Phòng vệ sinh riêng & Phòng thay đồ sau đầu giường:** Thiết kế vách ngăn tinh tế sau giường ngủ dẫn vào Nhà vệ sinh khép kín ($2\text{m} \times 3.2\text{m}$) có bồn tắm nằm thư giãn, và Phòng thay đồ Walk-in Closet ($1.8\text{m} \times 3.2\text{m}$) với hệ tủ áo âm tường kịch trần.
+3. **Cầu thang, Giếng trời thông tầng & Hành lang đối lưu:**
+   - Khoang thang chữ U kết hợp ô kính giếng trời thông tầng ở giữa nhà, giúp ánh sáng tự nhiên rót thẳng từ mái xuống lõi nhà, mang lại sinh khí và sự thông thoáng tuyệt vời.
+   - Hành lang 1m dọc bên phải kết nối nhịp nhàng từ phòng Master ra phòng Em Út và phòng Chị Hai.
+4. **Phòng ngủ Em Út (Phòng Sếu - $4\text{m} \times 3.2\text{m}$):**
+   - Bố trí vuông vức, bàn học và tủ quần áo tiện nghi.
+   - Được chiếu sáng và thông gió tự nhiên nhờ cửa kính mở sang giếng trời cùng ô thoáng cao trên tường trái.
+5. **Phòng ngủ Chị Hai ($4\text{m} \times 3.2\text{m}$):**
+   - Nằm ở cuối khối nhà chính, sở hữu sự riêng tư và tĩnh lặng tuyệt đối.
+   - Cửa kính trượt lớn mở trực tiếp ra ban công sau mênh mông, đón trọn bầu không khí trong lành của vườn cây bên dưới.
+6. **Ban công sau siêu rộng ($5\text{m} \times 8.0\text{m} = 40\text{ m}^2$):**
+   - Vươn dài 8m che phủ trọn vẹn khu sân sau tầng 1, tạo nên một sàn sinh hoạt ngoài trời đẳng cấp trên cao.
+   - Nơi tập Yoga, thiền định buổi sáng, tắm nắng, tắm trăng ngắm sao mỗi đêm.
+   - Cuối ban công bố trí khu phơi đồ kín đáo có lan can tường bao che chắn gió giật, bảo đảm quần áo luôn an toàn và thẩm mỹ.
 
 ---
 
@@ -213,35 +237,40 @@
 ```
         [MẶT ĐƯỜNG QUỐC LỘ]
                 |
-    [CỔNG AN NINH & HÀNG RÀO LAM]
+    [CỔNG XE 3.6M & CỔNG PHỤ 2.0M]
                 |
-  +-----------------------------+-------+
-  | SÂN TRƯỚC (18m x 5m)        | LUỒNG |
-  | - Đỗ ô tô, bồn hoa cảnh     | 2m    |
-  | - HIÊN TRÀ & NHẬU CỦA BA    |       |
-  |   (Có mái che, bàn ghế)     |       |
-  +-----------------------------+-------+
-  | NGÔI NHÀ 2 TẦNG (16m x 5m)  | LỐI XE|
-  | (PK, Thờ, Ngủ, Thang, Bếp)  | MÁY   |
-  +-----------------------------+-------+
-  | SÂN SAU (~7m x 5m)          | VÀO   |
-  | - Sảnh hóng gió & để xe máy | SAU   |
-  | - Giặt phơi có mái che kính |       |
-  | - VƯỜN RAU XANH HỮU CƠ      |       |
-  +-----------------------------+-------+
+  +--------------------------------+-------+
+  | SÂN TRƯỚC (18m x 5m)           | LUỒNG |
+  | - MÁI CHE KÍN TOÀN BỘ 18M      | 2m    |
+  | - Đỗ ô tô SUV bên trái         | ĐÁ    |
+  | - BÀN NƯỚC CỦA BA ÁP SÁT TƯỜNG | BƯỚC  |
+  +--------------------------------+ DẶM   |
+  | NGÔI NHÀ 2 TẦNG (16m x 5m)     | BONSAI|
+  | T1: PK, Thờ, Ngủ Ba Mẹ, Thang, |       |
+  |     Bếp mở & Bàn ăn tròn       |       |
+  | T2: Master Chị Ba (Piano/Yoga) |       |
+  |     Thang/Giếng trời, 2 PN     |       |
+  +--------------------------------+-------+
+  | SÂN SAU (~12m x 5m)            | THÔNG |
+  | - Dãy phụ trái: WC, Tắm, Giặt, | THẲNG |
+  |   Phơi đồ có mái thoáng        | RA    |
+  | - Ban công T2 (8m x 5m) che phủ| SÂN   |
+  |   Bàn chill & chỗ để xe máy    | SAU   |
+  | - VƯỜN RAU XANH HỮU CƠ (5m x 4m|       |
+  +--------------------------------+-------+
     [TƯỜNG RÀO SAU KIÊN CỐ 2.2m]
 ```
 
-1. **Sân trước 18m:**
-   - Khoảng sân rộng thênh thang, lát gạch nhám chống rêu màu xám ghi sạch sẽ.
-   - Bên phải là lối xe ô tô ra vào thẳng thớm; bên trái là góc hiên trà của Ba với giàn hoa giấy hoặc hoa leo dịu dàng, chậu cây bon-sai xanh mát.
-2. **Hành lang đường luồng 2m:**
-   - Lối đi dành cho xe máy, xe đạp di chuyển êm ả từ cổng ra thẳng khu để xe sân sau, giữ cho phòng khách luôn sạch bong kin kít, không có vết bánh xe hay mùi xăng xe trong nhà.
-   - Dọc theo tường rào bên hông bố trí rãnh sỏi trắng và những khóm trúc quân tử, trầu bà thanh lọc không khí.
-3. **Sân sau 7m:**
-   - **Khu để xe & Sảnh hóng gió:** Nằm dưới mái hiên sau mát mẻ, dựng xe máy gọn gàng, có bàn trà nhỏ để ngồi ngắm mẹ hái rau, chuyện trò râm ran mỗi chiều.
-   - **Khu giặt phơi thông minh:** Lợp mái kính cường lực dán phim cách nhiệt (hoặc tấm poly đặc ruột): Nắng chan hòa diệt khuẩn quần áo nhưng mưa bão không bao giờ ướt đồ.
-   - **Vườn rau xanh sạch:** 3 luống rau được xây bồn gạch cao 35cm sạch sẽ, trồng xà lách, rau muống, cà chua, hành ngò thơm ngát; góc sân trồng thêm 1-2 cây ăn trái sum suê (bưởi, ổi, khế).
+1. **Sân trước 18m có Mái che kín toàn bộ 18m:**
+   - Khoảng sân rộng thênh thang được bảo vệ toàn diện bởi mái che kín suốt 18m, lát gạch nhám chống rêu màu xám ghi sạch sẽ.
+   - Bên trái là khu vực đỗ xe ô tô SUV 7 chỗ cùng góc bàn trà của Ba được đặt **áp sát vào vách tường bên trái**, tạo cảm giác vững chãi, ấm cúng và kín gió mưa. Ba có thể thảnh thơi nhâm nhi trà sớm, trò chuyện cùng người thân mà hoàn toàn không lo mưa hắt.
+2. **Hành lang đường luồng 2m bên phải:**
+   - Lối đi lát đá bước dặm tự nhiên xen lẫn cây cảnh bonsai và rãnh sỏi trắng, dẫn thẳng từ cổng 2m vào khu để xe máy và dãy công trình phụ sân sau.
+   - Giúp xe cộ không đi qua phòng khách, giữ sàn nhà luôn sạch bong và không có mùi xăng xe.
+3. **Sân sau 12m & Ban công tầng 2 che phủ:**
+   - **Khu để xe máy & Bàn ngồi chill bên phải:** Được sàn ban công Tầng 2 vươn dài 8m che mát, là nơi dựng xe máy sạch sẽ và góc ngồi hóng mát ngắm vườn rau.
+   - **Dãy công trình phụ khép kín bên trái:** Chuỗi công năng WC - Phòng tắm kính - Phòng giặt - Khu phơi đồ thiết kế thẳng hàng áp sát tường, thoát nước ngầm cực tốt và kín đáo.
+   - **Vườn rau hữu cơ cuối sân ($5\text{m} \times 4\text{m}$):** Cung cấp rau củ xanh sạch tươi ngon mỗi ngày cho bữa cơm gia đình.
 
 ---
 

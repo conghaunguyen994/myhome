@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fullhouse 3D Villa - Smart Home & Night Illumination Edition</title>
+  <title>Fullhouse 3D Villa - Kiến Trúc Mới & Smart Home Toàn Diện</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -24,7 +24,6 @@
       left: 0;
       z-index: 1;
     }
-    /* Modern Glassmorphism UI */
     .glass {
       background: rgba(10, 17, 32, 0.84);
       backdrop-filter: blur(18px);
@@ -96,7 +95,6 @@
       font-weight: 600;
     }
 
-    /* Smart Home Inspector Card (Left below header) */
     .smarthome-card {
       position: absolute;
       top: 205px;
@@ -179,11 +177,8 @@
       color: #cbd5e1;
       line-height: 1.5;
     }
-    .sh-detail-box strong {
-      color: #38bdf8;
-    }
+    .sh-detail-box strong { color: #38bdf8; }
 
-    /* Right Quick Navigation Panel */
     .nav-panel {
       position: absolute;
       top: 18px;
@@ -193,7 +188,7 @@
       display: flex;
       flex-direction: column;
       gap: 6px;
-      max-width: 245px;
+      max-width: 265px;
       max-height: calc(100vh - 110px);
       overflow-y: auto;
     }
@@ -233,7 +228,6 @@
       font-weight: 600;
     }
 
-    /* Bottom Control Bar */
     .bottom-bar {
       position: absolute;
       bottom: 20px;
@@ -284,7 +278,6 @@
       margin: 0 3px;
     }
 
-    /* Slider styling */
     .slider-wrap {
       display: flex;
       align-items: center;
@@ -299,13 +292,9 @@
       width: 75px;
     }
 
-    /* 3D Callout Pins Overlay (Like Reference Image) */
     #labels-container {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0; width: 100%; height: 100%;
       pointer-events: none;
       z-index: 5;
       overflow: hidden;
@@ -346,36 +335,12 @@
       justify-content: center;
       font-size: 14px;
     }
-    .sh-pin-text {
-      display: flex;
-      flex-direction: column;
-    }
-    .sh-pin-title {
-      font-size: 10.5px;
-      font-weight: 800;
-      color: #ffffff;
-      letter-spacing: 0.4px;
-      text-transform: uppercase;
-    }
-    .sh-pin-sub {
-      font-size: 9.5px;
-      color: #93c5fd;
-      font-weight: 500;
-    }
-    .sh-pin-stem {
-      width: 2px;
-      height: 28px;
-      background: linear-gradient(to bottom, #60a5fa, rgba(96, 165, 250, 0.2));
-    }
-    .sh-pin-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #60a5fa;
-      box-shadow: 0 0 10px #38bdf8, 0 0 4px #ffffff;
-    }
+    .sh-pin-text { display: flex; flex-direction: column; }
+    .sh-pin-title { font-size: 10.5px; font-weight: 800; color: #ffffff; letter-spacing: 0.4px; text-transform: uppercase; }
+    .sh-pin-sub { font-size: 9.5px; color: #93c5fd; font-weight: 500; }
+    .sh-pin-stem { width: 2px; height: 26px; background: linear-gradient(to bottom, #60a5fa, rgba(96, 165, 250, 0.2)); }
+    .sh-pin-dot { width: 8px; height: 8px; border-radius: 50%; background: #60a5fa; box-shadow: 0 0 10px #38bdf8, 0 0 4px #ffffff; }
 
-    /* Tooltip Helper */
     .tooltip {
       position: absolute;
       bottom: 76px;
@@ -392,7 +357,6 @@
       letter-spacing: 0.2px;
     }
 
-    /* Loader */
     #loader {
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -423,8 +387,8 @@
 
   <div id="loader">
     <div class="spinner"></div>
-    <div style="font-weight: 700; font-size: 16px; color: #f8fafc; letter-spacing: -0.2px;">Đang khởi tạo Fullhouse 3D Smart Villa...</div>
-    <div style="font-size: 12px; color: #64748b;">Kết xuất vật liệu PBR, hệ thống đèn LED ban đêm & sơ đồ Smart Home</div>
+    <div style="font-weight: 700; font-size: 16px; color: #f8fafc; letter-spacing: -0.2px;">Đang khởi tạo Fullhouse 3D Villa (Mặt bằng phác thảo mới)...</div>
+    <div style="font-size: 12px; color: #64748b;">Mái che sân trước 18m, Bàn trà áp tường, Master phía trước, Khối phụ trợ sân sau</div>
   </div>
 
   <div id="canvas-container"></div>
@@ -432,20 +396,20 @@
 
   <!-- Header Info Card -->
   <div class="header-card glass">
-    <h1>🏡 FULLHOUSE 3D VILLA <span class="badge">5M × 16M</span> <span class="badge badge-smart">SMART HOME AI</span></h1>
-    <p>Phối cảnh kiến trúc & nội thất chân thực: Lam gỗ mặt tiền LED hắt sáng, sàn gỗ xương cá, đá Calacatta vân mây, cùng hệ sinh thái Smart Home toàn diện (WiFi Mesh, Camera PoE, Tủ điện & Khóa FaceID).</p>
+    <h1>🏡 FULLHOUSE 3D VILLA <span class="badge">5M × 16M</span> <span class="badge badge-smart">MẶT BẰNG MỚI</span></h1>
+    <p>Cập nhật theo phác thảo mới: Sân trước 18m có mái che kín toàn bộ, Bàn trà của Ba áp sát tường trái. Master đưa ra trước tầng 2 có ban công ngắm sao & piano. Sân sau dãy WC/Tắm/Giặt/Phơi áp tường trái cạnh vườn rau.</p>
     <div class="stats-row">
+      <div class="stat-item">
+        <span class="stat-val">18m Mái</span>
+        <span class="stat-lbl">Che Kín Sân Trước</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-val">Master Trước</span>
+        <span class="stat-lbl">Piano & Ban Công</span>
+      </div>
       <div class="stat-item">
         <span class="stat-val">6 Camera</span>
         <span class="stat-lbl">An ninh AI PoE</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-val">3 Node Mesh</span>
-        <span class="stat-lbl">WiFi 6E Xuyên Sàn</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-val">2 Tủ Điện</span>
-        <span class="stat-lbl">MDB + Solar 5kWp</span>
       </div>
       <div class="stat-item">
         <span class="stat-val">Full LED</span>
@@ -454,59 +418,57 @@
     </div>
   </div>
 
-  <!-- Smart Home & MEP System Panel -->
+  <!-- Smart Home Inspector Card -->
   <div class="smarthome-card glass" id="sh-panel">
     <div class="sh-header">
-      <div class="sh-title">📡 Sơ Đồ Smart Home, Điện & WiFi</div>
+      <div class="sh-title">📡 Sơ Đồ Smart Home & Kỹ Thuật Mới</div>
       <span style="font-size: 10px; color: #94a3b8;">Bấm để xem vị trí</span>
     </div>
     <div class="sh-grid">
       <div class="sh-chip active" onclick="inspectSmartSystem('wifi', this)">
-        <div class="sh-chip-top"><span>🛜 Hệ Thống WiFi Mesh</span><span class="sh-dot"></span></div>
-        <div class="sh-chip-desc">1 Router chính + 2 Node Mesh 6E phủ 100% nhà & sân</div>
+        <div class="sh-chip-top"><span>🛜 WiFi Mesh 6E (3 Node)</span><span class="sh-dot"></span></div>
+        <div class="sh-chip-desc">Kệ TV T1, Bếp/Đọc sách và Hành lang T2 xuyên sàn</div>
       </div>
       <div class="sh-chip" onclick="inspectSmartSystem('camera', this)">
-        <div class="sh-chip-top"><span>📷 6 Camera An Ninh</span><span class="sh-dot"></span></div>
-        <div class="sh-chip-desc">Góc rộng PoE chống ngược sáng, quét cổng & 4 phía</div>
+        <div class="sh-chip-top"><span>📷 6 Camera AI PoE</span><span class="sh-dot"></span></div>
+        <div class="sh-chip-desc">Cổng 18m, Sân ô tô, Luồng 2m, Sân sau, PK, Ban công T2</div>
       </div>
       <div class="sh-chip" onclick="inspectSmartSystem('power', this)">
-        <div class="sh-chip-top"><span>⚡ Tủ Điện & Solar</span><span class="sh-dot"></span></div>
-        <div class="sh-chip-desc">Tủ tổng MDB cầu thang, Inverter 5kW & Sạc EV sân trước</div>
+        <div class="sh-chip-top"><span>⚡ Tủ Điện MDB & Solar</span><span class="sh-dot"></span></div>
+        <div class="sh-chip-desc">Tủ MDB gầm thang, Inverter 5kW, Sạc EV sân trước</div>
       </div>
-      <div class="sh-chip" onclick="inspectSmartSystem('lock', this)">
-        <div class="sh-chip-top"><span>🔒 Khóa Cửa & Cổng</span><span class="sh-dot"></span></div>
-        <div class="sh-chip-desc">Khóa vân tay FaceID cửa chính + Motor cổng tự động</div>
+      <div class="sh-chip" onclick="inspectSmartSystem('canopy', this)">
+        <div class="sh-chip-top"><span>🏗️ Mái Che Sân 18m</span><span class="sh-dot"></span></div>
+        <div class="sh-chip-desc">Mái che kín 18m chống mưa nắng + Bàn trà áp vách</div>
       </div>
-      <div class="sh-chip" onclick="inspectSmartSystem('ac', this)">
-        <div class="sh-chip-top"><span>🌡️ Điều Hòa & Cảm Biến</span><span class="sh-dot"></span></div>
-        <div class="sh-chip-desc">5 dàn lạnh Inverter + Cảm biến khói bếp & tưới cây</div>
+      <div class="sh-chip" onclick="inspectSmartSystem('master', this)">
+        <div class="sh-chip-top"><span>🎹 Master Suite Trước</span><span class="sh-dot"></span></div>
+        <div class="sh-chip-desc">Piano, Yoga, Ban công ngắm sao, WC & Thay đồ riêng</div>
       </div>
       <div class="sh-chip" onclick="inspectSmartSystem('lighting', this)">
-        <div class="sh-chip-top"><span>💡 Đèn Thông Minh</span><span class="sh-dot"></span></div>
-        <div class="sh-chip-desc">LED hắt khe trần, lam gỗ mặt tiền, đèn tranh & sân vườn</div>
+        <div class="sh-chip-top"><span>💡 Đèn LED Ban Đêm</span><span class="sh-dot"></span></div>
+        <div class="sh-chip-desc">LED mái che 18m, lam gỗ, hắt trần, bếp, cầu thang</div>
       </div>
     </div>
     <div class="sh-detail-box" id="sh-detail-text">
-      <strong>📍 Vị trí WiFi & Trung Tâm Điều Khiển:</strong><br>
-      • <strong>Router Tổng + Smart Hub (Tầng 1):</strong> Đặt tại kệ TV Phòng Khách (Y=2.0m), kết nối cáp quang trực tiếp.<br>
-      • <strong>Mesh Node 2 (Tầng 1 Sau):</strong> Gắn tường khu Đọc sách / Bếp (Y=9.5m), phủ sóng bếp & vườn rau.<br>
-      • <strong>Mesh Node 3 (Tầng 2):</strong> Gắn hành lang trung tâm Lầu 1 (Y=7.2m, cao độ Z=5.8m), đi dây mạng âm tường Cat6.
+      <strong>📍 Quy hoạch Mái Che Sân Trước 18m & Bàn Trà Của Ba:</strong><br>
+      • <strong>Mái che dài 18m che kín:</strong> Hệ khung thép hộp sơn tĩnh điện kết hợp mái kính cường lực dán phim cách nhiệt phủ kín từ cổng chính tới hiên nhà, che râm mát cho ô tô và lối đi.<br>
+      • <strong>Bàn trà của Ba áp sát vách tường trái:</strong> Kê sát tường rào trái (Y=-3.5m), có ghế băng và ghế đơn, tận dụng tối đa không gian sân để xe ô tô đỗ bên phải thuận tiện.
     </div>
   </div>
 
   <!-- Quick Navigation Panel -->
   <div class="nav-panel glass">
-    <div class="panel-title">Khám Phá Không Gian</div>
-    <button class="nav-btn" onclick="focusCamera('facade', event)">✨ Mặt Tiền Lên Đèn & Lam Gỗ</button>
-    <button class="nav-btn" onclick="focusCamera('front', event)">🚗 Sân Trước, Cổng & Sạc EV</button>
-    <button class="nav-btn" onclick="focusCamera('porch', event)">🍵 Hiên Trà Của Ba (Đèn Ấm)</button>
-    <button class="nav-btn" onclick="focusCamera('living', event)">🛋️ Phòng Khách & Smart Hub</button>
-    <button class="nav-btn" onclick="focusCamera('altar', event)">🪷 Gian Thờ Quan Âm</button>
-    <button class="nav-btn" onclick="focusCamera('study', event)">⚡ Tủ Điện Tổng & Phòng Đọc</button>
-    <button class="nav-btn" onclick="focusCamera('kitchen', event)">🍰 Bếp & Đảo Làm Bánh LED</button>
-    <button class="nav-btn" onclick="focusCamera('garden', event)">🥬 Vườn Rau & Tưới Tự Động</button>
-    <button class="nav-btn" onclick="focusCamera('master', event)">🎹 Master: Piano & Đèn Ngủ</button>
-    <button class="nav-btn" onclick="focusCamera('sisters', event)">🛏️ Phòng Chị Hai & Em Út</button>
+    <div class="panel-title">Khám Phá Mặt Bằng Mới</div>
+    <button class="nav-btn" onclick="focusCamera('frontCanopy', event)">🚗 Sân Trước Mái Che Kín 18m</button>
+    <button class="nav-btn" onclick="focusCamera('dadTeaWall', event)">🍵 Bàn Trà Của Ba (Áp Vách Tường)</button>
+    <button class="nav-btn" onclick="focusCamera('livingNew', event)">🛋️ Phòng Khách (Bàn Thờ & TV Trái)</button>
+    <button class="nav-btn" onclick="focusCamera('parentsBed', event)">🛏️ Phòng Ba Mẹ (Tầng 1 Thuận Tiện)</button>
+    <button class="nav-btn" onclick="focusCamera('stairMDB', event)">⚡ Cầu Thang Chữ U & Tủ Điện MDB</button>
+    <button class="nav-btn" onclick="focusCamera('kitchenNew', event)">🍳 Bếp Dọc Trái & Bàn Ăn Tròn</button>
+    <button class="nav-btn" onclick="focusCamera('rearService', event)">🚿 Sân Sau: WC/Tắm/Giặt/Phơi/Rau</button>
+    <button class="nav-btn" onclick="focusCamera('masterFront', event)">🎹 Master Phía Trước: Piano & Sao</button>
+    <button class="nav-btn" onclick="focusCamera('sistersRear', event)">🛏️ Phòng Sếu, Chị Hai & Ban Công Sau</button>
   </div>
 
   <!-- Bottom Control Bar -->
@@ -526,31 +488,23 @@
     <button class="ctrl-btn" id="btn-fov" onclick="toggleTechVisuals()">🔍 Sóng WiFi & Góc Cam</button>
   </div>
 
-  <div class="tooltip">Xoay: Chuột trái | Di chuyển: Chuột phải | Cuộn: Zoom | Bấm vào các Nhãn xanh trên mô hình để xem chi tiết thiết bị</div>
+  <div class="tooltip">Xoay: Chuột trái | Di chuyển: Chuột phải | Cuộn: Zoom | Bấm vào các Nhãn trên mô hình để bay tới xem chi tiết</div>
 
   <script>
     // =========================================================================
-    // 1. HIGH-REALISM PROCEDURAL TEXTURES (HERRINGBONE WOOD, MARBLE, STONE, SOLAR)
+    // 1. PROCEDURAL TEXTURES (PBR GENERATION)
     // =========================================================================
-    function createHerringboneWoodTexture() {
+    function createWoodTexture() {
       const c = document.createElement('canvas');
       c.width = 512; c.height = 512;
       const ctx = c.getContext('2d');
-      ctx.fillStyle = '#9c6b3b';
-      ctx.fillRect(0, 0, 512, 512);
-
+      ctx.fillStyle = '#9c6b3b'; ctx.fillRect(0, 0, 512, 512);
       const plankW = 64, plankH = 16;
       const shades = ['#a67444', '#946234', '#b07e4d', '#875629', '#a06e3e'];
       for (let y = 0; y < 512; y += plankH) {
         for (let x = 0; x < 512; x += plankW) {
           ctx.fillStyle = shades[(x + y) % shades.length];
           ctx.fillRect(x, y, plankW - 1.5, plankH - 1.5);
-          // Wood grain fibers
-          ctx.fillStyle = 'rgba(55, 30, 10, 0.14)';
-          for (let g = 0; g < 6; g++) {
-            ctx.fillRect(x + 2, y + Math.random() * (plankH - 3), plankW - 4, 1);
-          }
-          // Plank seam
           ctx.strokeStyle = 'rgba(40, 22, 8, 0.45)';
           ctx.lineWidth = 1.2;
           ctx.strokeRect(x, y, plankW, plankH);
@@ -562,163 +516,64 @@
       return tex;
     }
 
-    function createCalacattaMarbleTexture() {
+    function createMarbleTexture() {
       const c = document.createElement('canvas');
       c.width = 512; c.height = 512;
       const ctx = c.getContext('2d');
-      ctx.fillStyle = '#f8f9fa';
-      ctx.fillRect(0, 0, 512, 512);
-
-      // Soft warm golden-grey Calacatta veins
+      ctx.fillStyle = '#f8f9fa'; ctx.fillRect(0, 0, 512, 512);
       for (let i = 0; i < 14; i++) {
         ctx.beginPath();
         ctx.strokeStyle = i % 3 === 0 ? 'rgba(180, 145, 95, 0.18)' : 'rgba(130, 140, 155, 0.22)';
         ctx.lineWidth = (i % 4 + 1) * 1.6;
-        let x = Math.random() * 512;
-        let y = 0;
+        let x = Math.random() * 512, y = 0;
         ctx.moveTo(x, y);
-        while (y < 512) {
-          y += 32;
-          x += (Math.random() - 0.48) * 45;
-          ctx.lineTo(x, y);
-        }
+        while (y < 512) { y += 32; x += (Math.random() - 0.48) * 45; ctx.lineTo(x, y); }
         ctx.stroke();
       }
-      // Tile grout grid (80x80cm luxury porcelain look)
-      ctx.strokeStyle = 'rgba(160, 165, 175, 0.42)';
-      ctx.lineWidth = 2;
-      ctx.strokeRect(1, 1, 254, 254);
-      ctx.strokeRect(257, 1, 254, 254);
-      ctx.strokeRect(1, 257, 254, 254);
-      ctx.strokeRect(257, 257, 254, 254);
-
+      ctx.strokeStyle = 'rgba(160, 165, 175, 0.42)'; ctx.lineWidth = 2;
+      ctx.strokeRect(1, 1, 254, 254); ctx.strokeRect(257, 1, 254, 254);
+      ctx.strokeRect(1, 257, 254, 254); ctx.strokeRect(257, 257, 254, 254);
       const tex = new THREE.CanvasTexture(c);
       tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
       tex.repeat.set(4, 11);
       return tex;
     }
 
-    function createSplitStoneTexture() {
+    function createStoneTexture() {
       const c = document.createElement('canvas');
       c.width = 512; c.height = 512;
       const ctx = c.getContext('2d');
-      ctx.fillStyle = '#2b3440';
-      ctx.fillRect(0, 0, 512, 512);
+      ctx.fillStyle = '#2b3440'; ctx.fillRect(0, 0, 512, 512);
       const colors = ['#333e4d', '#262f3b', '#3d4959', '#1f2733', '#465263'];
-      const rowH = 32;
-      for (let y = 0; y < 512; y += rowH) {
+      for (let y = 0; y < 512; y += 32) {
         let x = 0;
         while (x < 512) {
           const w = 48 + Math.floor(Math.random() * 64);
           ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
-          ctx.fillRect(x + 1, y + 1, w - 2, rowH - 2);
-          ctx.strokeStyle = '#141921';
-          ctx.lineWidth = 2;
-          ctx.strokeRect(x, y, w, rowH);
+          ctx.fillRect(x + 1, y + 1, w - 2, 30);
+          ctx.strokeStyle = '#141921'; ctx.lineWidth = 2; ctx.strokeRect(x, y, w, 32);
           x += w;
         }
       }
       const tex = new THREE.CanvasTexture(c);
       tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-      tex.repeat.set(2, 2);
       return tex;
     }
 
-    function createGardenPaverTexture() {
-      const c = document.createElement('canvas');
-      c.width = 512; c.height = 512;
-      const ctx = c.getContext('2d');
-      ctx.fillStyle = '#3b4452';
-      ctx.fillRect(0, 0, 512, 512);
-      for (let y = 0; y < 512; y += 64) {
-        for (let x = 0; x < 512; x += 64) {
-          ctx.fillStyle = (x + y) % 128 === 0 ? '#4b5563' : '#434d5b';
-          ctx.fillRect(x + 3, y + 3, 58, 58);
-          // Subtle speckle
-          ctx.fillStyle = 'rgba(255,255,255,0.04)';
-          ctx.fillRect(x + 10, y + 10, 20, 20);
-        }
-      }
-      const tex = new THREE.CanvasTexture(c);
-      tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-      tex.repeat.set(5, 12);
-      return tex;
-    }
-
-    function createSolarPanelTexture() {
-      const c = document.createElement('canvas');
-      c.width = 256; c.height = 256;
-      const ctx = c.getContext('2d');
-      ctx.fillStyle = '#0c1938';
-      ctx.fillRect(0, 0, 256, 256);
-      ctx.strokeStyle = 'rgba(147, 197, 253, 0.35)';
-      ctx.lineWidth = 1.5;
-      for (let x = 0; x <= 256; x += 32) {
-        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 256); ctx.stroke();
-      }
-      for (let y = 0; y <= 256; y += 32) {
-        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(256, y); ctx.stroke();
-      }
-      const tex = new THREE.CanvasTexture(c);
-      return tex;
-    }
-
-    function createWallStuccoTexture() {
-      const c = document.createElement('canvas');
-      c.width = 256; c.height = 256;
-      const ctx = c.getContext('2d');
-      ctx.fillStyle = '#f8fafc';
-      ctx.fillRect(0, 0, 256, 256);
-      for (let i = 0; i < 1500; i++) {
-        ctx.fillStyle = i % 2 === 0 ? 'rgba(226, 232, 240, 0.35)' : 'rgba(255, 255, 255, 0.5)';
-        ctx.fillRect(Math.random() * 256, Math.random() * 256, 2, 2);
-      }
-      const tex = new THREE.CanvasTexture(c);
-      tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-      tex.repeat.set(4, 4);
-      return tex;
-    }
-
-    function createPaintingTexture(theme = 1) {
-      const c = document.createElement('canvas');
-      c.width = 256; c.height = 192;
-      const ctx = c.getContext('2d');
-      const grd = ctx.createLinearGradient(0, 0, 256, 192);
-      if (theme === 1) {
-        grd.addColorStop(0, '#1e3a5f'); grd.addColorStop(0.5, '#d97706'); grd.addColorStop(1, '#fef3c7');
-      } else {
-        grd.addColorStop(0, '#134e4a'); grd.addColorStop(0.6, '#10b981'); grd.addColorStop(1, '#ecfdf5');
-      }
-      ctx.fillStyle = grd;
-      ctx.fillRect(0, 0, 256, 192);
-      // Golden sun/mountain motif
-      ctx.fillStyle = 'rgba(251, 191, 36, 0.8)';
-      ctx.beginPath(); ctx.arc(180, 65, 32, 0, Math.PI * 2); ctx.fill();
-      ctx.strokeStyle = '#451a03';
-      ctx.lineWidth = 10;
-      ctx.strokeRect(5, 5, 246, 182);
-      return new THREE.CanvasTexture(c);
-    }
-
-    const woodTex = createHerringboneWoodTexture();
-    const marbleTex = createCalacattaMarbleTexture();
-    const stoneTex = createSplitStoneTexture();
-    const paverTex = createGardenPaverTexture();
-    const solarTex = createSolarPanelTexture();
-    const stuccoTex = createWallStuccoTexture();
-    const artTex1 = createPaintingTexture(1);
-    const artTex2 = createPaintingTexture(2);
+    const woodTex = createWoodTexture();
+    const marbleTex = createMarbleTexture();
+    const stoneTex = createStoneTexture();
 
     // =========================================================================
-    // 2. REALISTIC PBR MATERIALS & EMISSIVE NIGHT LIGHT MATERIALS
+    // 2. MATERIALS
     // =========================================================================
     const mats = {
-      wallWhite: new THREE.MeshStandardMaterial({ map: stuccoTex, color: 0xfafaf9, roughness: 0.72 }),
-      wallCream: new THREE.MeshStandardMaterial({ map: stuccoTex, color: 0xf5efe6, roughness: 0.7 }),
+      wallWhite: new THREE.MeshStandardMaterial({ color: 0xfafaf9, roughness: 0.72 }),
+      wallCream: new THREE.MeshStandardMaterial({ color: 0xf5efe6, roughness: 0.7 }),
       wallCharcoal: new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.6, metalness: 0.1 }),
       wallStone: new THREE.MeshStandardMaterial({ map: stoneTex, roughness: 0.65 }),
       road: new THREE.MeshStandardMaterial({ color: 0x172030, roughness: 0.88 }),
-      paver: new THREE.MeshStandardMaterial({ map: paverTex, roughness: 0.75 }),
+      paver: new THREE.MeshStandardMaterial({ color: 0x3b4452, roughness: 0.75 }),
       floorTile: new THREE.MeshStandardMaterial({ map: marbleTex, roughness: 0.18, metalness: 0.08 }),
       woodOak: new THREE.MeshStandardMaterial({ map: woodTex, roughness: 0.36, metalness: 0.05 }),
       woodSlats: new THREE.MeshStandardMaterial({ color: 0xb4723c, roughness: 0.38, metalness: 0.05 }),
@@ -726,6 +581,7 @@
       whiteMarble: new THREE.MeshStandardMaterial({ map: marbleTex, roughness: 0.12, metalness: 0.1 }),
       glassClear: new THREE.MeshStandardMaterial({ color: 0xdbeafe, roughness: 0.05, metalness: 0.1, transparent: true, opacity: 0.34 }),
       glassBronze: new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.08, metalness: 0.2, transparent: true, opacity: 0.45 }),
+      canopyGlass: new THREE.MeshStandardMaterial({ color: 0x64748b, roughness: 0.1, metalness: 0.3, transparent: true, opacity: 0.42 }),
       metalBlack: new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.3, metalness: 0.85 }),
       metalStainless: new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.18, metalness: 0.92 }),
       gold: new THREE.MeshStandardMaterial({ color: 0xfbbf24, roughness: 0.22, metalness: 0.92 }),
@@ -737,10 +593,7 @@
       foliageGreen: new THREE.MeshStandardMaterial({ color: 0x1b4332, roughness: 0.65 }),
       foliageLime: new THREE.MeshStandardMaterial({ color: 0x40916c, roughness: 0.65 }),
       trunk: new THREE.MeshStandardMaterial({ color: 0x5c4033, roughness: 0.9 }),
-      solarCell: new THREE.MeshStandardMaterial({ map: solarTex, roughness: 0.15, metalness: 0.6 }),
-      art1: new THREE.MeshStandardMaterial({ map: artTex1, roughness: 0.4 }),
-      art2: new THREE.MeshStandardMaterial({ map: artTex2, roughness: 0.4 }),
-      // Emissive lighting materials
+      solarCell: new THREE.MeshStandardMaterial({ color: 0x0f244a, roughness: 0.15, metalness: 0.6 }),
       ledWarmStrip: new THREE.MeshBasicMaterial({ color: 0xffd166 }),
       ledBulbWarm: new THREE.MeshBasicMaterial({ color: 0xfff3b0 }),
       ledCyanTech: new THREE.MeshBasicMaterial({ color: 0x38bdf8 }),
@@ -752,7 +605,7 @@
     };
 
     // =========================================================================
-    // 3. THREE.JS SCENE & LIGHTING SYSTEM
+    // 3. THREE.JS SCENE SETUP
     // =========================================================================
     const container = document.getElementById('canvas-container');
     const scene = new THREE.Scene();
@@ -777,30 +630,19 @@
     controls.maxPolarAngle = Math.PI / 2 + 0.02;
     controls.target.set(3.0, 3.2, 5.0);
 
-    // Ambient & Sun/Moon Light
     const hemiLight = new THREE.HemisphereLight(0x93c5fd, 0x1e293b, 0.24);
     scene.add(hemiLight);
 
     const sunLight = new THREE.DirectionalLight(0x60a5fa, 0.22);
     sunLight.position.set(22, 32, -20);
     sunLight.castShadow = true;
-    sunLight.shadow.mapSize.width = 2048;
-    sunLight.shadow.mapSize.height = 2048;
-    sunLight.shadow.camera.near = 0.5;
-    sunLight.shadow.camera.far = 120;
-    sunLight.shadow.camera.left = -26;
-    sunLight.shadow.camera.right = 26;
-    sunLight.shadow.camera.top = 26;
-    sunLight.shadow.camera.bottom = -26;
-    sunLight.shadow.bias = -0.0005;
     scene.add(sunLight);
 
-    // Hierarchy Groups
     const groupSite = new THREE.Group();
     const groupFl1 = new THREE.Group();
     const groupFl2 = new THREE.Group();
     const groupRoof = new THREE.Group();
-    const groupTechVisuals = new THREE.Group(); // WiFi waves & Camera FOV cones
+    const groupTechVisuals = new THREE.Group();
     groupTechVisuals.visible = false;
     scene.add(groupSite);
     scene.add(groupFl1);
@@ -808,9 +650,7 @@
     scene.add(groupRoof);
     scene.add(groupTechVisuals);
 
-    // Warm Interior & Exterior Night Lights Registry
     const interiorLights = [];
-    const nightGlowMeshes = [];
 
     function addWarmLight(parent, x, y, z, intensity = 2.2, dist = 8.5, color = 0xffb347) {
       const pl = new THREE.PointLight(color, intensity, dist);
@@ -820,23 +660,6 @@
       return pl;
     }
 
-    function addGlowingSconce(parent, x, y, z, w = 0.12, d = 0.12, h = 0.28) {
-      const box = addBox(parent, x - w/2, y - d/2, z - h/2, x + w/2, y + d/2, z + h/2, mats.ledBulbWarm);
-      nightGlowMeshes.push(box);
-      return box;
-    }
-
-    function addBedsideLamp(parent, x, y, z) {
-      const stand = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.09, 0.18, 12), mats.gold);
-      stand.position.set(x, z + 0.09, y);
-      parent.add(stand);
-      const shade = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.16, 0.22, 16), mats.ledBulbWarm);
-      shade.position.set(x, z + 0.26, y);
-      parent.add(shade);
-      nightGlowMeshes.push(shade);
-    }
-
-    // Helper Primitive (X = Width 0..5, Y = Depth -18..23, Z = Height 0..8)
     function addBox(parent, minX, minY, minZ, maxX, maxY, maxZ, mat) {
       const dx = Math.max(maxX - minX, 0.01);
       const dy = Math.max(maxY - minY, 0.01);
@@ -852,77 +675,77 @@
       return mesh;
     }
 
-    function addTree(parent, x, y, z, scale = 1.0) {
-      const g = new THREE.Group();
-      const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.11 * scale, 0.16 * scale, 2.0 * scale, 8), mats.trunk);
-      trunk.position.set(0, 1.0 * scale, 0);
-      trunk.castShadow = true;
-      g.add(trunk);
-      // Multi-layered realistic foliage canopy
-      const c1 = new THREE.Mesh(new THREE.SphereGeometry(1.05 * scale, 12, 12), mats.foliageGreen);
-      c1.position.set(0, 2.3 * scale, 0);
-      g.add(c1);
-      const c2 = new THREE.Mesh(new THREE.SphereGeometry(0.75 * scale, 10, 10), mats.foliageLime);
-      c2.position.set(0.5 * scale, 2.0 * scale, 0.3 * scale);
-      g.add(c2);
-      const c3 = new THREE.Mesh(new THREE.SphereGeometry(0.7 * scale, 10, 10), mats.foliageLime);
-      c3.position.set(-0.45 * scale, 2.1 * scale, -0.35 * scale);
-      g.add(c3);
-      // Warm tree uplight at base for night luxury!
-      addGlowingSconce(parent, x, y + 0.35, z + 0.08, 0.14, 0.14, 0.08);
-      g.position.set(x, z, y);
-      parent.add(g);
+    function addBedsideLamp(parent, x, y, z) {
+      const stand = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.09, 0.18, 12), mats.gold);
+      stand.position.set(x, z + 0.09, y);
+      parent.add(stand);
+      const shade = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.16, 0.22, 16), mats.ledBulbWarm);
+      shade.position.set(x, z + 0.26, y);
+      parent.add(shade);
     }
 
     // =========================================================================
-    // 4. SITE, LANDSCAPE & GARDEN LIGHTING (SÂN TRƯỚC 18m, NHÀ 16m, SÂN SAU 7m)
+    // 4. SITE & SÂN TRƯỚC 18M: MÁI CHE KÍN 18M & BÀN TRÀ ÁP VÁCH TƯỜNG TRÁI
     // =========================================================================
-    // Front Highway & Sidewalk (Y = -24..-18)
+    // Đường quốc lộ & vỉa hè
     addBox(groupSite, -4, -24, -0.35, 11, -18.8, -0.20, mats.road);
     addBox(groupSite, -2, -18.8, -0.20, 9, -18.0, 0.0, mats.wallWhite);
-
-    // Architectural Scale Base Plinth (like reference model base)
     addBox(groupSite, -0.5, -18.5, -0.45, 7.5, 23.5, -0.01, mats.wallCharcoal);
 
-    // Front Yard 18m (Y = -18..0, X = 0..7)
+    // Sân trước 18m (Y = -18..0, X = 0..7)
     addBox(groupSite, 0, -18, 0.0, 7, 0, 0.15, mats.paver);
-    addBox(groupSite, 2.8, -17.5, 0.15, 6.8, -6.0, 0.18, mats.grass);
-    addTree(groupSite, 4.9, -14.0, 0.18, 1.25);
-    addTree(groupSite, 5.2, -8.5, 0.18, 1.1);
 
-    // Garden Pathway Bollard Lights (Đèn trụ nấm sân vườn dọc lối đi)
-    [-16.2, -12.5, -8.8, -5.2, 3.0, 8.5, 14.0, 18.5].forEach(by => {
-      const bx = by < 0 ? 2.65 : 6.75;
-      addBox(groupSite, bx - 0.05, by - 0.05, 0.15, bx + 0.05, by + 0.05, 0.62, mats.metalBlack);
-      addGlowingSconce(groupSite, bx, by, 0.66, 0.14, 0.14, 0.12);
-    });
-
-    // Boundary Fences & Split-Stone Gate Pillars (Y = -18)
+    // Cổng chính & Trụ đá chẻ (Cổng xe 3.6m bên trái X=0.3..3.9, Cổng phụ 2m bên phải X=4.8..6.8)
+    addBox(groupSite, -0.18, -18.18, 0, 0.35, -17.82, 2.65, mats.wallStone);
+    addBox(groupSite, 3.85, -18.18, 0, 4.15, -17.82, 2.65, mats.wallStone);
+    addBox(groupSite, 6.85, -18.18, 0, 7.18, -17.82, 2.65, mats.wallStone);
+    // Cánh cổng sắt sơn đen
+    addBox(groupSite, 0.35, -18.0, 0.18, 3.85, -17.94, 2.25, mats.metalBlack);
+    addBox(groupSite, 4.15, -18.0, 0.18, 6.85, -17.94, 2.25, mats.metalBlack);
+    // Tường rào 2 bên
     addBox(groupSite, -0.18, -18, 0, 0, 23, 2.35, mats.wallWhite);
     addBox(groupSite, 7.0, -18, 0, 7.18, 23, 2.35, mats.wallWhite);
     addBox(groupSite, -0.18, 23, 0, 7.18, 23.18, 2.35, mats.wallWhite);
 
-    // Gate Pillars with Split Stone Texture & Warm Cap Lamps
-    [[-0.18, 0.35], [2.65, 2.95], [6.85, 7.18]].forEach(([x1, x2]) => {
-      addBox(groupSite, x1, -18.18, 0, x2, -17.82, 2.65, mats.wallStone);
-      addGlowingSconce(groupSite, (x1 + x2) / 2, -18.0, 2.74, 0.26, 0.26, 0.16);
+    // 🏗️ MÁI CHE SÂN TRƯỚC CHE KÍN TOÀN BỘ 18M (Y = -18..0, X = 0..5.2)
+    // Hệ cột thép chịu lực
+    [-17.8, -12.0, -6.0, -0.2].forEach(cy => {
+      [0.05, 5.05].forEach(cx => {
+        addBox(groupSite, cx - 0.06, cy - 0.06, 0.15, cx + 0.06, cy + 0.06, 3.25, mats.metalBlack);
+      });
     });
-    addWarmLight(groupSite, 1.5, -17.5, 2.8, 1.8, 9.0, 0xffc864);
-    addWarmLight(groupSite, 5.0, -17.5, 2.8, 1.6, 8.0, 0xffc864);
+    // Khung kèo dầm chính dọc sân 18m
+    addBox(groupSite, 0.0, -18.0, 3.25, 0.12, 0.0, 3.38, mats.metalBlack);
+    addBox(groupSite, 5.0, -18.0, 3.25, 5.12, 0.0, 3.38, mats.metalBlack);
+    // Các xà gồ ngang & Đèn LED thanh hắt sáng ban đêm dưới mái che
+    for (let py = -18; py <= 0; py += 2.0) {
+      addBox(groupSite, 0.0, py - 0.05, 3.28, 5.12, py + 0.05, 3.36, mats.metalBlack);
+      addBox(groupSite, 0.5, py - 0.02, 3.24, 4.6, py + 0.02, 3.27, mats.ledWarmStrip); // LED rọi sáng toàn bộ sân 18m
+    }
+    // Mái kính cường lực dán phim cách nhiệt che kín 18m
+    addBox(groupSite, 0.0, -18.0, 3.38, 5.15, 0.0, 3.42, mats.canopyGlass);
 
-    // Automated Smart Gate Slats
-    addBox(groupSite, 0.35, -18.0, 0.2, 2.65, -17.95, 2.2, mats.metalBlack);
-    addBox(groupSite, 2.95, -18.0, 0.2, 6.85, -17.95, 2.2, mats.metalBlack);
+    // 🍵 BÀN UỐNG NƯỚC CỦA BA: KÊ ÁP SÁT VÀO VÁCH TƯỜNG BÊN TRÁI (Y = -5.0..-2.2, X = 0.1..1.5)
+    // Ghế băng gỗ dài áp vách tường trái
+    addBox(groupSite, 0.05, -4.8, 0.15, 0.55, -2.4, 0.55, mats.woodOak);
+    addBox(groupSite, 0.02, -4.8, 0.55, 0.12, -2.4, 1.05, mats.woodSlats);
+    // Đệm ngồi màu vàng mù tạt
+    addBox(groupSite, 0.12, -4.75, 0.55, 0.52, -2.45, 0.62, mats.fabricMustard);
+    // Bàn trà gỗ mặt đá dài áp tường
+    addBox(groupSite, 0.68, -4.5, 0.15, 1.25, -2.7, 0.72, mats.whiteMarble);
+    // Ấm trà & chén
+    addBox(groupSite, 0.90, -3.7, 0.72, 1.05, -3.5, 0.84, mats.wallWhite);
+    // Đèn hắt tường trang trí ngay phía trên bàn trà của Ba
+    addBox(groupSite, 0.02, -3.7, 1.65, 0.10, -3.5, 1.85, mats.ledBulbWarm);
+    addWarmLight(groupSite, 0.8, -3.6, 1.8, 2.2, 6.0, 0xffaa44);
 
-    // White Family SUV (like reference image) with glowing Headlights & Taillights
+    // Xe ô tô gia đình màu trắng đỗ bên trái (Y = -14.5..-10.0, X = 0.8..2.7)
     const carGroup = new THREE.Group();
     addBox(carGroup, -0.95, -2.15, 0.20, 0.95, 2.15, 0.78, mats.carPaint);
     addBox(carGroup, -0.84, -0.95, 0.78, 0.84, 1.25, 1.48, mats.carPaint);
     addBox(carGroup, -0.81, -1.0, 0.80, 0.81, 1.28, 1.42, mats.glassBronze);
-    // Glowing LED Headlights
     addBox(carGroup, -0.82, -2.17, 0.52, -0.52, -2.14, 0.66, mats.ledBulbWarm);
     addBox(carGroup, 0.52, -2.17, 0.52, 0.82, -2.14, 0.66, mats.ledBulbWarm);
-    // Taillights
     addBox(carGroup, -0.85, 2.14, 0.55, 0.85, 2.17, 0.64, mats.ledRedCam);
     [-0.98, 0.98].forEach(wx => {
       [-1.35, 1.35].forEach(wy => {
@@ -932,290 +755,190 @@
         carGroup.add(wh);
       });
     });
-    carGroup.position.set(1.45, 0.15, -11.5);
+    carGroup.position.set(1.85, 0.15, -12.5);
     groupSite.add(carGroup);
 
-    // Smart EV Wallbox Charger on left fence near SUV
-    addBox(groupSite, 0.01, -11.5, 1.0, 0.14, -11.1, 1.55, mats.metalBlack);
-    addBox(groupSite, 0.14, -11.4, 1.15, 0.16, -11.2, 1.42, mats.ledGreenOk);
-
-    // DAD'S TEA & BBQ PORCH (X = 2.4..4.9, Y = -4.8..-0.6) with Warm Pergola String Lights
-    addBox(groupSite, 2.45, -4.8, 0.15, 4.95, -0.6, 0.24, mats.woodOak);
-    [2.52, 4.88].forEach(px => {
-      [-4.7, -0.7].forEach(py => {
-        addBox(groupSite, px - 0.06, py - 0.06, 0.24, px + 0.06, py + 0.06, 2.85, mats.metalBlack);
-      });
+    // Bonsai & Cây cảnh bên phải sân (X = 5.2..6.8)
+    [-16, -12, -8, -4].forEach(by => {
+      addBox(groupSite, 5.6, by - 0.3, 0.15, 6.4, by + 0.3, 0.55, mats.wallStone);
+      const leaf = new THREE.Mesh(new THREE.SphereGeometry(0.45, 8, 8), mats.foliageGreen);
+      leaf.position.set(6.0, 0.95, by);
+      groupSite.add(leaf);
+      addBox(groupSite, 6.0, by, 0.16, 6.08, by + 0.08, 0.22, mats.ledBulbWarm); // Đèn hắt gốc bonsai
     });
-    for (let r = 0; r < 9; r++) {
-      const ry = -4.8 + r * 0.52;
-      addBox(groupSite, 2.4, ry, 2.85, 5.0, ry + 0.09, 2.95, mats.woodSlats);
-      if (r % 2 === 1) {
-        addGlowingSconce(groupSite, 3.7, ry + 0.04, 2.80, 1.8, 0.04, 0.04); // Warm LED bar under pergola
-      }
-    }
-    addBox(groupSite, 2.35, -4.95, 2.95, 5.05, -0.55, 2.99, mats.glassBronze);
-    addWarmLight(groupSite, 3.7, -2.7, 2.55, 2.2, 7.5, 0xffb74d);
 
-    // Tea Table & 4 Chairs
-    addBox(groupSite, 3.2, -3.3, 0.90, 4.2, -2.1, 0.96, mats.whiteMarble);
-    addBox(groupSite, 3.45, -3.0, 0.24, 3.95, -2.4, 0.90, mats.woodDark);
-    addBox(groupSite, 2.85, -2.9, 0.24, 3.15, -2.5, 0.75, mats.fabricMustard);
-    addBox(groupSite, 4.25, -2.9, 0.24, 4.55, -2.5, 0.75, mats.fabricMustard);
-    addBox(groupSite, 3.5, -3.7, 0.24, 3.9, -3.4, 0.75, mats.fabricMustard);
-    addBox(groupSite, 3.5, -2.0, 0.24, 3.9, -1.7, 0.75, mats.fabricMustard);
-    addBox(groupSite, 3.6, -2.8, 0.96, 3.8, -2.6, 1.08, mats.wallWhite);
-
-    // Side 2m Corridor (X = 5..7, Y = 0..16)
+    // Đường luồng 2m (X = 5..7, Y = 0..16)
     addBox(groupSite, 5.0, 0.0, 0.0, 7.0, 16.0, 0.15, mats.paver);
     for (let s = 0; s < 12; s++) {
       const sy = 0.8 + s * 1.25;
       addBox(groupSite, 5.35, sy, 0.15, 6.1, sy + 0.65, 0.18, mats.whiteMarble);
     }
 
-    // Rear Yard 7m (Y = 16..23) + Smart Drip Irrigation System
-    addBox(groupSite, 0, 16, 0.0, 7, 19.5, 0.15, mats.paver);
-    addBox(groupSite, 0, 19.5, 0.0, 7, 23.0, 0.15, mats.grass);
-    for (let r = 0; r < 3; r++) {
-      const vy = 20.0 + r * 0.95;
-      addBox(groupSite, 0.5, vy, 0.15, 4.8, vy + 0.65, 0.42, mats.woodDark);
-      // Smart drip pipe with cyan sensor valve
-      addBox(groupSite, 0.45, vy + 0.3, 0.43, 4.75, vy + 0.34, 0.46, mats.ledCyanTech);
-      for (let vx = 0; vx < 8; vx++) {
-        const sx = 0.85 + vx * 0.5;
-        const sh = new THREE.Mesh(new THREE.SphereGeometry(0.15, 8, 8), vx % 2 === 0 ? mats.foliageLime : mats.foliageGreen);
-        sh.position.set(sx, 0.52, vy + 0.32);
-        groupSite.add(sh);
-      }
-    }
-    addTree(groupSite, 6.0, 21.2, 0.15, 1.2);
-    addWarmLight(groupSite, 2.8, 20.8, 2.2, 1.4, 8.0, 0xffcc66);
-
     // =========================================================================
-    // 5. FLOOR 1 ARCHITECTURE, REALISTIC TEXTURES & NIGHT LEDS (Y = 0..16)
+    // 5. FLOOR 1: PHÒNG KHÁCH (BÀN THỜ/TV TRÁI), PHÒNG BA MẸ, THANG CHỮ U & BẾP
     // =========================================================================
     const Z1 = 0.25;
     const H1 = 3.60;
     addBox(groupFl1, 0, 0, 0.1, 5.0, 16.0, Z1, mats.floorTile);
 
-    // Exterior & Cutaway Walls
-    addBox(groupFl1, 0, 0, Z1, 0.22, 16.0, Z1 + 0.42, mats.wallWhite); // Left cutaway low wall for viewing
-    addBox(groupFl1, 4.78, 0, Z1, 5.0, 16.0, H1, mats.wallWhite);      // Right exterior wall
-    addBox(groupFl1, 0, 0, Z1, 5.0, 0.22, H1, mats.wallWhite);         // Front wall
-    addBox(groupFl1, 0, 15.78, Z1, 5.0, 16.0, H1, mats.wallWhite);     // Rear wall
+    // Tường bao Tầng 1
+    addBox(groupFl1, 0, 0, Z1, 0.22, 16.0, Z1 + 0.42, mats.wallWhite); // Vách trái cắt thấp để xem
+    addBox(groupFl1, 4.78, 0, Z1, 5.0, 16.0, H1, mats.wallWhite);      // Vách ngoài bên phải
+    addBox(groupFl1, 0, 0, Z1, 5.0, 0.22, H1, mats.wallWhite);         // Mặt tiền T1
+    addBox(groupFl1, 0, 15.78, Z1, 5.0, 16.0, H1, mats.wallWhite);     // Vách sau T1
 
-    // SIGNATURE ARCHITECTURAL VERTICAL WOOD SLAT FACADE (Lam gỗ mặt tiền thông tầng + Đèn LED hắt khe như hình mẫu!)
-    addBox(groupFl1, 0.0, -0.12, Z1, 1.15, 0.02, H1 + 3.6, mats.woodDark);
-    for (let sl = 0; sl < 11; sl++) {
-      const sx = 0.08 + sl * 0.10;
-      addBox(groupFl1, sx, -0.20, Z1, sx + 0.045, -0.05, H1 + 3.55, mats.woodSlats);
-    }
-    // Warm vertical LED strips hidden inside the wood louvers
-    addGlowingSconce(groupFl1, 0.35, -0.18, 3.6, 0.03, 0.03, 6.8);
-    addGlowingSconce(groupFl1, 0.85, -0.18, 3.6, 0.03, 0.03, 6.8);
-    // Under-canopy front facade LED strip
-    addGlowingSconce(groupFl1, 2.5, -0.15, H1 - 0.05, 4.8, 0.06, 0.05);
+    // Cửa chính bên phải mở vào trong (X = 2.8..4.6, Y = 0..0.22)
+    addBox(groupFl1, 2.85, 0.05, Z1, 4.55, 0.18, 2.80, mats.glassClear);
+    // Cửa sổ bên trái mặt tiền nhìn ra sân (X = 0.4..2.2)
+    addBox(groupFl1, 0.45, 0.05, 0.95, 2.25, 0.18, 2.55, mats.glassClear);
 
-    // Partitions Floor 1
-    addBox(groupFl1, 0.22, 3.8, Z1, 3.72, 3.92, H1, mats.wallWhite);  // Living / Parents
-    addBox(groupFl1, 3.72, 3.8, Z1, 3.84, 7.2, H1, mats.wallWhite);   // Parents Hall
-    addBox(groupFl1, 0.22, 7.2, Z1, 3.72, 7.32, H1, mats.wallWhite);  // Parents / Stair
-    addBox(groupFl1, 0.22, 10.4, Z1, 2.6, 10.52, H1, mats.wallWhite); // Stair / Kitchen
-    addBox(groupFl1, 0.22, 14.2, Z1, 2.4, 14.32, H1, mats.wallWhite); // Kitchen / Bath
-    addBox(groupFl1, 2.4, 14.2, Z1, 2.52, 15.78, H1, mats.wallWhite); // Bath side
+    // A. PHÒNG KHÁCH (Y = 0.3..5.8, X = 0.3..4.8)
+    // Tường trái: Vách TV & Bàn thờ dựa tường trái
+    // 1. Kệ TV & Màn hình TV OLED (Y = 0.8..2.6, X = 0.24..0.6)
+    addBox(groupFl1, 0.24, 0.8, Z1 + 0.1, 0.65, 2.6, Z1 + 0.52, mats.woodOak);
+    addBox(groupFl1, 0.24, 0.8, Z1 + 0.52, 0.28, 2.6, Z1 + 2.35, mats.woodSlats); // Vách lam gỗ
+    addBox(groupFl1, 0.28, 1.0, Z1 + 0.75, 0.32, 2.4, Z1 + 1.65, mats.tvScreenGlow);
+    addBox(groupFl1, 0.25, 0.8, Z1 + 2.32, 0.30, 2.6, Z1 + 2.36, mats.ledWarmStrip); // LED hắt vách TV
 
-    // Black Aluminum Window Frames & Clear Glass on Right Wall
-    [[0.4, 1.4], [4.6, 6.4], [8.2, 9.8], [11.2, 12.8]].forEach(([y1, y2]) => {
-      addBox(groupFl1, 4.74, y1 - 0.05, 0.85, 4.82, y2 + 0.05, 2.65, mats.metalBlack);
-      addBox(groupFl1, 4.76, y1, 0.90, 4.80, y2, 2.60, mats.glassClear);
-    });
-
-    // Front Entrance Door with Black Mullions & Smart Lock
-    addBox(groupFl1, 1.20, 0.05, Z1, 4.45, 0.18, 2.80, mats.metalBlack);
-    addBox(groupFl1, 1.28, 0.08, Z1 + 0.05, 4.37, 0.15, 2.72, mats.glassClear);
-
-    // A. LIVING ROOM (Y = 0.3..3.8, X = 0.3..3.2)
-    addBox(groupFl1, 0.4, 0.5, Z1, 3.1, 3.4, Z1 + 0.02, mats.fabricWarm); // Plush Rug
-    addBox(groupFl1, 0.35, 0.6, Z1 + 0.06, 1.15, 2.5, Z1 + 0.16, mats.woodOak);
-    addBox(groupFl1, 0.35, 2.5, Z1 + 0.06, 2.05, 3.25, Z1 + 0.16, mats.woodOak);
-    addBox(groupFl1, 0.35, 0.6, Z1 + 0.16, 0.55, 3.25, Z1 + 0.80, mats.wallCharcoal); // Dark grey sofa like reference image
-    addBox(groupFl1, 0.52, 0.65, Z1 + 0.16, 1.15, 2.45, Z1 + 0.44, mats.wallCharcoal);
-    addBox(groupFl1, 0.52, 2.45, Z1 + 0.16, 2.00, 3.20, Z1 + 0.44, mats.wallCharcoal);
-    // Throw pillows
-    addBox(groupFl1, 0.56, 0.8, Z1 + 0.44, 0.72, 1.15, Z1 + 0.68, mats.fabricMustard);
-    addBox(groupFl1, 0.56, 2.1, Z1 + 0.44, 0.72, 2.45, Z1 + 0.68, mats.fabricWarm);
-
-    // Coffee Table & Fluted Wood TV Wall with Backlit LED Cove
-    addBox(groupFl1, 1.75, 1.35, Z1 + 0.02, 2.35, 2.15, Z1 + 0.42, mats.whiteMarble);
-    addBox(groupFl1, 2.85, 0.75, Z1 + 0.12, 3.18, 2.95, Z1 + 0.52, mats.woodOak);
-    addGlowingSconce(groupFl1, 2.95, 1.85, Z1 + 0.10, 0.15, 2.1, 0.03); // Under-cabinet LED strip
-    // Fluted wood backdrop behind TV
-    addBox(groupFl1, 3.08, 0.85, Z1 + 0.52, 3.16, 2.85, Z1 + 2.45, mats.woodSlats);
-    addGlowingSconce(groupFl1, 3.06, 1.85, Z1 + 2.42, 0.04, 1.95, 0.04); // Top TV cove LED
-    // 75" Smart OLED TV
-    addBox(groupFl1, 3.00, 1.05, Z1 + 0.80, 3.06, 2.65, Z1 + 1.78, mats.metalBlack);
-    addBox(groupFl1, 2.99, 1.10, Z1 + 0.84, 3.00, 2.60, Z1 + 1.74, mats.tvScreenGlow);
-    // Framed Art & Warm Picture Light on Partition Wall (like reference image!)
-    addBox(groupFl1, 1.2, 3.74, Z1 + 1.45, 2.2, 3.79, Z1 + 2.25, mats.art1);
-    addGlowingSconce(groupFl1, 1.7, 3.70, Z1 + 2.32, 0.55, 0.06, 0.04);
-    // Floor lamp in living room corner
-    addBedsideLamp(groupFl1, 0.65, 3.45, Z1 + 0.45);
-
-    // B. SACRED QUAN YIN ALTAR (X = 3.25..4.76, Y = 1.35..3.75)
-    for (let s = 0; s < 8; s++) {
-      const sy = 1.45 + s * 0.28;
-      addBox(groupFl1, 3.25, sy, Z1, 3.29, sy + 0.04, 3.25, mats.woodDark);
-    }
-    addBox(groupFl1, 3.9, 2.0, Z1 + 0.1, 4.65, 3.4, Z1 + 1.05, mats.woodDark);
-    addBox(groupFl1, 4.25, 2.2, Z1 + 1.05, 4.65, 3.2, Z1 + 1.25, mats.woodDark);
-    const lotusBase = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.2, 0.1, 12), mats.gold);
-    lotusBase.position.set(4.45, Z1 + 1.30, 2.7);
-    groupFl1.add(lotusBase);
+    // 2. Gian thờ Bồ Tát Quan Âm & Gia tiên dựa tường trái (Y = 3.0..4.8, X = 0.24..1.1)
+    addBox(groupFl1, 0.24, 3.0, Z1 + 0.1, 0.85, 4.6, Z1 + 1.05, mats.woodDark);
+    addBox(groupFl1, 0.24, 3.4, Z1 + 1.05, 0.75, 4.3, Z1 + 1.25, mats.woodDark);
     const buddha = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.45, 12), mats.gold);
-    buddha.position.set(4.45, Z1 + 1.55, 2.7);
+    buddha.position.set(0.55, Z1 + 1.55, 3.85);
     groupFl1.add(buddha);
-    const halo = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.42, 0.02, 24), mats.ledWarmStrip);
+    const halo = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 0.02, 24), mats.ledWarmStrip);
     halo.rotation.z = Math.PI / 2;
-    halo.position.set(4.66, Z1 + 1.82, 2.7);
+    halo.position.set(0.28, Z1 + 1.82, 3.85);
     groupFl1.add(halo);
-    nightGlowMeshes.push(halo);
 
-    // C. PARENTS' BEDROOM (Y = 3.8..7.2, X = 0.22..3.72) with Herringbone Wood Floor & Bedside Lamps
-    addBox(groupFl1, 0.24, 3.92, Z1, 3.70, 7.18, Z1 + 0.015, mats.woodOak); // Herringbone floor
-    addBox(groupFl1, 0.45, 4.5, Z1, 2.45, 6.5, Z1 + 0.55, mats.fabricWarm);
-    addBox(groupFl1, 0.45, 4.55, Z1 + 0.55, 1.85, 6.45, Z1 + 0.62, mats.fabricNavy); // Navy duvet like reference
-    addBox(groupFl1, 0.40, 4.4, Z1, 0.48, 6.6, Z1 + 1.25, mats.woodSlats);
-    addGlowingSconce(groupFl1, 0.48, 5.5, Z1 + 1.28, 0.04, 2.1, 0.04); // Headboard LED strip
-    addBedsideLamp(groupFl1, 0.60, 4.18, Z1 + 0.45);
-    addBedsideLamp(groupFl1, 0.60, 6.72, Z1 + 0.45);
-    addBox(groupFl1, 0.35, 6.75, Z1, 2.2, 7.15, Z1 + 2.5, mats.woodOak);
+    // 3. Sofa đối diện bên phải (X = 2.4..4.5, Y = 1.2..3.8)
+    addBox(groupFl1, 2.5, 1.4, Z1 + 0.08, 4.5, 3.6, Z1 + 0.44, mats.wallCharcoal);
+    addBox(groupFl1, 4.1, 1.4, Z1 + 0.44, 4.5, 3.6, Z1 + 0.78, mats.wallCharcoal); // Tựa lưng sofa
+    addBox(groupFl1, 3.1, 2.2, Z1 + 0.05, 3.9, 2.8, Z1 + 0.42, mats.whiteMarble); // Bàn trà tròn đôi
+    addWarmLight(groupFl1, 2.5, 2.6, 2.9, 2.5, 8.5, 0xffb347);
 
-    // D. STAIRCASE & STUDY / GUEST DAYBED (Y = 7.2..10.4) with LED Stair Treads
+    // B. PHÒNG BA MẸ (4m x 3.2m: Y = 5.8..9.0, X = 0.22..4.0)
+    // Tường ngăn Phòng khách & Phòng Ba Mẹ (Y = 5.8, có cửa sổ kính 3 luồng lấy sáng)
+    addBox(groupFl1, 0.22, 5.75, Z1, 4.0, 5.85, H1, mats.wallWhite);
+    addBox(groupFl1, 1.2, 5.76, Z1 + 1.2, 3.2, 5.84, Z1 + 2.2, mats.glassClear); // Cửa sổ 3 luồng
+    // Hành lang 1m bên phải đi thông xuống bếp (X = 4.0..5.0)
+    addBox(groupFl1, 3.95, 5.8, Z1, 4.05, 9.0, H1, mats.wallWhite); // Vách hành lang
+    // Nội thất phòng Ba Mẹ: Giường ngủ, tủ áo, tab đầu giường
+    addBox(groupFl1, 0.8, 6.4, Z1, 2.8, 8.4, Z1 + 0.55, mats.fabricWarm);
+    addBox(groupFl1, 0.8, 6.45, Z1 + 0.55, 2.4, 8.35, Z1 + 0.62, mats.fabricNavy);
+    addBox(groupFl1, 0.7, 6.35, Z1, 0.8, 8.45, Z1 + 1.15, mats.woodSlats);
+    addBedsideLamp(groupFl1, 0.8, 6.15, Z1 + 0.45);
+    addBox(groupFl1, 0.35, 6.2, Z1, 0.65, 8.6, Z1 + 2.5, mats.woodOak); // Tủ áo
+    addWarmLight(groupFl1, 2.0, 7.4, 2.8, 2.0, 7.5, 0xffb85c);
+
+    // C. CẦU THANG CHỮ U (Y = 9.0..11.2, X = 0.24..4.0)
+    // 2 vế thang gập lại, hành lang 1m bên phải (X=4.0..5.0) vẫn đi thông xuống bếp
     for (let s = 0; s < 10; s++) {
-      const sy = 7.25 + s * 0.20;
+      const sy = 9.05 + s * 0.18;
       const sz = Z1 + (s + 1) * 0.177;
-      addBox(groupFl1, 0.24, sy, sz - 0.04, 1.18, sy + 0.22, sz, mats.woodOak);
-      if (s % 2 === 0) {
-        addGlowingSconce(groupFl1, 0.71, sy + 0.02, sz - 0.05, 0.85, 0.02, 0.02); // LED under stair tread
-      }
+      addBox(groupFl1, 0.24, sy, sz - 0.04, 1.8, sy + 0.20, sz, mats.woodOak);
+      addBox(groupFl1, 0.26, sy, sz - 0.045, 1.75, sy + 0.02, sz - 0.035, mats.ledWarmStrip); // LED bậc thang
     }
-    addBox(groupFl1, 0.24, 9.25, 1.96, 2.22, 9.85, 2.04, mats.woodOak);
-    addBox(groupFl1, 1.18, 7.25, Z1 + 0.2, 1.20, 9.25, Z1 + 1.25, mats.glassClear);
-    addBox(groupFl1, 3.45, 7.5, Z1, 3.70, 9.8, 2.65, mats.woodOak);
-    for (let sh = 0; sh < 5; sh++) {
-      addBox(groupFl1, 3.46, 7.52, Z1 + 0.45 + sh * 0.44, 3.69, 9.78, Z1 + 0.48 + sh * 0.44, mats.woodOak);
+    // Chiếu nghỉ thang (Y = 10.6..11.2, X = 0.24..3.8)
+    addBox(groupFl1, 0.24, 10.6, 1.95, 3.8, 11.2, 2.05, mats.woodOak);
+    // Tủ điện tổng MDB & Inverter Solar 5kW đặt tại tường gầm thang
+    addBox(groupFl1, 3.85, 9.2, Z1 + 0.9, 3.98, 9.8, Z1 + 1.85, mats.metalStainless);
+    addBox(groupFl1, 3.98, 9.3, Z1 + 1.3, 4.0, 9.7, Z1 + 1.7, mats.ledGreenOk);
+
+    // D. BẾP MỞ & BÀN ĂN (5m x 6.4m: Y = 11.2..16.0)
+    // Tủ bếp chạy dọc theo tường bên trái (X = 0.24..1.0, Y = 11.5..15.6)
+    addBox(groupFl1, 0.24, 11.5, Z1, 0.95, 15.6, Z1 + 0.86, mats.woodOak);
+    addBox(groupFl1, 0.22, 11.45, Z1 + 0.86, 0.98, 15.65, Z1 + 0.90, mats.whiteMarble);
+    addBox(groupFl1, 0.24, 11.5, Z1 + 1.6, 0.65, 14.8, Z1 + 2.35, mats.wallCream);
+    addBox(groupFl1, 0.58, 11.6, Z1 + 1.58, 0.62, 14.7, Z1 + 1.62, mats.ledWarmStrip); // LED hắt gầm tủ bếp
+    // Tủ lạnh 2 cánh
+    addBox(groupFl1, 0.24, 14.85, Z1, 1.05, 15.65, Z1 + 1.95, mats.metalStainless);
+
+    // Bàn ăn tròn 4-6 chỗ ở giữa không gian bếp (X = 2.5, Y = 13.5)
+    const diningTable = new THREE.Mesh(new THREE.CylinderGeometry(0.75, 0.75, 0.05, 24), mats.woodOak);
+    diningTable.position.set(2.5, Z1 + 0.74, 13.5);
+    groupFl1.add(diningTable);
+    const diningLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.16, 0.72, 16), mats.metalBlack);
+    diningLeg.position.set(2.5, Z1 + 0.36, 13.5);
+    groupFl1.add(diningLeg);
+    // 6 ghế ngồi tròn xung quanh
+    for (let c = 0; c < 6; c++) {
+      const ang = c * (Math.PI / 3);
+      const cx = 2.5 + Math.cos(ang) * 1.15;
+      const cy = 13.5 + Math.sin(ang) * 1.15;
+      addBox(groupFl1, cx - 0.18, cy - 0.18, Z1, cx + 0.18, cy + 0.18, Z1 + 0.44, mats.fabricWarm);
     }
-    addGlowingSconce(groupFl1, 3.46, 8.65, Z1 + 2.22, 0.04, 2.1, 0.04); // Bookshelf LED
-    addBox(groupFl1, 1.35, 7.6, Z1, 2.35, 9.2, Z1 + 0.45, mats.fabricWarm);
-    addBox(groupFl1, 1.38, 8.4, Z1 + 0.45, 2.32, 9.18, Z1 + 0.48, mats.fabricMustard);
-
-    // E. KITCHEN & DINING ROOM (Y = 10.4..14.2) with Under-Cabinet LED & Chandelier
-    addBox(groupFl1, 0.35, 10.6, Z1, 1.05, 14.1, Z1 + 0.86, mats.woodOak);
-    addBox(groupFl1, 0.32, 10.55, Z1 + 0.86, 1.08, 14.15, Z1 + 0.90, mats.whiteMarble);
-    // Upper kitchen cabinets + warm LED strip underneath
-    addBox(groupFl1, 0.35, 10.6, Z1 + 1.55, 0.78, 13.2, Z1 + 2.35, mats.wallCream);
-    addGlowingSconce(groupFl1, 0.72, 11.9, Z1 + 1.53, 0.04, 2.5, 0.04);
-    addBox(groupFl1, 0.35, 13.35, Z1, 1.15, 14.15, Z1 + 1.95, mats.metalStainless); // Smart Side-by-Side Fridge
-
-    // Baking Island with Waterfall Marble & Toe-kick LED
-    addBox(groupFl1, 1.48, 11.85, Z1, 2.62, 13.15, Z1 + 0.86, mats.woodOak);
-    addBox(groupFl1, 1.42, 11.80, Z1 + 0.86, 2.68, 13.20, Z1 + 0.90, mats.whiteMarble);
-    addGlowingSconce(groupFl1, 2.05, 12.5, Z1 + 0.04, 1.1, 1.25, 0.03);
-
-    // Dining Table & Warm Pendant Lamps above Dining Table
-    addBox(groupFl1, 3.25, 11.4, Z1 + 0.72, 4.35, 13.0, Z1 + 0.76, mats.woodOak);
-    [3.35, 4.25].forEach(lx => {
-      [11.5, 12.9].forEach(ly => {
-        addBox(groupFl1, lx - 0.03, ly - 0.03, Z1, lx + 0.03, ly + 0.03, Z1 + 0.72, mats.woodDark);
-      });
-    });
-    [11.7, 12.2, 12.7].forEach(cy => {
-      addBox(groupFl1, 2.9, cy - 0.18, Z1, 3.2, cy + 0.18, Z1 + 0.75, mats.fabricWarm);
-      addBox(groupFl1, 4.4, cy - 0.18, Z1, 4.7, cy + 0.18, Z1 + 0.75, mats.fabricWarm);
-    });
-    // Dining Pendant Lights
-    [11.8, 12.5].forEach(py => {
-      addGlowingSconce(groupFl1, 3.8, py, Z1 + 2.15, 0.22, 0.22, 0.14);
-    });
-
-    // F. BATHROOM & REAR PORCH
-    addBox(groupFl1, 0.25, 14.3, Z1, 2.35, 15.7, Z1 + 0.85, mats.whiteMarble);
-    addBox(groupFl1, 1.1, 14.3, Z1, 1.12, 15.7, Z1 + 2.1, mats.glassClear);
-
-    // Warm Interior Point Lights Floor 1
-    addWarmLight(groupFl1, 1.8, 2.0, 2.9, 2.4, 9.5, 0xffb347);   // Living
-    addWarmLight(groupFl1, 4.1, 2.6, 2.8, 1.8, 7.0, 0xffaa33);   // Altar
-    addWarmLight(groupFl1, 1.8, 5.5, 2.8, 2.0, 8.5, 0xffb85c);   // Parents
-    addWarmLight(groupFl1, 2.5, 8.8, 2.8, 1.8, 8.0, 0xffb85c);   // Study
-    addWarmLight(groupFl1, 2.6, 12.5, 2.9, 2.5, 9.5, 0xffbd59);  // Kitchen & Dining
+    // 2 cửa sổ ra đường luồng bên phải và cửa sau ra sân sau
+    addBox(groupFl1, 4.76, 12.0, Z1 + 0.95, 4.80, 13.5, Z1 + 2.45, mats.glassClear);
+    addBox(groupFl1, 4.76, 14.0, Z1 + 0.95, 4.80, 15.2, Z1 + 2.45, mats.glassClear);
+    addBox(groupFl1, 2.6, 15.76, Z1, 4.2, 15.82, Z1 + 2.6, mats.glassClear); // Cửa sau ra sân sau
+    addWarmLight(groupFl1, 2.5, 13.5, 2.9, 2.6, 9.0, 0xffbd59);
 
     // =========================================================================
-    // 6. FLOOR 2 ARCHITECTURE, HERRINGBONE FLOORS & NIGHT LIGHTS (Z2 = 3.85)
+    // 6. SÂN SAU: KHỐI PHỤ TRỢ (WC/TẮM/GIẶT/PHƠI) ÁP TƯỜNG TRÁI + VƯỜN RAU
+    // =========================================================================
+    addBox(groupSite, 0, 16, 0.0, 7, 23.0, 0.15, mats.paver);
+    // Dãy công năng dựa tường trái (X = 0..2.4, Y = 16..22.8)
+    // 1. WC (2.4 x 1.6m: Y = 16.0..17.6)
+    addBox(groupSite, 0.1, 16.0, 0.15, 2.4, 17.6, 2.65, mats.wallWhite);
+    addBox(groupSite, 0.3, 16.3, 0.15, 0.7, 16.8, 0.85, mats.whiteMarble); // Lavabo & toilet
+    // 2. Phòng Tắm (2.4 x 1.6m: Y = 17.6..19.2)
+    addBox(groupSite, 0.1, 17.6, 0.15, 2.4, 19.2, 2.65, mats.wallWhite);
+    addBox(groupSite, 1.2, 17.7, 0.15, 1.25, 19.1, 2.45, mats.glassClear); // Vách tắm kính
+    // 3. Giặt đồ (2.4 x 1.6m: Y = 19.2..20.8)
+    addBox(groupSite, 0.1, 19.2, 0.15, 2.4, 20.8, 2.65, mats.wallWhite);
+    addBox(groupSite, 0.4, 19.5, 0.15, 1.1, 20.2, 1.05, mats.metalStainless); // Máy giặt & sấy
+    // 4. Phơi đồ có mái thoáng (2.4 x 2.2m: Y = 20.8..23.0)
+    addBox(groupSite, 0.1, 20.8, 0.15, 2.4, 23.0, 0.25, mats.woodOak);
+    for (let r = 0; r < 3; r++) {
+      addBox(groupSite, 0.3, 21.2 + r * 0.5, 2.1, 2.2, 21.25 + r * 0.5, 2.14, mats.metalStainless); // Giàn phơi
+    }
+
+    // Bên phải sân sau: Bàn ngồi chill + Khu để xe máy
+    // Bàn tròn ngồi chill
+    const chillTable = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.45, 0.05, 16), mats.woodOak);
+    chillTable.position.set(3.4, 0.85, 17.5);
+    groupSite.add(chillTable);
+    addBox(groupSite, 3.1, 16.8, 0.15, 3.7, 17.1, 0.65, mats.fabricMustard);
+    addBox(groupSite, 3.1, 17.9, 0.15, 3.7, 18.2, 0.65, mats.fabricMustard);
+    // Xe máy để râm mát bên phải (Y = 19.0..21.5, X = 3.2..4.6)
+    addBox(groupSite, 3.3, 19.2, 0.15, 3.7, 20.6, 0.95, mats.wallWhite);
+    addBox(groupSite, 4.1, 19.2, 0.15, 4.5, 20.6, 0.95, mats.wallCharcoal);
+
+    // Cuối sân: Vườn rau xanh 5m x 4m (X = 0..5, Y = 23..27 hoặc luống rau hữu cơ)
+    for (let vr = 0; vr < 3; vr++) {
+      const vry = 21.5 + vr * 0.45;
+      addBox(groupSite, 4.8, vry, 0.15, 6.8, vry + 0.35, 0.38, mats.woodDark);
+      addBox(groupSite, 4.85, vry + 0.15, 0.39, 6.75, vry + 0.2, 0.42, mats.ledCyanTech); // Tưới nhỏ giọt
+    }
+
+    // =========================================================================
+    // 7. FLOOR 2: MASTER PHÍA TRƯỚC (PIANO & BAN CÔNG), PHÒNG SẾU, PHÒNG CHỊ HAI
     // =========================================================================
     const Z2 = 3.85;
     const H2 = 7.20;
-    addBox(groupFl2, 0, -1.6, Z2 - 0.15, 5.0, 18.0, Z2, mats.floorTile);
-    // Herringbone wood floor across Floor 2 bedrooms
-    addBox(groupFl2, 0.22, 0.22, Z2, 4.76, 15.75, Z2 + 0.015, mats.woodOak);
-    // Exterior LED strip under Floor 2 balcony slab
-    addGlowingSconce(groupFl2, 2.5, -1.55, Z2 - 0.16, 4.8, 0.06, 0.04);
+    addBox(groupFl2, 0, -1.6, Z2 - 0.15, 5.0, 24.0, Z2, mats.floorTile); // Sàn Tầng 2 vươn ra ban công sau 8m
 
-    // Walls Floor 2
+    // Tường bao Tầng 2
     addBox(groupFl2, 0, 0, Z2, 0.22, 16.0, Z2 + 0.42, mats.wallWhite);
     addBox(groupFl2, 4.78, 0, Z2, 5.0, 16.0, H2, mats.wallWhite);
     addBox(groupFl2, 0, 0, Z2, 5.0, 0.22, H2, mats.wallWhite);
     addBox(groupFl2, 0, 15.78, Z2, 5.0, 16.0, H2, mats.wallWhite);
 
-    // Front & Rear Black Metal & Glass Balcony Railings (like reference model)
-    addBox(groupFl2, 0, -1.6, Z2, 5.0, -1.54, Z2 + 1.12, mats.glassBronze);
-    addBox(groupFl2, 0, -1.62, Z2 + 1.12, 5.0, -1.52, Z2 + 1.17, mats.metalBlack);
-    addBox(groupFl2, 0, 17.95, Z2, 5.0, 18.0, Z2 + 1.12, mats.glassBronze);
-    addBox(groupFl2, 0, 17.93, Z2 + 1.12, 5.0, 18.02, Z2 + 1.17, mats.metalBlack);
-
-    // Partitions Floor 2
-    addBox(groupFl2, 0.22, 3.8, Z2, 3.72, 3.92, H2, mats.wallWhite);
-    addBox(groupFl2, 3.72, 0.0, Z2, 3.84, 7.2, H2, mats.wallWhite);
-    addBox(groupFl2, 0.22, 7.2, Z2, 3.72, 7.32, H2, mats.wallWhite);
-    addBox(groupFl2, 2.4, 7.4, Z2, 4.78, 7.52, H2, mats.wallWhite);
-    addBox(groupFl2, 2.4, 7.4, Z2, 2.52, 9.4, H2, mats.wallWhite);
-    addBox(groupFl2, 0.22, 10.4, Z2, 4.78, 10.52, H2, mats.wallWhite);
-    addBox(groupFl2, 2.7, 13.8, Z2, 4.78, 13.92, H2, mats.wallWhite);
-    addBox(groupFl2, 2.7, 13.8, Z2, 2.82, 15.78, H2, mats.wallWhite);
-
-    // Windows on Right Wall Floor 2
-    [[0.6, 2.2], [4.6, 6.2], [11.2, 14.2]].forEach(([y1, y2]) => {
-      addBox(groupFl2, 4.74, y1 - 0.05, Z2 + 0.90, 4.82, y2 + 0.05, Z2 + 2.50, mats.metalBlack);
-      addBox(groupFl2, 4.76, y1, Z2 + 0.95, 4.80, y2, Z2 + 2.45, mats.glassClear);
-    });
-
-    // Front Stargazing Balcony (Y = -1.6..0) with Lounge Lamp & Planter (like reference image)
+    // Ban công trước (5m x 1.6m: Y = -1.6..0.0)
+    addBox(groupFl2, 0, -1.6, Z2, 5.0, -1.55, Z2 + 1.15, mats.glassBronze);
     addBox(groupFl2, 1.2, -1.25, Z2, 1.8, -0.65, Z2 + 0.75, mats.fabricWarm);
     addBox(groupFl2, 3.2, -1.25, Z2, 3.8, -0.65, Z2 + 0.75, mats.fabricWarm);
-    addBox(groupFl2, 2.3, -1.05, Z2, 2.7, -0.65, Z2 + 0.45, mats.woodOak);
-    addBedsideLamp(groupFl2, 4.35, -0.95, Z2 + 0.02);
 
-    // Youngest Sister Bed (Y = 0.5..3.5) with Navy Bedding, Framed Art & Warm Lamps
-    addBox(groupFl2, 0.45, 1.0, Z2, 2.45, 2.8, Z2 + 0.55, mats.fabricWarm);
-    addBox(groupFl2, 0.50, 1.05, Z2 + 0.55, 1.95, 2.75, Z2 + 0.62, mats.fabricNavy);
-    addBox(groupFl2, 0.38, 0.92, Z2, 0.48, 2.88, Z2 + 1.25, mats.woodSlats);
-    addGlowingSconce(groupFl2, 0.46, 1.9, Z2 + 1.28, 0.04, 1.9, 0.04);
-    addBedsideLamp(groupFl2, 0.60, 0.68, Z2 + 0.42);
-    addBox(groupFl2, 0.35, 3.15, Z2, 2.2, 3.65, Z2 + 2.5, mats.woodOak);
-    addBox(groupFl2, 3.0, 1.5, Z2, 3.6, 2.7, Z2 + 0.75, mats.woodOak);
-
-    // Older Sister Bed (Y = 4.2..6.8)
-    addBox(groupFl2, 0.45, 4.5, Z2, 2.45, 6.3, Z2 + 0.55, mats.fabricWarm);
-    addBox(groupFl2, 0.50, 4.55, Z2 + 0.55, 1.95, 6.25, Z2 + 0.62, mats.fabricMustard);
-    addBox(groupFl2, 0.38, 4.42, Z2, 0.48, 6.38, Z2 + 1.25, mats.woodSlats);
-    addGlowingSconce(groupFl2, 0.46, 5.4, Z2 + 1.28, 0.04, 1.9, 0.04);
-    addBedsideLamp(groupFl2, 0.60, 4.18, Z2 + 0.42);
-    addBox(groupFl2, 0.35, 6.55, Z2, 2.2, 7.05, Z2 + 2.5, mats.woodOak);
-    addBox(groupFl2, 3.0, 5.0, Z2, 3.6, 6.2, Z2 + 0.75, mats.woodOak);
-
-    // Shared Bath Floor 2 (Y = 7.5..9.3)
-    addBox(groupFl2, 2.6, 7.6, Z2, 4.6, 9.2, Z2 + 0.85, mats.whiteMarble);
-
-    // MASTER SUITE (Y = 10.5..16.0)
-    // 1. UPRIGHT PIANO
+    // A. PHÒNG NGỦ MASTER CHỊ BA (PHÍA TRƯỚC: Y = 0.22..7.0)
+    // Cửa kính lớn mở ra ban công trước
+    addBox(groupFl2, 0.8, 0.05, Z2, 4.2, 0.15, Z2 + 2.65, mats.glassClear);
+    // Giường ngủ King Size (X = 0.8..2.8, Y = 0.8..2.8)
+    addBox(groupFl2, 0.8, 0.8, Z2, 2.8, 2.8, Z2 + 0.55, mats.fabricWarm);
+    addBox(groupFl2, 0.85, 0.85, Z2 + 0.55, 2.75, 2.75, Z2 + 0.63, mats.fabricNavy);
+    addBox(groupFl2, 0.7, 0.75, Z2, 0.8, 2.85, Z2 + 1.35, mats.woodSlats);
+    addBedsideLamp(groupFl2, 0.8, 0.55, Z2 + 0.45);
+    // 🎹 CÂY ĐÀN PIANO UPRIGHT ĐEN BÓNG (áp vách tường phải tại X = 3.6, Y = 1.8)
     function createPiano(parent, x, y, z) {
       const p = new THREE.Group();
       p.position.set(x, z, y);
@@ -1224,59 +947,75 @@
       addBox(p, -0.72, 0.19, 0.68, 0.72, 0.45, 0.76, mats.pianoGloss);
       addBox(p, -0.60, 0.21, 0.76, 0.60, 0.42, 0.785, mats.wallWhite);
       addBox(p, -0.32, 0.20, 0.88, 0.32, 0.22, 1.08, mats.pianoGloss);
-      addBox(p, -0.24, 0.22, 0.90, 0.24, 0.23, 1.06, mats.wallCream);
       addBox(p, -0.38, 0.65, 0.0, 0.38, 0.95, 0.48, mats.woodDark);
       parent.add(p);
     }
-    createPiano(groupFl2, 0.35, 11.8, Z2);
+    createPiano(groupFl2, 3.8, 1.8, Z2);
 
-    // 2. YOGA & MEDITATION STUDIO
-    addBox(groupFl2, 0.85, 13.2, Z2, 1.65, 15.0, Z2 + 0.02, mats.fabricWarm);
+    // Góc Yoga, thiền & đọc sách (X = 2.4..3.6, Y = 2.8..4.0)
+    addBox(groupFl2, 2.4, 2.8, Z2, 3.4, 4.2, Z2 + 0.02, mats.fabricWarm);
     const zafu = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.1, 16), mats.fabricMustard);
-    zafu.position.set(1.25, Z2 + 0.05, 14.7);
+    zafu.position.set(2.9, Z2 + 0.05, 3.5);
     groupFl2.add(zafu);
 
-    // 3. KING BED & MASTER LED WARDROBE
-    addBox(groupFl2, 1.7, 11.0, Z2, 3.7, 13.0, Z2 + 0.55, mats.fabricWarm);
-    addBox(groupFl2, 1.75, 11.4, Z2 + 0.55, 3.65, 12.95, Z2 + 0.63, mats.fabricNavy);
-    addBox(groupFl2, 1.6, 10.85, Z2, 3.8, 11.0, Z2 + 1.35, mats.woodSlats);
-    addGlowingSconce(groupFl2, 2.7, 10.95, Z2 + 1.38, 2.1, 0.04, 0.04); // Master headboard LED
-    addBedsideLamp(groupFl2, 1.35, 10.95, Z2 + 0.45);
-    addBedsideLamp(groupFl2, 4.02, 10.95, Z2 + 0.45);
-    // Framed art above Master bed
-    addBox(groupFl2, 2.2, 10.53, Z2 + 1.55, 3.2, 10.58, Z2 + 2.25, mats.art2);
-    // Luxury Illuminated Glass Wardrobe
-    addBox(groupFl2, 3.85, 11.2, Z2, 4.7, 13.5, Z2 + 2.55, mats.glassBronze);
-    addGlowingSconce(groupFl2, 4.25, 12.35, Z2 + 2.45, 0.6, 2.1, 0.04);
+    // Cụm WC Riêng (2 x 3.2m) & Phòng Thay Đồ (1.8 x 3.2m) nằm phía sau giường (Y = 4.2..7.0)
+    addBox(groupFl2, 0.22, 4.15, Z2, 4.0, 4.25, H2, mats.wallWhite); // Tường ngăn
+    // WC Riêng bên trái (X = 0.22..2.2, Y = 4.2..7.0)
+    addBox(groupFl2, 0.35, 4.5, Z2, 2.0, 6.8, Z2 + 0.85, mats.whiteMarble);
+    addBox(groupFl2, 1.1, 4.5, Z2, 1.15, 6.8, Z2 + 2.2, mats.glassClear);
+    // Phòng Thay Đồ bên phải (X = 2.2..4.0, Y = 4.2..7.0)
+    addBox(groupFl2, 2.2, 4.2, Z2, 2.3, 7.0, H2, mats.wallWhite); // Vách chia
+    addBox(groupFl2, 2.4, 4.4, Z2, 3.8, 6.8, Z2 + 2.5, mats.glassBronze); // Tủ áo âm tường kịch trần
+    addWarmLight(groupFl2, 2.5, 2.2, 6.2, 2.6, 9.0, 0xffb74d);
 
-    // 4. MASTER EN-SUITE BATHROOM
-    addBox(groupFl2, 2.9, 14.0, Z2, 4.6, 15.6, Z2 + 0.85, mats.whiteMarble);
+    // B. CẦU THANG & GIẾNG TRỜI THÔNG TẦNG TRUNG TÂM (Y = 7.0..10.0)
+    // Giếng trời lấy sáng và thông gió đối lưu
+    addBox(groupFl2, 1.4, 7.2, Z2, 3.2, 9.8, Z2 + 0.05, mats.glassClear);
+    // Hành lang 1m bên phải đi thông về 2 phòng sau (X = 4.0..5.0)
 
-    // Warm Interior Point Lights Floor 2
-    addWarmLight(groupFl2, 2.2, -0.8, 5.2, 1.5, 6.5, 0xffb74d); // Front Balcony
-    addWarmLight(groupFl2, 1.8, 2.0, 6.2, 2.2, 8.5, 0xffb74d);  // Youngest Sister
-    addWarmLight(groupFl2, 1.8, 5.4, 6.2, 2.2, 8.5, 0xffb74d);  // Older Sister
-    addWarmLight(groupFl2, 2.6, 12.6, 6.3, 2.6, 9.5, 0xffb347); // Master Suite
+    // C. PHÒNG SẾU (EM ÚT - 4m x 3.2m: Y = 10.0..13.0, X = 0.22..4.0)
+    addBox(groupFl2, 0.22, 9.95, Z2, 4.0, 10.05, H2, mats.wallWhite);
+    addBox(groupFl2, 0.6, 10.5, Z2, 2.4, 12.5, Z2 + 0.55, mats.fabricWarm);
+    addBox(groupFl2, 0.65, 10.55, Z2 + 0.55, 2.1, 12.45, Z2 + 0.62, mats.fabricNavy);
+    addBox(groupFl2, 2.8, 10.5, Z2, 3.8, 12.5, Z2 + 0.75, mats.woodOak); // Bàn học
+    addWarmLight(groupFl2, 2.0, 11.5, 6.2, 2.0, 7.5, 0xffb74d);
+
+    // D. PHÒNG CHỊ HAI (4m x 3.2m: Y = 13.0..16.0, X = 0.22..4.0)
+    addBox(groupFl2, 0.22, 12.95, Z2, 4.0, 13.05, H2, mats.wallWhite);
+    addBox(groupFl2, 0.6, 13.5, Z2, 2.4, 15.5, Z2 + 0.55, mats.fabricWarm);
+    addBox(groupFl2, 0.65, 13.55, Z2 + 0.55, 2.1, 15.45, Z2 + 0.62, mats.fabricMustard);
+    addBox(groupFl2, 2.8, 13.5, Z2, 3.8, 15.5, Z2 + 0.75, mats.woodOak); // Bàn làm việc
+    // Cửa kính mở ra ban công sau
+    addBox(groupFl2, 1.2, 15.76, Z2, 3.6, 15.82, Z2 + 2.5, mats.glassClear);
+    addWarmLight(groupFl2, 2.0, 14.5, 6.2, 2.0, 7.5, 0xffb74d);
+
+    // E. BAN CÔNG SAU RỘNG 5M X 8M (Y = 16.0..24.0)
+    // Phủ lên một phần sân sau: Khu tập yoga, thiền, ngắm trăng & phơi đồ kín gió
+    addBox(groupFl2, 0, 23.95, Z2, 5.0, 24.0, Z2 + 1.15, mats.glassBronze);
+    addBox(groupFl2, 0, 16.0, Z2, 0.05, 24.0, Z2 + 1.15, mats.glassBronze);
+    addBox(groupFl2, 4.95, 16.0, Z2, 5.0, 24.0, Z2 + 1.15, mats.glassBronze);
+    // Thảm yoga & đệm thiền ngoài trời
+    addBox(groupFl2, 1.2, 17.5, Z2, 2.2, 19.5, Z2 + 0.02, mats.fabricWarm);
+    // Khu phơi đồ kín gió ở cuối ban công sau
+    for (let pr = 0; pr < 3; pr++) {
+      addBox(groupFl2, 1.2, 21.5 + pr * 0.6, Z2 + 1.8, 3.8, 21.55 + pr * 0.6, Z2 + 1.84, mats.metalStainless);
+    }
+    addWarmLight(groupFl2, 2.5, 19.0, 5.5, 1.8, 7.0, 0xffb74d);
 
     // =========================================================================
-    // 7. ROOF, ARCHITECTURAL CHARCOAL COPING & SOLAR PV (ZR = 7.35)
+    // 8. TẦNG MÁI, SOLAR 5KWP & KỸ THUẬT
     // =========================================================================
     const ZR = 7.35;
-    addBox(groupRoof, -0.25, -0.35, ZR, 5.25, 16.35, ZR + 0.22, mats.wallCharcoal); // Dark architectural roof fascia like reference image
+    addBox(groupRoof, -0.25, -0.35, ZR, 5.25, 16.35, ZR + 0.22, mats.wallCharcoal);
     addBox(groupRoof, 0.05, 0.05, ZR + 0.22, 4.95, 15.95, ZR + 0.28, mats.wallWhite);
-    addGlowingSconce(groupRoof, 2.5, -0.32, ZR - 0.02, 5.1, 0.06, 0.04); // Roofline perimeter LED glow
-
-    // Skylight over Stairwell
-    addBox(groupRoof, 1.6, 7.8, ZR + 0.28, 3.4, 9.4, ZR + 0.55, mats.glassClear);
-
-    // 1500L Stainless Tank & Solar Water Heater
+    // Giếng trời trên mái
+    addBox(groupRoof, 1.4, 7.2, ZR + 0.28, 3.2, 9.8, ZR + 0.55, mats.glassClear);
+    // Bồn nước Inox 1500L & Thái Dương Năng
     const tank = new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.62, 1.4, 20), mats.metalStainless);
     tank.rotation.z = Math.PI / 2;
     tank.position.set(1.25, ZR + 0.95, 13.5);
     groupRoof.add(tank);
-    addBox(groupRoof, 2.45, 13.4, ZR + 0.32, 3.85, 15.0, ZR + 0.95, mats.solarCell);
-
-    // 6 Detailed Monocrystalline Solar PV Panels (5kWp System)
+    // 6 tấm pin mặt trời Solar PV 5kWp
     for (let p = 0; p < 3; p++) {
       const py = 2.2 + p * 1.65;
       addBox(groupRoof, 0.55, py, ZR + 0.30, 2.25, py + 1.40, ZR + 0.38, mats.solarCell);
@@ -1284,115 +1023,15 @@
     }
 
     // =========================================================================
-    // 8. SMART HOME ECOSYSTEM: WIFI MESH, ELECTRICAL DB, CAMERAS, AC & LOCKS
-    // =========================================================================
-    // 8.1. SMART ELECTRICAL PANELS (Tủ Điện Tổng MDB + Solar Inverter + Tủ Nhánh Tầng 2)
-    // Main MDB & Hybrid Solar Inverter at Ground Floor Stairwell/Utility Wall (X = 0.25, Y = 9.9, Z = 1.6)
-    addBox(groupFl1, 0.22, 9.85, Z1 + 1.1, 0.38, 10.32, Z1 + 1.95, mats.metalStainless); // Main MDB Panel
-    addBox(groupFl1, 0.38, 9.92, Z1 + 1.65, 0.40, 10.25, Z1 + 1.85, mats.ledGreenOk);    // Smart Meter & Breaker LED
-    addBox(groupFl1, 0.22, 9.35, Z1 + 1.2, 0.38, 9.78, Z1 + 1.85, mats.wallWhite);       // 5kW Solar Hybrid Inverter
-    addBox(groupFl1, 0.38, 9.48, Z1 + 1.48, 0.40, 9.65, Z1 + 1.65, mats.ledCyanTech);    // Inverter Status Screen
-
-    // Floor 2 Sub-Distribution Board (Tủ Điện Nhánh Tầng 2 - Hành lang Y = 7.3)
-    addBox(groupFl2, 3.68, 7.05, Z2 + 1.35, 3.86, 7.38, Z2 + 1.90, mats.metalStainless);
-    addBox(groupFl2, 3.86, 7.12, Z2 + 1.65, 3.88, 7.30, Z2 + 1.78, mats.ledGreenOk);
-
-    // 8.2. SMART HOME CENTRAL TOUCH HUB & WIFI 6E MESH NODES (3 Nodes + Animated Signal Rings)
-    function createWifiNode(parent, x, y, z, floorGroupForWaves) {
-      const node = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.14, 0.05, 20), mats.wallWhite);
-      node.position.set(x, z, y);
-      parent.add(node);
-      const ring = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.02, 20), mats.ledCyanTech);
-      ring.position.set(x, z + 0.02, y);
-      parent.add(ring);
-
-      // Visual WiFi Signal Coverage Rings (in groupTechVisuals)
-      [1.2, 2.4, 3.6].forEach(rad => {
-        const waveGeo = new THREE.RingGeometry(rad - 0.06, rad, 32);
-        const waveMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, side: THREE.DoubleSide, transparent: true, opacity: 0.32 });
-        const wave = new THREE.Mesh(waveGeo, waveMat);
-        wave.rotation.x = Math.PI / 2;
-        wave.position.set(x, z, y);
-        groupTechVisuals.add(wave);
-      });
-    }
-    // Node 1: Main Router at Living Room TV Console (X=3.0, Y=2.2, Z=0.85)
-    createWifiNode(groupFl1, 3.0, 2.2, Z1 + 0.62);
-    // Smart Home 10" Touch Control Panel on Living Room Wall (X=3.7, Y=3.75, Z=1.55)
-    addBox(groupFl1, 3.35, 3.74, Z1 + 1.35, 3.68, 3.79, Z1 + 1.62, mats.metalBlack);
-    addBox(groupFl1, 3.37, 3.73, Z1 + 1.37, 3.66, 3.74, Z1 + 1.60, mats.ledCyanTech);
-    // Node 2: Study / Kitchen Rear Mesh Node (X=2.5, Y=10.3, Z=2.6)
-    createWifiNode(groupFl1, 2.5, 10.35, Z1 + 2.35);
-    // Node 3: Floor 2 Central Hallway Mesh Node (X=3.75, Y=5.8, Z=6.2)
-    createWifiNode(groupFl2, 3.75, 5.8, Z2 + 2.35);
-
-    // 8.3. 6 AI SECURITY CAMERAS (PoE Bullet/Dome Cameras + 3D Field-of-View Cones)
-    function createSecurityCamera(parent, x, y, z, targetX, targetY, targetZ) {
-      const camGroup = new THREE.Group();
-      camGroup.position.set(x, z, y);
-      const body = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.12, 0.24), mats.wallWhite);
-      camGroup.add(body);
-      const lens = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.06, 12), mats.metalBlack);
-      lens.rotation.x = Math.PI / 2;
-      lens.position.set(0, 0, 0.13);
-      camGroup.add(lens);
-      const irLed = new THREE.Mesh(new THREE.SphereGeometry(0.025, 8, 8), mats.ledRedCam);
-      irLed.position.set(0.04, 0.03, 0.13);
-      camGroup.add(irLed);
-      camGroup.lookAt(targetX, targetZ, targetY);
-      parent.add(camGroup);
-
-      // 3D FOV Cone in groupTechVisuals
-      const coneLen = 4.8;
-      const coneGeo = new THREE.ConeGeometry(1.65, coneLen, 16, 1, true);
-      coneGeo.translate(0, -coneLen / 2, 0);
-      coneGeo.rotateX(-Math.PI / 2);
-      const coneMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.16, side: THREE.DoubleSide });
-      const coneMesh = new THREE.Mesh(coneGeo, coneMat);
-      coneMesh.position.set(x, z, y);
-      coneMesh.lookAt(targetX, targetZ, targetY);
-      groupTechVisuals.add(coneMesh);
-    }
-
-    // Cam 1: Front Gate Pillar -> scanning gate & highway approach
-    createSecurityCamera(groupSite, 2.8, -17.8, 2.55, 1.5, -13.0, 0.5);
-    // Cam 2: Front Facade Right Corner -> scanning SUV driveway & Dad's tea porch
-    createSecurityCamera(groupFl1, 4.85, -0.1, 3.35, 2.6, -6.5, 0.5);
-    // Cam 3: Side 2m Corridor -> scanning side breeze pathway
-    createSecurityCamera(groupFl1, 5.02, 4.0, 3.25, 6.0, 10.5, 0.5);
-    // Cam 4: Rear Facade -> scanning 7m vegetable garden & back door
-    createSecurityCamera(groupFl1, 2.5, 16.05, 3.35, 2.5, 21.5, 0.4);
-    // Cam 5: Living Room Indoor AI Dome -> monitoring front door & living area
-    createSecurityCamera(groupFl1, 0.35, 0.35, 3.35, 2.5, 2.8, 1.0);
-    // Cam 6: Floor 2 Front Balcony Overhang -> scanning upper balcony & front yard
-    createSecurityCamera(groupFl2, 4.85, -0.1, 6.95, 2.2, -3.5, 3.85);
-
-    // 8.4. SMART INVERTER AIR CONDITIONERS (5 Units with Cyan Smart Status Indicator)
-    function createSmartAC(parent, x, y, z) {
-      addBox(parent, x, y - 0.48, z, x + 0.24, y + 0.48, z + 0.28, mats.wallWhite);
-      addBox(parent, x + 0.23, y - 0.42, z + 0.05, x + 0.25, y + 0.42, z + 0.08, mats.metalBlack); // Louver
-      addBox(parent, x + 0.24, y + 0.32, z + 0.14, x + 0.26, y + 0.40, z + 0.18, mats.ledCyanTech); // Smart WiFi LED
-    }
-    createSmartAC(groupFl1, 0.24, 1.8, 2.95);   // Living Room AC
-    createSmartAC(groupFl1, 0.24, 5.5, 2.95);   // Parents Bedroom AC
-    createSmartAC(groupFl2, 0.24, 1.9, 6.50);   // Youngest Sister AC
-    createSmartAC(groupFl2, 0.24, 5.4, 6.50);   // Older Sister AC
-    createSmartAC(groupFl2, 1.90, 10.54, 6.50); // Master Bedroom AC
-
-    // 8.5. SMART DOOR LOCKS (Khóa cửa vân tay FaceID tại Cửa chính & Cổng)
-    addBox(groupFl1, 2.75, 0.01, Z1 + 1.05, 2.84, 0.09, Z1 + 1.42, mats.metalBlack);
-    addBox(groupFl1, 2.77, -0.01, Z1 + 1.25, 2.82, 0.02, Z1 + 1.38, mats.ledCyanTech);
-
-    // =========================================================================
-    // 9. FLOATING 3D CALLOUT PINS (MATCHING USER'S UPLOADED REFERENCE IMAGE)
+    // 9. SMART HOME PINS & VISUALS
     // =========================================================================
     const smartPinsData = [
-      { id: 'lock', icon: '🔒', title: 'KHÓA CỬA THÔNG MINH', sub: 'FaceID + Vân Tay + Cổng Tự Động', pos: new THREE.Vector3(2.8, 1.5, 0.0), camKey: 'front' },
-      { id: 'wifi', icon: '🛜', title: 'TRUNG TÂM ĐIỀU KHIỂN & WIFI', sub: 'Router Tổng + 3 Node Mesh 6E', pos: new THREE.Vector3(3.1, 1.6, 2.2), camKey: 'living' },
-      { id: 'power', icon: '⚡', title: 'TỦ ĐIỆN TỔNG & INVERTER', sub: 'Cầu Thang T1 + Sạc EV + Solar 5kW', pos: new THREE.Vector3(0.4, 2.1, 9.8), camKey: 'study' },
-      { id: 'lighting', icon: '💡', title: 'ĐÈN THÔNG MINH KỊCH BẢN', sub: 'LED Lam Gỗ, Hắt Trần & Đèn Ngủ', pos: new THREE.Vector3(1.8, 5.4, 2.0), camKey: 'facade' },
-      { id: 'ac', icon: '🌡️', title: 'ĐIỀU HÒA THÔNG MINH', sub: '5 Dàn Lạnh Inverter Tự Chỉnh Nhiệt', pos: new THREE.Vector3(2.2, 6.6, 11.0), camKey: 'master' },
-      { id: 'camera', icon: '📷', title: 'CAMERA AN NINH AI (6 MẮT)', sub: 'Quét Cổng, Sân Xe, Hành Lang & Vườn', pos: new THREE.Vector3(4.85, 7.0, -0.1), camKey: 'front' }
+      { id: 'canopy', icon: '🏗️', title: 'MÁI CHE SÂN 18M & BÀN TRÀ', sub: 'Mái Che Kín 18m + Bàn Trà Áp Vách', pos: new THREE.Vector3(1.2, 1.5, -3.5), camKey: 'dadTeaWall' },
+      { id: 'wifi', icon: '🛜', title: 'WIFI MESH 6E & SMART HUB', sub: 'Kệ TV T1 + 3 Node Xuyên Sàn', pos: new THREE.Vector3(0.5, 1.5, 1.8), camKey: 'livingNew' },
+      { id: 'power', icon: '⚡', title: 'TỦ ĐIỆN TỔNG & INVERTER', sub: 'Gầm Thang T1 + Sạc EV Sân Trước', pos: new THREE.Vector3(3.9, 1.6, 9.5), camKey: 'stairMDB' },
+      { id: 'master', icon: '🎹', title: 'MASTER PHÍA TRƯỚC TẦNG 2', sub: 'Piano, Yoga, Ban Công Sao, WC Riêng', pos: new THREE.Vector3(2.5, 5.5, 2.0), camKey: 'masterFront' },
+      { id: 'camera', icon: '📷', title: '6 CAMERA AN NINH AI POE', sub: 'Quét Cổng, Sân Xe, Luồng 2m, Sân Sau', pos: new THREE.Vector3(4.85, 3.4, -0.1), camKey: 'frontCanopy' },
+      { id: 'lighting', icon: '💡', title: 'KỊCH BẢN ĐÈN ĐÊM LUNG LINH', sub: 'LED Mái Che 18m, Lam Gỗ, Bếp, Bậc Thang', pos: new THREE.Vector3(2.5, 3.3, -9.0), camKey: 'frontCanopy' }
     ];
 
     const labelsContainer = document.getElementById('labels-container');
@@ -1423,8 +1062,7 @@
     let showSmartPins = true;
     function toggleSmartOverlay() {
       showSmartPins = !showSmartPins;
-      const btn = document.getElementById('btn-smart');
-      btn.classList.toggle('active', showSmartPins);
+      document.getElementById('btn-smart').classList.toggle('active', showSmartPins);
       labelsContainer.style.display = showSmartPins ? 'block' : 'none';
     }
 
@@ -1439,17 +1077,10 @@
       const halfH = window.innerHeight / 2;
       pinElements.forEach(({ el, data }) => {
         const worldPos = data.pos.clone();
-        // Adjust height if floors are exploded
-        if (data.pos.y > 3.6) {
-          worldPos.y += groupFl2.position.y;
-        } else if (data.pos.y > 0.5) {
-          worldPos.y += groupFl1.position.y;
-        }
+        if (data.pos.y > 3.6) worldPos.y += groupFl2.position.y;
+        else if (data.pos.y > 0.5) worldPos.y += groupFl1.position.y;
         worldPos.project(camera);
-        if (worldPos.z > 1) {
-          el.style.opacity = '0';
-          return;
-        }
+        if (worldPos.z > 1) { el.style.opacity = '0'; return; }
         const x = (worldPos.x * halfW) + halfW;
         const y = -(worldPos.y * halfH) + halfH;
         el.style.left = `${x}px`;
@@ -1458,54 +1089,46 @@
       });
     }
 
-    // Smart Home System Detailed Explanations
     const smartSystemDetails = {
-      wifi: `<strong>📍 Vị trí WiFi Mesh 6E & Trung Tâm Điều Khiển:</strong><br>
-        • <strong>Router Tổng + Smart Hub (Tầng 1):</strong> Đặt tại kệ TV Phòng Khách (Y=2.2m), kết nối cáp quang chính.<br>
-        • <strong>Mesh Node 2 (Tầng 1 Sau):</strong> Gắn tường giữa Phòng Đọc & Bếp (Y=10.3m), phủ sóng toàn bộ bếp & vườn rau 7m.<br>
-        • <strong>Mesh Node 3 (Tầng 2):</strong> Gắn trần hành lang trung tâm Lầu 1 (Y=5.8m), nối dây LAN Cat6 âm tường xuyên sàn không suy hao.`,
-      camera: `<strong>📷 Hệ Thống 6 Camera An Ninh PoE Góc Rộng (Bấm "🔍 Sóng WiFi & Góc Cam" để xem vùng quét):</strong><br>
-        • <strong>Cam 1 (Cổng chính):</strong> Gắn trụ cổng rào nhận diện biển số & khách bấm chuông.<br>
-        • <strong>Cam 2 (Sân xe & Hiên trà):</strong> Góc phải mặt tiền Tầng 1 nhìn thẳng ô tô & bàn trà của Ba.<br>
-        • <strong>Cam 3 & 4 (Hành lang 2m & Vườn rau):</strong> Giám sát lối đi bên hông và sân sau 7m.<br>
-        • <strong>Cam 5 & 6 (Phòng khách & Ban công Lầu 1):</strong> Góc trần phòng khách và ban công trước.`,
-      power: `<strong>⚡ Vị Trí Tủ Điện Tổng, Điện Nhánh & Năng Lượng Mặt Trời:</strong><br>
-        • <strong>Tủ Điện Tổng MDB + Inverter 5kW:</strong> Đặt tại mảng tường kỹ thuật khô ráo cạnh cầu thang Tầng 1 (Y=9.8m) — trung tâm tải điện của cả nhà, dễ ngắt khẩn cấp.<br>
-        • <strong>Tủ Điện Nhánh Tầng 2:</strong> Đặt tại hành lang Lầu 1 (Y=7.2m) chia aptomat riêng cho từng phòng ngủ & điều hòa.<br>
-        • <strong>Trạm Sạc Ô Tô Điện (EV Wallbox):</strong> Gắn tường rào trái cạnh vị trí đỗ SUV (Y=-11.5m) có RCBO chống giật riêng.`,
-      lock: `<strong>🔒 Khóa Thông Minh & An Ninh Cửa Ra Vào:</strong><br>
-        • <strong>Cửa Chính Tầng 1:</strong> Khóa thông minh FaceID 3D + Vân tay + Mã số ảo, tự động bật đèn Phòng Khách khi mở cửa buổi tối.<br>
-        • <strong>Cổng Rào Trước (Y=-18m):</strong> Motor cổng trượt tự động điều khiển qua App điện thoại & giọng nói trên xe ô tô.`,
-      ac: `<strong>🌡️ Hệ Thống Điều Hòa Thông Minh & Cảm Biến Môi Trường:</strong><br>
-        • <strong>5 Dàn Lạnh Inverter:</strong> Lắp tại Phòng Khách, Phòng Ba Mẹ, Phòng Chị Hai, Em Út và Master (dàn nóng đặt gọn trên mái sau).<br>
-        • <strong>Tự động hóa:</strong> Tự tăng 1°C lúc 2h sáng bảo vệ giấc ngủ cho Ba Mẹ; tích hợp cảm biến khói tại Bếp và van tưới nhỏ giọt tự động vườn rau.`,
+      canopy: `<strong>🏗️ Mái Che Sân Trước 18m & Bàn Trà Áp Vách Tường:</strong><br>
+        • <strong>Mái che kín 18m:</strong> Toàn bộ chiều dài sân trước 18m được lợp mái che kín (khung thép hộp + kính cường lực dán phim cách nhiệt) từ cổng rào đến hiên nhà, mưa bão không ướt, nắng không chói.<br>
+        • <strong>Bàn trà của Ba áp vách tường trái:</strong> Kê áp sát tường rào bên trái (Y=-3.5m), có ghế băng gỗ và đệm ấm cúng, tối ưu luồng giao thông để xe ô tô đỗ thoải mái.<br>
+        • <strong>Hệ thống đèn LED ban đêm:</strong> Dải đèn LED thanh ấm gắn dưới các thanh xà gồ rọi sáng toàn bộ khoảng sân 18m.`,
+      wifi: `<strong>📍 Vị trí WiFi Mesh 6E & Màn Hình Trung Tâm Điều Khiển:</strong><br>
+        • <strong>Node 1 (Router Chính):</strong> Đặt tại Kệ TV Phòng khách bên vách trái (Y=1.8m), kết nối cáp quang trực tiếp.<br>
+        • <strong>Node 2 (Khu Bếp & Sân Sau):</strong> Gắn tường khu vực Bàn ăn / Cầu thang (Y=11.2m), phủ sóng trọn vẹn khu bếp và sân sau.<br>
+        • <strong>Node 3 (Tầng 2 Trung Tâm):</strong> Gắn trần hành lang Tầng 2 cạnh giếng trời (Y=8.5m), phủ sóng phòng Master trước và 2 phòng ngủ sau.`,
+      camera: `<strong>📷 Hệ Thống 6 Camera An Ninh AI PoE Góc Rộng:</strong><br>
+        • <strong>Cam 1 (Cổng chính 18m):</strong> Nhận diện biển số và khách bấm chuông tại cổng rào.<br>
+        • <strong>Cam 2 (Sân trước & Bàn trà):</strong> Góc mặt tiền quét toàn bộ xe ô tô và bàn uống nước của Ba.<br>
+        • <strong>Cam 3 (Đường luồng 2m):</strong> Quét lối đi bên hông xuyên suốt từ trước ra sau.<br>
+        • <strong>Cam 4 (Sân sau):</strong> Giám sát khu để xe máy, khối phụ trợ và vườn rau.<br>
+        • <strong>Cam 5 (Phòng khách):</strong> Góc trần phòng khách trông nhà 24/7.<br>
+        • <strong>Cam 6 (Ban công T2):</strong> Quan sát từ trên cao xuống toàn bộ sân trước.`,
+      power: `<strong>⚡ Vị Trí Tủ Điện MDB, Inverter Solar & Trạm Sạc EV:</strong><br>
+        • <strong>Tủ Điện Tổng MDB & Inverter 5kW:</strong> Đặt tại vách kỹ thuật dưới gầm cầu thang Tầng 1 (Y=9.5m) — tâm tải của cả nhà.<br>
+        • <strong>Trạm Sạc EV Sân Trước:</strong> Gắn tường rào trái cạnh ô tô (Y=-12.5m) có CB chống rò riêng biệt.`,
+      master: `<strong>🎹 Phòng Master Chị Ba Phía Trước Tầng 2:</strong><br>
+        • <strong>Kết nối Ban công trước:</strong> Cửa kính lớn mở ra ban công 5x1.6m ngắm sao và đón nắng mai.<br>
+        • <strong>Đàn Piano Upright & Góc Yoga:</strong> Bố trí trang trọng, đón ánh sáng tự nhiên.<br>
+        • <strong>Khối WC Riêng & Phòng Thay Đồ:</strong> Tách biệt phía sau phòng ngủ, tiện nghi như resort.`,
       lighting: `<strong>💡 Kịch Bản Ánh Sáng Đêm Lung Linh (Warm 3000K):</strong><br>
-        • <strong>Ngoại thất:</strong> LED thanh hắt dọc hệ lam gỗ mặt tiền thông tầng, đèn hắt trần ban công, đèn trụ cổng đá chẻ và 8 trụ đèn nấm lối đi sân vườn.<br>
-        • <strong>Nội thất:</strong> Đèn rọi tranh treo tường, LED hắt gầm tủ bếp & bậc cầu thang, đèn ngủ đầu giường và hào quang Gian thờ Quan Âm.`
+        • <strong>Ngoại thất:</strong> Dải LED xà gồ mái che 18m, đèn trụ đá cổng rào, đèn rọi gốc bonsai dọc lối đi 2m.<br>
+        • <strong>Nội thất:</strong> LED hắt vách TV, hào quang Gian thờ, LED bậc cầu thang, LED gầm tủ bếp và đèn ngủ các phòng.`
     };
 
     function inspectSmartSystem(key, chipEl) {
       document.querySelectorAll('.sh-chip').forEach(c => c.classList.remove('active'));
       if (chipEl) chipEl.classList.add('active');
       document.getElementById('sh-detail-text').innerHTML = smartSystemDetails[key] || '';
-
-      if (key === 'camera' || key === 'wifi') {
-        groupTechVisuals.visible = true;
-        document.getElementById('btn-fov').classList.add('active');
-      }
-
-      if (key === 'wifi') animateCameraTo(-14, 14, 4.0, 2.8, 3.0, 5.5);
-      else if (key === 'camera') animateCameraTo(-22, 19, -12, 3.0, 2.8, 2.0);
-      else if (key === 'power') animateCameraTo(-6, 6.5, 9.5, 1.2, 1.8, 9.8);
-      else if (key === 'lock') animateCameraTo(-6, 4.5, -6.5, 2.8, 1.5, -1.0);
-      else if (key === 'ac') animateCameraTo(-12, 11, 8.5, 2.2, 4.8, 7.5);
-      else if (key === 'lighting') {
-        if (!isNight) toggleTimeOfDay();
-        animateCameraTo(-18, 11, -12, 2.5, 3.8, 3.0);
-      }
+      if (key === 'canopy') animateCameraTo(-10, 8.5, -12, 1.2, 1.5, -4.5);
+      else if (key === 'wifi') animateCameraTo(-4, 4.5, 1.5, 0.8, 1.5, 2.0);
+      else if (key === 'camera') animateCameraTo(-18, 16, -10, 2.5, 2.5, 0.0);
+      else if (key === 'power') animateCameraTo(1.5, 4.5, 9.5, 3.8, 1.8, 9.5);
+      else if (key === 'master') animateCameraTo(-8, 9.5, 3.5, 2.5, 5.5, 2.5);
+      else if (key === 'lighting') { if (!isNight) toggleTimeOfDay(); animateCameraTo(-18, 11, -12, 2.5, 3.8, 3.0); }
     }
 
-    // Hide loader when scene ready
     setTimeout(() => {
       const loader = document.getElementById('loader');
       loader.style.opacity = '0';
@@ -1513,17 +1136,11 @@
     }, 350);
 
     // =========================================================================
-    // 10. INTERACTIVE VIEW CONTROLS & CAMERA ANIMATIONS
+    // 10. CAMERA CONTROLS & ANIMATIONS
     // =========================================================================
     function animateCameraTo(cx, cy, cz, tx, ty, tz, duration = 1100) {
-      new TWEEN.Tween(camera.position)
-        .to({ x: cx, y: cy, z: cz }, duration)
-        .easing(TWEEN.Easing.Cubic.Out)
-        .start();
-      new TWEEN.Tween(controls.target)
-        .to({ x: tx, y: ty, z: tz }, duration)
-        .easing(TWEEN.Easing.Cubic.Out)
-        .start();
+      new TWEEN.Tween(camera.position).to({ x: cx, y: cy, z: cz }, duration).easing(TWEEN.Easing.Cubic.Out).start();
+      new TWEEN.Tween(controls.target).to({ x: tx, y: ty, z: tz }, duration).easing(TWEEN.Easing.Cubic.Out).start();
     }
 
     function setFloorMode(mode) {
@@ -1531,45 +1148,27 @@
         const b = document.getElementById('btn-' + m);
         if (b) b.classList.toggle('active', m === mode);
       });
-
       document.getElementById('explodeSlider').value = 0;
-      groupFl1.position.y = 0;
-      groupFl2.position.y = 0;
-      groupRoof.position.y = 0;
+      groupFl1.position.y = 0; groupFl2.position.y = 0; groupRoof.position.y = 0;
 
       if (mode === 'all') {
-        groupSite.visible = true;
-        groupFl1.visible = true;
-        groupFl2.visible = true;
-        groupRoof.visible = true;
+        groupSite.visible = true; groupFl1.visible = true; groupFl2.visible = true; groupRoof.visible = true;
         animateCameraTo(-24, 20, -15, 3.0, 3.2, 5.0);
       } else if (mode === 'fl1') {
-        groupSite.visible = true;
-        groupFl1.visible = true;
-        groupFl2.visible = false;
-        groupRoof.visible = false;
+        groupSite.visible = true; groupFl1.visible = true; groupFl2.visible = false; groupRoof.visible = false;
         animateCameraTo(-12, 15, 7.5, 2.5, 1.8, 7.5);
       } else if (mode === 'fl2') {
-        groupSite.visible = false;
-        groupFl1.visible = false;
-        groupFl2.visible = true;
-        groupRoof.visible = false;
+        groupSite.visible = false; groupFl1.visible = false; groupFl2.visible = true; groupRoof.visible = false;
         animateCameraTo(-12, 17, 7.5, 2.5, 5.2, 7.5);
       } else if (mode === 'roof') {
-        groupSite.visible = true;
-        groupFl1.visible = true;
-        groupFl2.visible = true;
-        groupRoof.visible = true;
+        groupSite.visible = true; groupFl1.visible = true; groupFl2.visible = true; groupRoof.visible = true;
         animateCameraTo(3.5, 23, 8.0, 3.5, 7.5, 8.0);
       }
     }
 
     function onExplodeChange(val) {
       const v = parseFloat(val);
-      groupSite.visible = true;
-      groupFl1.visible = true;
-      groupFl2.visible = true;
-      groupRoof.visible = true;
+      groupSite.visible = true; groupFl1.visible = true; groupFl2.visible = true; groupRoof.visible = true;
       groupFl1.position.y = v * 2.0;
       groupFl2.position.y = v * 6.5;
       groupRoof.position.y = v * 11.5;
@@ -1579,41 +1178,36 @@
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
       if (ev && ev.currentTarget) ev.currentTarget.classList.add('active');
 
-      if (spot === 'facade') {
+      if (spot === 'frontCanopy') {
         setFloorMode('all');
-        if (!isNight) toggleTimeOfDay();
-        animateCameraTo(-14, 8.5, -11.5, 2.5, 3.8, 2.0);
-      } else if (spot === 'front') {
+        animateCameraTo(-12, 10, -22, 2.5, 2.0, -9.0);
+      } else if (spot === 'dadTeaWall') {
         setFloorMode('all');
-        animateCameraTo(-8.5, 6.5, -23.0, 2.8, 2.0, -9.5);
-      } else if (spot === 'porch') {
+        animateCameraTo(-3.5, 3.5, -4.5, 0.8, 1.2, -3.5);
+      } else if (spot === 'livingNew') {
         setFloorMode('fl1');
-        animateCameraTo(6.2, 3.2, -6.5, 3.7, 1.2, -2.7);
-      } else if (spot === 'living') {
+        animateCameraTo(-3.5, 4.0, 2.0, 2.2, 1.4, 2.5);
+      } else if (spot === 'parentsBed') {
         setFloorMode('fl1');
-        animateCameraTo(-3.2, 3.8, 0.8, 2.2, 1.4, 2.2);
-      } else if (spot === 'altar') {
+        animateCameraTo(-2.5, 4.0, 7.5, 2.0, 1.5, 7.5);
+      } else if (spot === 'stairMDB') {
         setFloorMode('fl1');
-        animateCameraTo(1.4, 2.8, 2.7, 4.2, 1.8, 2.7);
-      } else if (spot === 'study') {
+        animateCameraTo(2.0, 4.5, 10.0, 3.8, 1.8, 10.0);
+      } else if (spot === 'kitchenNew') {
         setFloorMode('fl1');
-        animateCameraTo(-2.5, 3.8, 9.2, 1.8, 1.6, 9.4);
-      } else if (spot === 'kitchen') {
+        animateCameraTo(-2.5, 4.5, 13.5, 2.5, 1.5, 13.5);
+      } else if (spot === 'rearService') {
         setFloorMode('fl1');
-        animateCameraTo(-2.2, 4.0, 12.5, 2.6, 1.5, 12.5);
-      } else if (spot === 'garden') {
-        setFloorMode('fl1');
-        animateCameraTo(3.5, 6.5, 26.0, 3.5, 1.0, 19.5);
-      } else if (spot === 'master') {
+        animateCameraTo(4.5, 7.5, 22.0, 2.5, 1.2, 19.0);
+      } else if (spot === 'masterFront') {
         setFloorMode('fl2');
-        animateCameraTo(-3.0, 7.5, 12.5, 2.5, 5.2, 12.5);
-      } else if (spot === 'sisters') {
+        animateCameraTo(-3.5, 7.5, 2.5, 2.5, 5.2, 2.5);
+      } else if (spot === 'sistersRear') {
         setFloorMode('fl2');
-        animateCameraTo(-3.0, 7.5, 3.8, 2.5, 5.2, 3.8);
+        animateCameraTo(-3.5, 8.5, 14.5, 2.5, 5.2, 14.5);
       }
     }
 
-    // Default to Night Mode so the house immediately glows warmly as requested!
     let isNight = true;
     function toggleTimeOfDay() {
       isNight = !isNight;
@@ -1628,8 +1222,6 @@
         hemiLight.intensity = 0.24;
         renderer.toneMappingExposure = 1.18;
         interiorLights.forEach(item => item.light.intensity = item.baseIntensity);
-        mats.ledBulbWarm.color.set(0xfff3b0);
-        mats.ledWarmStrip.color.set(0xffd166);
       } else {
         btn.innerText = '☀️ Ban Ngày Chân Thực';
         btn.classList.remove('active');
@@ -1640,8 +1232,6 @@
         hemiLight.intensity = 0.72;
         renderer.toneMappingExposure = 1.05;
         interiorLights.forEach(item => item.light.intensity = item.baseIntensity * 0.35);
-        mats.ledBulbWarm.color.set(0xe2e8f0);
-        mats.ledWarmStrip.color.set(0xfef08a);
       }
     }
 

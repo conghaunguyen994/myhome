@@ -5,14 +5,28 @@
 
 ---
 
-## 📌 Tổng Quan Công Trình & Nâng Cấp Mới Nhất
+## 📌 Tổng Quan Công Trình & Bố Cục Không Gian Mới Nhất
 
 - **Vị trí & Hướng nhà:** Mặt tiền đường Quốc lộ, hướng Đông (nhà nằm phía Tây đường; sáng đón ánh nắng bình minh hướng Đông dịu nhẹ, chiều râm mát).
 - **Kích thước khu đất:** Ngang **7.0m** × Dài **41.0m** (Tổng diện tích: **287 m²**):
-  - **Sân trước:** Dài **18.0m** (Đậu ô tô SUV trắng, trạm sạc EV Wallbox, hiên trà ngoài trời của Ba, đệm cây xanh cản bụi ồn).
-  - **Nhà chính (2 tầng):** Kích thước **5.0m × 16.0m** (Diện tích sàn: 80 m²/sàn, tổng diện tích sàn GFA gồm 2 ban công: ~**175 m²**).
-  - **Đường luồng bên hông:** Rộng **2.0m** xuyên suốt từ cổng trước ra tận sân sau (dắt xe máy ra sau, mở cửa sổ hông đón gió mát).
-  - **Sân sau:** Dài **7.0m** (Khu giặt phơi mái che kính lấy sáng chống mưa, bàn hóng gió, để xe mát mẻ và vườn rau sạch tích hợp tưới nhỏ giọt tự động).
+  - **Sân trước:** Dài **18.0m** — **Mái che kín toàn bộ 18.0m** (Đậu ô tô SUV 7 chỗ, trạm sạc EV Wallbox, góc **bàn nước của Ba đặt áp sát vách tường** dưới mái che râm mát, đệm cây cảnh bonsai cản bụi ồn).
+  - **Nhà chính (2 tầng):** Kích thước **5.0m × 16.0m** (Tổng diện tích sàn GFA gồm 2 ban công: ~**205 m²**).
+  - **Đường luồng bên hông:** Rộng **2.0m** xuyên suốt từ cổng 2m phía trước ra tận sân sau (trải đá bước dặm & bonsai, dắt xe máy ra sau, mở cửa sổ hông đón gió mát).
+  - **Sân sau:** Dài **12.0m** (gồm dãy công trình phụ WC - Tắm - Giặt - Phơi áp sát tường trái, bàn ngồi chill + chỗ để xe máy bên phải được che bởi ban công sau tầng 2, và vườn rau sạch hữu cơ $5\text{m} \times 4\text{m}$ cuối sân).
+- **🏡 Chi Tiết Mặt Bằng Công Năng:**
+  - **Tầng 1 (Tầng Trệt):**
+    - *Phòng khách ($5\text{m} \times 5.8\text{m}$):* Vách TV & Gian thờ Bồ Tát Quan Âm trang nghiêm ở tường trái, bộ sofa đối diện, cửa chính bên phải, cửa sổ lớn bên trái.
+    - *Phòng ngủ Ba Mẹ ($4\text{m} \times 3.2\text{m}$):* Đặt sau phòng khách, có vách kính 3 tấm ngang lấy sáng từ phòng khách, cửa mở ra hành lang 1m.
+    - *Cầu thang chữ U:* 2 vế gập lại (~4m bề ngang), gầm thang tích hợp Tủ điện tổng MDB & Hệ biến tần Inverter Hybrid Solar 5kW.
+    - *Bếp mở & Bàn ăn tròn ($5\text{m} \times 6.4\text{m}$):* Hệ tủ bếp chữ I dài dọc tường trái, bàn ăn tròn 4-6 chỗ ấm cúng ở giữa, 2 cửa sổ ra đường luồng và cửa kính lớn ra sân sau.
+    - *Sân sau:* Dãy phụ áp tường trái (WC $\to$ Phòng tắm $\to$ Giặt đồ $\to$ Phơi đồ có mái thoáng); bên phải là bàn ngồi chill + chỗ để xe máy; cuối sân là vườn rau $5\text{m} \times 4\text{m}$.
+  - **Tầng 2 (Lầu 1):**
+    - *Ban công trước ($5\text{m} \times 1.6\text{m}$):* Nhô ra mặt tiền, che mưa nắng cho cửa chính Tầng 1, nơi ngắm sao và chill nhạc.
+    - *Phòng ngủ Master Chị Ba ($4\text{m} \times 5.8\text{m}$ - ĐƯỢC ĐƯA RA MẶT TIỀN):* Cửa kính lớn mở ra ban công trước; giường King size; sau vách đầu giường là WC riêng ($2\text{m} \times 3.2\text{m}$, bồn tắm nằm cao cấp) và Walk-in closet ($1.8\text{m} \times 3.2\text{m}$); góc đặt đàn Piano upright sát tường phải & thảm Yoga/thiền.
+    - *Cầu thang & Giếng trời thông tầng:* Chiếu nghỉ mở rộng kết hợp giếng trời lấy sáng lõi nhà.
+    - *Phòng ngủ Em Út (Phòng Sếu - $4\text{m} \times 3.2\text{m}$):* Nằm ở giữa, cửa kính mở ra giếng trời và cửa sổ tường trái.
+    - *Phòng ngủ Chị Hai ($4\text{m} \times 3.2\text{m}$):* Nằm ở phía sau, cửa kính lớn mở trực tiếp ra ban công sau.
+    - *Ban công sau siêu rộng ($5\text{m} \times 8\text{m} = 40\text{ m}^2$):* Che phủ sân sau tầng 1, không gian tập Yoga ngoài trời, tắm nắng, tắm trăng và khu phơi đồ kín đáo cuối ban công.
 - **✨ Họa tiết & Vật liệu PBR Chân thực:**
   - Hệ **lam gỗ mặt tiền thông tầng** (Tầng 1 + Tầng 2) kết hợp dải đèn LED vàng ấm 3000K hắt khe.
   - **Sàn gỗ xương cá / ván gỗ sồi** có đường ron và vân gỗ tự nhiên cho toàn bộ phòng ngủ.
