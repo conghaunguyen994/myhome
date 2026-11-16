@@ -167,6 +167,17 @@
   - Làm chung một phòng để tối ưu diện tích nhưng ngăn cách triệt để bằng vách kính cường lực 10mm có gioăng cao su từ tính và gờ đá chặn nước cao 5cm.
   - Khi tắm nước không bao giờ bắn ra khu vực bồn cầu và lavabo, sàn nhà tắm bên ngoài luôn khô ráo, sạch sẽ và an toàn.
 
+### 4.4. Nâng cấp Họa tiết Kiến trúc Chân thực & Kịch bản Ánh sáng Đêm Lung linh
+- **Hệ lam gỗ mặt tiền thông tầng tích hợp LED (Signature Louver Facade):**
+  - Mảng mặt tiền bên trái (từ Tầng 1 vươn thẳng lên Tầng 2) ốp hệ thanh lam gỗ ngoài trời sắc nét, bên trong giấu 2 dải đèn **LED thanh vàng ấm 3000K** chạy dọc thông tầng. Khi đêm xuống, ánh sáng hắt qua từng khe gỗ tạo chiều sâu kiến trúc sang trọng.
+- **Vật liệu bề mặt có chiều sâu (High-Realism PBR Textures):**
+  - **Sàn gỗ xương cá / ván gỗ sồi tự nhiên:** Toàn bộ Phòng ngủ Ba Mẹ (Tầng 1) và 3 phòng ngủ Tầng 2 lát sàn vân gỗ tự nhiên ấm chân, có đường ron ván và độ nhám bề mặt chân thực.
+  - **Gạch đá Calacatta vân mây khổ lớn ($80\text{cm} \times 80\text{cm}$):** Khu vực Phòng khách, Bếp mở và Quầy đảo làm bánh sử dụng đá vân mây trắng kem thanh lịch, phản chiếu ánh đèn đêm lung linh.
+  - **Đá chẻ tự nhiên (Split-Face Slate) & Viền mái Charcoal:** 3 trụ cổng rào trước ốp đá chẻ tự nhiên xám đen khỏe khoắn, đồng bộ với viền mái kiến trúc màu xám than (Charcoal Fascia) và 6 tấm pin mặt trời Monocrystalline có lưới cell quang điện rõ nét.
+- **Chiếu sáng ban đêm đa lớp (Layered Night Illumination):**
+  - **Ngoại thất:** Đèn trụ cổng đá chẻ, 8 trụ đèn nấm (bollard lights) dẫn lối sân trước – hành lang bên 2m – vườn rau sau, đèn hắt gốc cây xanh, đèn thanh LED giàn pergola Hiên trà của Ba và đèn hắt gầm ban công Tầng 2.
+  - **Nội thất:** Đèn LED hắt khe trần và vách TV lam sóng, đèn rọi tranh treo tường nghệ thuật, LED hắt gầm tủ bếp trên & chân quầy đảo làm bánh, LED âm từng mũi bậc cầu thang, LED hắt kệ sách và tủ áo cánh kính phòng Master, cùng hệ đèn bàn ngủ chụp vải ấm áp.
+
 ---
 
 ## 5. GIẢI PHÁP ÁNH SÁNG, GIÓ, KHÍ HẬU & CHỐNG NẮNG BÃO
@@ -245,24 +256,49 @@
 
 ---
 
-## 8. HỆ THỐNG KỸ THUẬT & TIỆN ÍCH (M&E)
+## 8. HỆ THỐNG SMART HOME AI, ĐIỆN, WIFI MESH & CAMERA AN NINH (M&E)
 
-1. **Hệ thống Điện & Chiếu sáng:**
-   - Toàn bộ dây dẫn dùng cáp đồng Cadivi luồn trong ống cứng chống cháy Sino âm tường.
-   - Ổ cắm điện bố trí cao 45cm (khu vực bếp và bàn học cao 1.1m), toàn bộ là loại có nắp che an toàn trẻ em của Panasonic / Schneider. Bố trí sẵn các ổ cắm chờ tiện ích: ổ cắm sạc xe điện sân sau, ổ cắm máy lọc nước, ổ cắm cho máy sấy, lò nướng bánh.
-   - Chiếu sáng: Đèn âm trần LED nhiệt độ màu **4000K (Ánh sáng trung tính ấm áp)**, tạo cảm giác dịu mắt, ấm cúng và tôn lên vẻ đẹp nội thất gỗ. Có công tắc đảo chiều đầu giường ngủ và chân cầu thang.
-2. **Hệ thống Nước & Vệ sinh:**
-   - Ống cấp nước nóng/lạnh PPR Bình Minh hàn nhiệt chống rò rỉ; ống thoát nước PVC dày loại 1.
-   - Bồn nước Inox 1500L đặt trên sàn mái BTCT.
-   - Máy nước nóng năng lượng mặt trời Thái Dương Năng 180L (tiết kiệm 100% tiền điện đun nước tắm quanh năm).
-   - Bố trí vòi nước rửa xe, tưới cây ở sân trước và vòi nước tưới rau, giặt rửa thô ở sân sau.
-   - Hệ thống lọc nước RO tại bếp đảm bảo nguồn nước uống trực tiếp tinh khiết cho cả nhà.
-3. **Thông gió & Khí động:**
-   - Máy hút mùi bếp công suất lớn 1100-1200 $\text{m}^3/\text{h}$ dẫn ống thoát thẳng ra đường luồng.
-   - Quạt hút âm trần cho từng nhà vệ sinh dẫn mùi ra ngoài hộp kỹ thuật.
-4. **Internet & An ninh:**
-   - Hệ thống Wifi Mesh 2 băng tần phủ sóng căng đét mọi góc nhà, từ sân trước ra tới vườn rau sau.
-   - Hệ thống 3 camera thông minh: 1 camera cổng chính, 1 camera hành lang 2m bên hông, 1 camera sân sau.
+### 8.1. Sơ đồ bố trí Tủ điện, Điện mặt trời Solar 5kWp & Trạm sạc xe điện
+1. **Tủ điện tổng (Main MDB) & Bộ hòa lưới Hybrid Inverter 5kW:**
+   - **Vị trí lắp đặt:** Đặt gọn gàng tại mảng tường kỹ thuật khô ráo ngay cạnh cầu thang Tầng 1 (`X = 0.25m, Y = 9.35m - 10.32m, cao độ Z = 1.4m - 1.9m`).
+   - **Lý do kỹ thuật:** Đây là tâm điểm phụ tải của toàn bộ ngôi nhà, giúp khoảng cách kéo dây tới Bếp (phía sau) và Phòng khách (phía trước) ngắn nhất, đồng thời nằm ngay dưới trục thông tầng giếng trời để cáp DC từ 6 tấm pin năng lượng mặt trời trên mái đi thẳng xuống Inverter an toàn tuyệt đối.
+2. **Tủ điện nhánh Tầng 2 (Sub-DB Lầu 1):**
+   - **Vị trí lắp đặt:** Gắn âm tường tại hành lang trung tâm Tầng 2 (`X = 3.72m, Y = 7.1m, cao độ Z = 5.3m`).
+   - **Công năng:** Tách riêng các aptomat chống giật (RCBO) cho từng phòng ngủ (Master, Chị Hai, Em Út), bình nước nóng và hệ điều hòa Tầng 2; dễ dàng ngắt điện bảo trì từng nhánh mà không làm mất điện tầng trệt của Ba Mẹ.
+3. **Trạm sạc Ô tô điện (EV Wallbox Charger) & Ổ cắm thông minh:**
+   - **Vị trí lắp đặt:** Gắn trên tường rào bên trái tại khu vực đỗ xe SUV sân trước (`X = 0.05m, Y = -11.3m, cao độ Z = 1.25m`), đi cáp ngầm riêng từ tủ tổng có CB chống dòng rò chuyên dụng.
+   - Toàn bộ dây dẫn dùng cáp đồng Cadivi luồn trong ống cứng chống cháy Sino âm tường; công tắc cảm ứng thông minh Zigbee/Matter viền LED định vị ban đêm tại cửa mỗi phòng.
+
+### 8.2. Hệ thống Mạng WiFi Mesh 6E Xuyên Sàn & Trung tâm Điều khiển Smart Home
+- **Màn hình Trung tâm Điều khiển (Smart Home Central Touch Hub 10 inch):**
+  - Đặt tại mảng tường trung tâm Phòng khách (`X = 3.5m, Y = 3.75m, cao độ Z = 1.5m`) ngay lối giao thông chính, hiển thị trực tiếp hình ảnh 6 camera an ninh, công suất điện mặt trời và điều khiển 1 chạm các kịch bản (*"Về nhà"*, *"Tiếp khách"*, *"Đi ngủ"*, *"Chào buổi sáng"*).
+- **3 Node WiFi Mesh 6E đi dây LAN Cat6 âm tường (Ethernet Backhaul):**
+  1. **Node 1 (Router Tổng + Modem Quang ONT):** Đặt tại kệ TV Phòng khách Tầng 1 (`X = 3.0m, Y = 2.2m, Z = 0.85m`), phủ sóng toàn bộ Phòng khách, Gian thờ, Hiên trà của Ba và Sân trước.
+  2. **Node 2 (Mesh Tầng 1 Phía Sau):** Gắn tường khu vực giao giữa Phòng đọc sách và Bếp mở (`X = 2.5m, Y = 10.35m, Z = 2.60m`), phủ sóng căng đét khu vực Đảo làm bánh, Bàn ăn, Phòng ngủ Ba Mẹ và Vườn rau sân sau 7m.
+  3. **Node 3 (Mesh Tầng 2 Trung Tâm):** Gắn trần hành lang trung tâm Lầu 1 (`X = 3.75m, Y = 5.80m, Z = 6.20m`), phủ sóng xuyên suốt 3 phòng ngủ Tầng 2, phòng Piano/Yoga và 2 ban công trước/sau.
+
+### 8.3. Hệ thống 6 Camera An Ninh AI (PoE Góc Rộng Chống Ngược Sáng)
+Toàn bộ 6 mắt camera sử dụng công nghệ **PoE (Power over Ethernet)** — cấp nguồn điện và truyền dữ liệu hình ảnh 4K trên cùng 1 sợi cáp mạng Cat6 âm tường kéo về đầu ghi NVR tại tủ kệ TV, an toàn và thẩm mỹ tuyệt đối:
+
+| Mã Camera | Vị trí lắp đặt chính xác | Tọa độ $(X, Y, Z)$ | Góc quét & Nhiệm vụ an ninh |
+| :--- | :--- | :---: | :--- |
+| **Cam 01** | Đỉnh trụ cổng chính giáp Quốc lộ | $(2.80, -17.80, 2.55)$ | Nhận diện khuôn mặt khách bấm chuông, biển số xe ra vào và giám sát mặt tiền cổng. |
+| **Cam 02** | Góc phải mặt tiền Tầng 1 | $(4.85, -0.10, 3.35)$ | Quét toàn cảnh sân đỗ xe ô tô SUV (18m) và khu vực bàn trà ngoài trời của Ba. |
+| **Cam 03** | Tường bên phải giữa nhà | $(5.05, 4.00, 3.25)$ | Giám sát xuyên suốt hành lang đường luồng 2m bên hông từ trước ra sau. |
+| **Cam 04** | Mặt tường hậu Tầng 1 | $(2.50, 16.05, 3.35)$ | Bao quát sảnh để xe máy phía sau, khu giặt phơi và vườn rau 7m của Mẹ. |
+| **Cam 05** | Góc trần Phòng khách (Indoor AI) | $(0.35, 0.35, 3.35)$ | Quan sát cửa chính và không gian chung Tầng 1 khi cả nhà đi vắng. |
+| **Cam 06** | Trần ban công trước Tầng 2 | $(4.85, -0.10, 6.95)$ | Góc nhìn từ trên cao bao quát toàn bộ sân trước, cổng rào và ban công Lầu 1. |
+
+### 8.4. Khóa cửa FaceID, Điều hòa thông minh & Tưới vườn tự động
+1. **Khóa cửa thông minh FaceID 3D & Cổng tự động:**
+   - Cửa chính Tầng 1 trang bị khóa thông minh nhận diện khuôn mặt 3D, vân tay, thẻ từ và mã số ảo (`X = 2.8m, Y = 0.0m, Z = 1.3m`); liên động với đèn sảnh và đèn phòng khách tự sáng ấm áp ngay khi mở cửa buổi tối.
+   - Cổng rào trước tích hợp motor trượt tự động điều khiển qua điện thoại và cảm biến an toàn chống kẹt.
+2. **5 Điều hòa thông minh Inverter & Cảm biến môi trường:**
+   - Lắp đặt tại 5 không gian: Phòng khách (`Y = 1.8m`), Phòng ngủ Ba Mẹ (`Y = 5.5m`), Phòng Em Út (`Y = 1.9m, T2`), Phòng Chị Hai (`Y = 5.4m, T2`) và Phòng Master (`Y = 10.5m, T2`).
+   - Tự động điều chỉnh tăng nhẹ nhiệt độ về đêm (Sleep Curve) để bảo vệ sức khỏe hô hấp cho Ba Mẹ và các chị em.
+3. **Hệ thống Nước, Lọc RO & Tưới rau nhỏ giọt tự động:**
+   - Bồn nước Inox 1500L + Máy nước nóng năng lượng mặt trời Thái Dương Năng 180L trên mái.
+   - 3 luống rau hữu cơ sân sau của Mẹ (`Y = 20m - 22m`) được lắp sẵn đường ống tưới nhỏ giọt tự động kèm van điện từ thông minh hẹn giờ tưới mỗi 6h sáng và 17h chiều.
 
 ---
 
@@ -320,15 +356,23 @@
 
 ---
 
-## 10. HƯỚNG DẪN TRẢI NGHIỆM MÔ HÌNH 3D
+## 10. HƯỚNG DẪN TRẢI NGHIỆM MÔ HÌNH 3D (PHIÊN BẢN LÊN ĐÈN ĐÊM & SMART HOME AI)
 
-Để xem trực quan từng góc cạnh, xoay 360 độ và bóc tách từng tầng của ngôi nhà **Fullhouse**:
+Để xem trực quan từng góc cạnh, xoay 360 độ, kiểm tra vị trí WiFi/Điện/Camera và bóc tách từng tầng của ngôi nhà **Fullhouse**:
 1. **Xem trực tiếp trên Trình duyệt Web (Không cần cài phần mềm):**
-   - Mở tệp [Fullhouse_3D_Viewer.html](file:///d:/lưu%20code/home/myhome/Fullhouse_3D_Viewer.html) bằng trình duyệt (Google Chrome, Microsoft Edge, Safari).
-   - Nhấp vào các nút: **Ban Ngày ☀️ / Ban Đêm 🌙**, **Bóc tách Tầng 1 / Tầng 2 / Mái**, hoặc các góc camera nhanh (**Phòng Master Piano & Yoga**, **Gian Thờ Quan Âm**, **Quầy Làm Bánh**, **Hiên Trà Của Ba**, **Phòng Đọc Sách Gầm Thang**).
+   - Mở tệp [Fullhouse_3D_Viewer.html](file:///c:/Users/nconghau/Desktop/new%20fe/myhome/myhome/Fullhouse_3D_Viewer.html) bằng trình duyệt (Google Chrome, Microsoft Edge, Safari).
+   - **Các tính năng nổi bật:**
+     - **🌙 Ban Đêm Lung Linh / ☀️ Ban Ngày Chân Thực:** Chiêm ngưỡng hệ lam gỗ mặt tiền hắt đèn LED vàng ấm, đèn hắt khe trần, đèn rọi tranh, đèn ngủ đầu giường, đèn gầm bậc cầu thang và 8 trụ đèn nấm sân vườn.
+     - **📡 Nhãn Smart Home & Bảng Sơ đồ Kỹ thuật (góc trái):** Bấm vào từng hạng mục (*Hệ thống WiFi Mesh*, *6 Camera An ninh*, *Tủ điện & Solar*, *Khóa cửa & Cổng*, *Điều hòa & Cảm biến*, *Đèn thông minh*) hoặc bấm trực tiếp vào các nhãn nổi màu xanh trên mô hình 3D để bay camera tới đúng vị trí lắp đặt.
+     - **🔍 Sóng WiFi & Góc Cam:** Bật hiển thị trực quan các vòng sóng phủ WiFi 6E và nón vùng quét hồng ngoại 3D (FOV Cone) của 6 mắt camera an ninh.
 2. **Mở trong phần mềm Blender chuyên nghiệp:**
-   - Khởi động Blender ➔ Mở tệp [Fullhouse_Model.blend](file:///d:/lưu%20code/home/myhome/Fullhouse_Model.blend) hoặc chạy script [build_fullhouse_blender.py](file:///d:/lưu%20code/home/myhome/build_fullhouse_blender.py).
-   - Nhấn phím **Z** ➔ Chọn **Material Preview** hoặc **Rendered** để thưởng thức ánh sáng và vật liệu như đời thực.
+   - Khởi động Blender ➔ Mở tệp [Fullhouse_Model.blend](file:///c:/Users/nconghau/Desktop/new%20fe/myhome/myhome/Fullhouse_Model.blend) hoặc chạy script [build_fullhouse_blender.py](file:///c:/Users/nconghau/Desktop/new%20fe/myhome/myhome/build_fullhouse_blender.py) trong thẻ *Scripting*.
+   - Trong cây **Outliner** của Blender đã được phân tách rõ ràng 10 Collection chuyên biệt:
+     - `01_Site_Landscape_Trees` đến `06_Roof_Solar_Technical`: Kiến trúc, cảnh quan và nội thất chi tiết với vật liệu Procedural PBR (gỗ xương cá, đá Calacatta vân mây, đá chẻ tự nhiên, tấm pin mặt trời).
+     - `07_Lighting_And_Night_LEDs`: Toàn bộ hệ đèn LED thanh, đèn hắt khe và nguồn sáng ban đêm.
+     - `09_SmartHome_WiFi_Power_Cameras`: Toàn bộ 3 Node WiFi Mesh, Tủ điện tổng MDB, Inverter 5kW, Tủ điện Tầng 2, Sạc EV Wallbox, 6 Camera PoE kèm nón vùng quét FOV 3D, 5 Điều hòa Inverter và Khóa FaceID.
+     - `10_SmartHome_3D_Callout_Labels`: Các bảng nhãn nổi 3D chỉ dẫn vị trí thiết bị ngay trong không gian Blender.
+   - Nhấn phím **Z** ➔ Chọn **Material Preview** hoặc **Rendered** để thưởng thức ánh sáng ban đêm lung linh và vật liệu PBR chân thực.
 
 ---
-*Hồ sơ thiết kế kiến trúc hoàn thiện dành riêng cho gia đình Fullhouse — Tháng 11/2026.*
+*Hồ sơ thiết kế kiến trúc & Smart Home hoàn thiện dành riêng cho gia đình Fullhouse — Cập nhật Tháng 11/2026.*
