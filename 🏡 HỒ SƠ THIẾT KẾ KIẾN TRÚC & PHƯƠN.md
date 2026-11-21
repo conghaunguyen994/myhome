@@ -411,4 +411,29 @@ Toàn bộ 6 mắt camera sử dụng công nghệ **PoE (Power over Ethernet)**
    - Nhấn phím **Z** ➔ Chọn **Material Preview** hoặc **Rendered** để thưởng thức ánh sáng ban đêm lung linh và vật liệu PBR chân thực.
 
 ---
-*Hồ sơ thiết kế kiến trúc & Smart Home hoàn thiện dành riêng cho gia đình Fullhouse — Cập nhật Tháng 11/2026.*
+
+## 11. NHẬT KÝ CẬP NHẬT PHƯƠNG ÁN KIẾN TRÚC & MÔ HÌNH 3D (21/11/2026)
+
+Các điều chỉnh kiến trúc mới nhất đã được đồng bộ trực tiếp vào mô hình 3D Blender (`Fullhouse_Model.blend`, `build_fullhouse_blender.py`, `Fullhouse_Model.obj/.mtl`):
+
+1. **Mở rộng Tầng 2 lên bề ngang 7.0m — Thêm Hành lang 2m nằm trên đường luồng Tầng 1:**
+   - Sàn Tầng 2 và Mái vươn phủ lên toàn bộ đường luồng 2m bên phải Tầng 1 (kết cấu cột đỡ đặt gọn sát tường rào phải, bổ sung đèn LED âm trần chiếu sáng lối đá bước dặm bên dưới).
+   - Tạo **Hành lang Tầng 2 rộng 2.0m × 16.0m** với 4 ô cửa kính toàn cảnh khung nhôm đen, 2 cửa kính nối thẳng ra Ban công trước và Ban công sau, kèm ghế băng đọc sách, kệ console, cây xanh và đèn thả.
+   - Xóa bỏ hành lang hẹp 1m cũ bên trong Tầng 2 → mở rộng diện tích sử dụng cho **Walk-in Closet Master**, **Phòng Sếu (Em Út)** và **Phòng Chị Hai** thêm ~1.0m bề ngang (~4.7m rộng).
+   - **Ban công sau mở rộng dạng chữ L:** Khu ngồi chill & Yoga mở rộng trọn 7m (`Y = 16..20.2m`), khu phơi cuối giữ gọn 5m (`Y = 20.2..24m`) để giữ nắng tự nhiên cho vườn rau hữu cơ bên dưới.
+   - **Mái nhà 7m** nâng cấp lên hệ **9 tấm pin năng lượng mặt trời Solar PV (3×3)**.
+2. **Bố trí lại Phòng khách & Gian thờ cúng có vách ngăn riêng biệt:**
+   - **Từ cửa chính bên phải đi thẳng vào là Sảnh đón & Phòng khách** (tủ giày/console, gương tròn, bộ Sofa chữ L, bàn trà đá cẩm thạch, kệ TV & vách lam gỗ thưa, tranh bộ 3, đèn cây, đèn chùm 3 bóng).
+   - **Một bên cửa chính (góc trái mặt tiền) là Gian thờ Bồ Tát Quan Âm & Gia tiên** quay mặt hướng Đông đón sáng bình minh, được ngăn cách trang nghiêm với Phòng khách bằng **vách hậu ốp gỗ óc chó kịch trần** kết hợp **vách CNC lam gỗ đứng có đèn LED**.
+3. **Tối ưu luồng đi khép kín cho Phòng Master Chị Ba:**
+   - Tạo luồng giao thông liên thông hợp lý: **Phòng ngủ Master $\to$ cửa khung gỗ vào Walk-in Closet $\to$ cửa trượt gỗ kính mờ vào Nhà vệ sinh riêng** (khắc phục hoàn toàn lỗi vách kín chưa có cửa vào WC).
+   - Sắp xếp lại toàn bộ thiết bị trong WC Master không chắn lối cửa: Lavabo đá cẩm thạch + gương tròn LED ở vách trước, bồn cầu đặt kín đáo sau mảng tường đặc có vách kính ngăn nước, bồn tắm nằm xoay ngang sát tường sau kèm vòi đồng đứng.
+   - Dời **góc Yoga & Thiền định** ra khoảng sàn đón nắng sáng ngay trước cửa kính ban công trước.
+4. **Mở rộng Ban công trước Tầng 2 (7m × 3m) & Nối liền mạch Mái che sân trước Tầng 1:**
+   - Kéo dài Ban công trước Tầng 2 từ **1.6m lên 3.0m** (diện tích **21 m²** ngay trước Phòng Master Chị Ba), bổ sung bộ bàn trà ngắm sao, ghế băng daybed tắm nắng, bồn hoa dọc lan can kính màu đồng và đèn tường mặt tiền.
+   - Thiết kế lại **mái kính sân trước Tầng 1** rộng trọn **7.0m** (bỏ hàng cột giữa sân), cao độ dầm khớp **liền mạch và bằng phẳng** ngay vào mép trước Ban công Tầng 2 (`Y = -9.0m..-3.0m`).
+5. **Nâng cấp mô hình 3D Blender chi tiết & tỉ lệ phóng lớn 1.5×:**
+   - Phóng to mô hình 1.5× (`SCALE_FACTOR = 1.5`), nâng cấp từ **168 lên 1.207 vật thể** nội thất/decor/Smart Home, mở thoáng mặt cắt bên trái và thiết lập sẵn chế độ hiển thị **Material Preview** có màu sắc ngay khi mở file.
+
+---
+*Hồ sơ thiết kế kiến trúc & Smart Home hoàn thiện dành riêng cho gia đình Fullhouse — Cập nhật 21/11/2026.*
