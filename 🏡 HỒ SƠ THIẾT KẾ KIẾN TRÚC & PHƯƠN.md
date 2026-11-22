@@ -23,16 +23,18 @@
 
 ### 2.1. Thông số mảnh đất và hướng công trình
 - **Vị trí:** Mặt tiền đường quốc lộ, bề ngang khu đất **7.0m**.
-- **Hướng nhà:** Mặt tiền quay **hướng Đông** (nhà nằm ở phía Tây của đường quốc lộ).
-  - *Đặc điểm tự nhiên:* Buổi sáng có ánh nắng Đông ban mai chiếu vào dịu nhẹ; buổi chiều cả ngôi nhà hoàn toàn râm mát vì mặt trời lặn sau lưng nhà.
-  - *Giải pháp thiết kế:* Mái hiên sâu dài rộng kết hợp hệ lam chắn nắng/rèm cuốn để cản bớt ánh nắng sớm chiếu thẳng vào cửa, chống chói và chống mưa tạt tuyệt đối.
+- **Hướng nhà:** Mặt tiền quay **hướng Đông** (nhà nằm ở phía Tây của đường quốc lộ). Khi đứng từ đường quốc lộ nhìn vào nhà: **bên trái (`X = 0..2m`) là phía Nam**, **bên phải (`X = 2..7m`) là phía Bắc**.
+  - *Đặc điểm tự nhiên & Khí hậu gió mùa:* Buổi sáng có ánh nắng Đông ban mai chiếu vào dịu nhẹ; buổi chiều cả ngôi nhà hoàn toàn râm mát vì mặt trời lặn sau lưng nhà. Mùa đông có gió bấc (gió mùa Đông Bắc) thổi từ phía Bắc; mùa hè đón gió Nam / Đông Nam mát lành từ phía Nam.
+  - *Giải pháp thiết kế tối ưu vi khí hậu:* Đặt **đường luồng 2.0m Tầng 1 & Hành lang kính 2.0m Tầng 2 ở phía Nam (`X = 0..2m`)** để đón trọn gió Nam/Đông Nam mát rượi và **tránh hoàn toàn gió bấc** nhờ khối nhà chính 5.0m × 16.0m đặt áp ranh đất phía Bắc (`X = 2..7m`) làm bức tường chắn gió mùa đông. Mái hiên sâu kết hợp lam chắn nắng cản nắng sớm hướng Đông.
 - **Tổng chiều dài mảnh đất:** **41.0m** (Tổng diện tích khu đất: $7.0\text{m} \times 41.0\text{m} = 287\text{ m}^2$).
-  - **Sân trước:** Dài **18.0m** $\times$ Ngang **7.0m** — **Mái che giảm còn 1/2 (dài 9.0m)**:
-    - *Nửa trong 9m giáp nhà ($Y = -9\text{m}$ đến $0\text{m}$):* Có mái che kiên cố bảo vệ ô tô SUV 7 chỗ, che chắn trọn vẹn góc bàn uống nước của Ba áp sát tường và lối vào sảnh chính râm mát.
-    - *Nửa ngoài 9m giáp cổng ($Y = -18\text{m}$ đến $-9\text{m}$):* Sân mở lộ thiên thoáng đãng đón ánh nắng ban mai và gió trời tự nhiên, trồng cây cảnh bonsai, bồn hoa và đón gió trong lành.
-  - **Khối nhà chính (2 tầng):** Kích thước **5.0m $\times$ 16.0m** (Diện tích xây dựng 1 sàn: $80\text{ m}^2$, tổng diện tích sàn xây dựng GFA gồm ban công: ~**200 - 210 $\text{m}^2$** với ban công sau $5\text{m} \times 8\text{m}$).
-  - **Đường luồng bên hông:** Rộng đúng **2.0m**, chạy xuyên suốt từ cổng 2m phía trước ra tận sân sau (cho xe máy/xe đạp đi thẳng ra sau nhà, mở toàn bộ hệ cửa sổ hông đón gió tươi đối lưu).
-  - **Sân sau:** Dài **12.0m** $\times$ Ngang **7.0m** (gồm dãy công trình phụ WC - Tắm - Giặt - Phơi áp sát tường trái, bàn ngồi chill + chỗ để xe máy bên phải được che bởi ban công sau tầng 2, và vườn rau sạch $5\text{m} \times 4\text{m}$ cuối sân).
+  - **Sân trước:** Dài **18.0m** $\times$ Ngang **7.0m** — **Mái che giảm còn 1/2 (dài 9.0m, rộng trọn 7.0m nối liền Ban công trước T2)**:
+    - *Nửa trong 9m giáp nhà ($Y = -9\text{m}$ đến $0\text{m}$):* Gồm 3m gầm Ban công trước Tầng 2 + 6m mái kính đồng cao độ che mưa nắng tuyệt đối cho ô tô SUV 7 chỗ, góc bàn uống nước của Ba áp tường rào Bắc (kín gió bấc) và lối vào sảnh chính râm mát.
+    - *Nửa ngoài 9m giáp cổng ($Y = -18\text{m}$ đến $-9\text{m}$):* Sân mở lộ thiên thoáng đãng đón ánh nắng ban mai và gió trời tự nhiên, trồng cây cảnh bonsai dọc lối vào đường luồng phía Nam.
+  - **Khối nhà chính (2 tầng — phía Bắc `X = 2.0..7.0m` chắn gió bấc):** Tầng 1 kích thước **5.0m $\times$ 16.0m**; Tầng 2 mở rộng trọn **7.0m $\times$ 16.0m** (gồm Hành lang 2m phía Nam nằm trên đường luồng Tầng 1; tổng diện tích sàn xây dựng GFA gồm 2 ban công mở rộng: ~**250 $\text{m}^2$**).
+  - **Đường luồng bên hông (PHÍA NAM `X = 0.0..2.0m` — tránh gió bấc):** Rộng đúng **2.0m**, chạy xuyên suốt từ cổng phụ 2m bên trái mặt tiền (phía Nam) ra tận sân sau & vườn rau (khuất sau khối nhà chính phía Bắc tránh gió bấc mùa đông, mở hệ cửa sổ Bếp & Hành lang Tầng 2 sang phía Nam đón gió tươi đối lưu mát lành).
+  - **Sân sau:** Dài **12.0m** $\times$ Ngang **7.0m** (nền nâng `Z = 0.34m` nên cửa sau chỉ cần **1 bậc thang**):
+    - *Phần có mái Hiên sau (`Y = 16.0..20.30m`, rộng `7m × 4.3m` che đến hết Nhà vệ sinh):* Gồm **Phòng Tắm + WC + Máy giặt gộp chung 1 phòng `7.20 m²`** áp tường Bắc (khu ướt Tắm + Máy giặt nâng nền cao hơn khu khô `+9 cm`, tất cả lỗ thoát nước đánh dốc thải thẳng ra rãnh phía sau), **chỗ dựng xe máy** đầu hướng Bắc gần nhà tắm, **góc chill 1 ghế dài + 1 bàn tròn** tựa tường Đông ngắm vườn rau, và **nơi rửa chén cúng giỗ ngoài trời** nằm trọn trong hiên (vòi đôi hướng Đông, nước xả thẳng ra vườn rau).
+    - *Phần ngoài trời không đổ bê tông (`Y = 20.52..24.0m`, trọn bề ngang 7m):* Giữ nguyên **đất tự nhiên trồng rau**, gồm **Vườn rau hữu cơ phía Nam**, **5 viên đá bước dặm rời** ở giữa, và **chỗ phơi đồ inox 3 dây bên trên – 3 luống đất trồng rau xanh bên dưới** ở phía Bắc.
 
 ### 2.2. Tiêu chí kỹ thuật cốt lõi
 1. **Độ bền vững trường tồn:** Kết cấu bê tông cốt thép chắc chắn, tường bao che kiên cố.
@@ -52,64 +54,105 @@
 ### 3.1. Mặt bằng Tầng 1 (Tầng Trệt) — Không gian gắn kết & Chăm sóc bố mẹ
 
 ```
-[MẶT TIỀN ĐƯỜNG QUỐC LỘ]
-  |--- SÂN TRƯỚC (Dài 18m x Ngang 7m) - MÁI CHE GIẢM CÒN 1/2 (DÀI 9M) ------------------------------|
-  |  - Cổng xe 3.6m bên trái & Cổng phụ 2.0m bên phải                                              |
-  |  - Khoảng 9m ngoài (Y = -18m đến -9m): Sân mở lộ thiên, đón nắng gió tự nhiên, cây cảnh bonsai |
-  |  - Khoảng 9m trong (Y = -9m đến 0m): Có MÁI CHE KÍNH kiên cố bảo vệ ô tô SUV & lối vào sảnh chính |
-  |  - Góc bàn ghế uống trà của Ba: ÁP SÁT VÁCH TƯỜNG TRÁI (dưới mái che 9m, không lo mưa nắng)    |
-  |  - Đường luồng 2m bên phải: Trải đá bước dặm & cây cảnh bonsai, thông thẳng ra sân sau         |
-  |--- NHÀ CHÍNH (5m x 16m) ------------------------------------------------------------------------|
-  |  (Y = 0.0m - 5.8m)  : PHÒNG KHÁCH (5m x 5.8m):                                                  |
-  |                       - Tường trái: Vách TV hiện đại & Bàn thờ Phật Bồ Tát Quan Âm trang nghiêm|
-  |                       - Ở giữa: Bộ sofa chữ I + bàn trà đối diện vách TV                       |
-  |                       - Phía trước: Cửa sổ bên trái nhìn ra sân, Cửa chính bên phải mở vào nhà |
-  |  (Y = 5.8m - 9.0m)  : PHÒNG NGỦ BA MẸ (4m x 3.2m):                                             |
-  |                       - Đặt ngay sau phòng khách, bên trái nhà                                 |
-  |                       - Vách ngăn phòng khách: Cửa sổ kính 3 tấm ngang lấy sáng gián tiếp      |
-  |                       - Cửa phòng mở ra hành lang 1m thông thoáng bên phải                     |
-  |  (Y = 9.0m - 12.2m) : CẦU THANG CHỮ U (Gập 2 vế chiếm ~4m bề ngang):                           |
-  |                       - Hành lang 1m bên phải đi thẳng xuống khu bếp                           |
-  |                       - Gầm thang: Tủ điện tổng MDB & Hệ biến tần Inverter Hybrid Solar 5kW    |
-  |  (Y = 12.2m - 16.0m): BẾP MỞ & PHÒNG ĂN ẤM ÁP (5m x 6.4m, tính cả khoang liên hoàn):           |
-  |                       - Hệ tủ bếp chữ I dài dọc theo vách tường trái                           |
-  |                       - Bàn ăn tròn ấm cúng 4-6 ghế đặt trung tâm                              |
-  |                       - 2 cửa sổ mở ra đường luồng 2m & Cửa kính hậu lớn mở ra sân sau         |
-  |--- SÂN SAU (Dài ~12m x Ngang 7m) ---------------------------------------------------------------|
-  |  - Dọc tường bên trái (Dãy công trình phụ tiện nghi):                                          |
-  |      [WC: 2.4m x 1.6m] -> [Phòng tắm: 2.4m x 1.6m] -> [Phòng giặt: 2.4m x 1.6m] -> [Sân phơi] |
-  |  - Phía bên phải: Bàn ngồi chill hóng mát + Chỗ để xe máy, xe đạp (Được che bởi ban công lầu 1) |
-  |  - Cuối sân: Vườn rau hữu cơ gia đình (5m x 4m) xanh tốt quanh năm                             |
+[MẶT TIỀN ĐƯỜNG QUỐC LỘ — HƯỚNG ĐÔNG]   (Nhìn vào nhà: TRÁI = NAM | PHẢI = BẮC)
+  |--- SÂN TRƯỚC (18m x 7m) -> BÀN BA CHILL DƯỚI BẬC THANG -> BẬC 3 BẬC -> CÁI HÈ THU HẸP ----------|
+  |  - Sân: Hướng BẮC đỗ ô tô SUV (+ sạc EV), hướng NAM trồng hàng cây bonsai dọc lối đường luồng  |
+  |  - DƯỚI bậc thang (phía Bắc sân dưới mái kính): Bàn ghế Ba chill chill cùng anh em             |
+  |  - Bậc thang 3 bậc -> Cái hè thu hẹp (sâu 1.45m) giữ nguyên 2 LAN CAN DỌC CÓ THỂ NGỒI ĐƯỢC     |
+  |    (nhìn sang hướng Nam lan can là đường luồng 2m); sát lan can phía Bắc trên hè đặt TỦ DÉP    |
+  |--- KHỐI NHÀ CHÍNH PHÍA BẮC (5m x 16m, X = 2..7m — CHẮN GIÓ BẤC) + LUỒNG 2M NAM CÓ MÁI HIÊN DƯỚI -|
+  |  - MÁI HIÊN ĐƯỜNG LUỒNG DƯỚI (X=0.02..2.0, Y=-1.6..16.2): Mái kính khung thép đen + nẹp gỗ +   |
+  |    LED dốc nhẹ chắn mưa nắng trên 2 cửa sổ Nam (Z=3.16m -> 2.86m), chừa khe gió Nam 51cm!      |
+  |  - Tường đường luồng phía Nam (X=2.0..2.22) có ĐÚNG 2 CỬA SỔ:                                  |
+  |      (1) Giữa Sofa & Phòng Ba Mẹ (lệch phía Sofa) | (2) Phía sau bàn ăn Bếp (thấy xe ai về)    |
+  |  (Y = 0.0m - 5.8m)  : GIAN THỜ SÁT VÁCH BẮC -> VÁCH TƯỜNG XÂY 7 Ô TRỐNG -> SOFA & TIVI:        |
+  |                       - Mặt tiền có 2 cửa: Cửa chính hướng Nam & Cửa sổ lớn hướng Bắc          |
+  |                       - Phía Nam trong nhà: Đường luồng trong nhà thoáng sạch (bỏ tủ, gương    |
+  |                         đối diện gian thờ & bỏ toàn bộ tranh treo tường Tầng 1)                |
+  |                       - Phía Bắc: Góc Gian thờ sát vách Bắc (thắp hương quay mặt hướng Bắc,    |
+  |                         lưng hướng Nam, nhìn qua phải cửa sổ thấy Ba ngồi chill dưới bậc thang)|
+  |                       - Vách xây tường sâu 28cm có 7 ô trống xuyên sáng so le 3 tầng (lót gỗ   |
+  |                         sồi + LED) bày sách, mô hình kiến trúc, thuyền & cây xanh -> Sofa & TV |
+  |  (Y = 5.8m - 9.0m)  : PHÒNG NGỦ BA MẸ (3.6m x 3.1m):                                           |
+  |                       - 2 cửa sổ Japandi khung hộp gỗ sồi (căn thẳng đỉnh cửa chính, có rèm):    |
+  |                         Cửa sổ 1 (Đông, 3 ô) thấy Sofa | Cửa sổ 2 (Tây SÁT TƯỜNG NAM, 2 ô) lấy   |
+  |                         gió sau & nhìn thẳng ra Phòng Bếp!                                       |
+  |                       - Cửa chính phòng hướng ra đường luồng trong nhà (phía Nam)              |
+  |                       - Giường ngủ: Đầu hướng TÂY tựa mảng tường đặc, chân hướng ĐÔNG          |
+  |                       - Tủ quần áo SIÊU DÀI KỊCH TRẦN dọc trọn tường Bắc (dài 3.02m x cao 3.08m|
+  |                         5 cánh chính + 5 cánh tủ trên); Bàn ghế bên phải giường (Nam),         |
+  |                         Bàn nhỏ góc đầu giường (ngay dưới cửa sổ Tây-Nam) để sách & điện thoại |
+  |  (Y = 9.0m - 11.2m) : CẦU THANG GỖ 1 VẾ THẲNG KIỂU LỬNG CỔ ĐIỂN ẤM ÁP (KHÔNG LÀM 2 VẾ CHỮ U):    |
+  |                       - CHỈ 1 VẾ THẲNG DUY NHẤT (Y=9.08..10.14): Bậc khởi đầu bo tròn rộng 2 bên +|
+  |                         2 TRỤ CÁI GỖ VUÔNG LỚN CÓ MŨ TRỤ + 16 bậc gỗ liền khối trải dải thảm kem  |
+  |                         chống trượt + hệ CON TIỆN GỖ DỌC 2 bên + tay vịn gỗ bản lớn đi thẳng lên  |
+  |                         Sảnh Lửng Tầng 2 (X=5.92..6.78) ốp diềm sàn gỗ & lan can CON TIỆN GỖ!    |
+  |                       - Gầm thang đóng VÁCH ỐP PANO GỖ SỒI CHIA Ô DỌC sang trọng; sát mép Bếp     |
+  |                         (Y=10.22..11.14) giữ nguyên 2 tủ cúng giỗ + Tủ lạnh thẳng đỉnh 1.86m & RO!|
+  |  (Y = 11.2m - 16.0m): PHÒNG BẾP CHỮ L (BẮC + TÂY), BÀN ĂN TRÒN & GHẾ CHỮ L TRẢI THẢM CHILL:      |
+  |                       - Góc Tây-Nam (Nam cửa sau & Tây cửa sổ đường luồng): Xây GHẾ BĂNG CHỮ L   |
+  |                         trải thảm êm, gối nằm & chăn mỏng để ăn xong nằm chill đón gió cửa sổ!   |
+  |                       - Bếp chữ L: Nhánh Bắc (Bồn rửa -> Máy rửa chén 60cm -> BẾP HỒNG NGOẠI   |
+  |                         & Hút mùi đặt sát tường BẮC — người nấu quay mặt Bắc, bên TRÁI nhìn ra |
+  |                         cửa sổ thấy Phòng tắm!); Nhánh Tây dưới cửa sổ làm bàn soạn thoáng sáng|
+  |                       - Cửa Bếp tinh gọn (bỏ cửa sổ gần cửa sau): 1 Cửa chính sau + 2 Cửa sổ:  |
+  |                         (1) Cửa sổ đường luồng sau bàn ăn (ngồi ăn thấy xe ai về)              |
+  |                         (2) Cửa sổ chỗ nấu ăn nhìn ra Phòng tắm/WC (thoát mùi cực thoáng)      |
+  |--- SÂN SAU (Dài ~12m x Ngang 7m — Hiên sau che đến hết WC Y=20.30, Vườn rau hứng trọn mưa nắng!)-|
+  |  - PHÒNG TẮM + WC + MÁY GIẶT GỘP CHUNG 1 PHÒNG RỘNG 7.20m² TRONG HIÊN SAU (X=4.95..6.95, Y=16.65|
+  |    ..20.25): Cửa mặt ngoài hướng NAM, mặt trong hướng BẮC nhìn vào Gương & Chỗ rửa tay; PHÍA    |
+  |    ĐÔNG gương xây kệ CHỮ L kéo từ gương sang Đông rồi dọc tường Đông sát tường Nam (trên: đồ  |
+  |    linh tinh, dưới: thùng & cây lau nhà); PHÍA TÂY gương đặt Bồn cầu + tường ngang nhô ra để  |
+  |    giấy & chai Vim; ĐỐI DIỆN gương gắn CÂY TREO ĐỒ DÀI 1.28m; PHÍA TÂY là KHU ƯỚT (NGĂN TẮM   |
+  |    vòi nóng lạnh + 2 khung ô tường Bắc & MÁY GIẶT) xây NỀN CAO HƠN nền khô +9cm chống trơn,   |
+  |    CẢ 3 LỖ THOÁT NƯỚC (Tắm + Máy giặt + sàn Lavabo/Bồn cầu) ĐỀU THOÁT DỐC RA THẲNG PHÍA SAU!  |
+  |  - XE MÁY chạy từ đường luồng xuống dựng gần Nhà tắm: ĐẦU hướng BẮC, BÁNH SAU hướng NAM!       |
+  |  - NƠI RỬA CHÉN NGOÀI TRỜI CÚNG GIỖ (nằm trọn trong Hiên sau X=0.30..2.85, Y=18.40..20.22):    |
+  |    Vòi đôi hướng ĐÔNG (ngồi rửa mát như trong nhà), phía sau rãnh thoát nước chảy thẳng ra RAU!|
+  |  - NGOÀI TRỜI (Y > 20.52 — KHÔNG đổ bê tông nền): Vườn rau phía Nam + CHỖ PHƠI ĐỒ BÊN TRÊN    |
+  |    & BÊN DƯỚI LÀ ĐẤT TRỒNG RAU (3 luống rau xanh + đá bước dặm rời đi lại sạch chân)!         |
+  |  - Phía Nam bậc thang cửa sau (X=1.94..3.44): CHỈ 1 GHẾ DÀI + 1 BÀN TRÒN (ngồi tựa tường Đông, |
+  |    lưng hướng Đông, mặt hướng TÂY ngắm thẳng Vườn rau hữu cơ cuối sân!)                        |
   |-------------------------------------------------------------------------------------------------|
 ```
 
 #### Chi tiết từng khu vực Tầng 1:
-1. **Sân trước 18m — Kết hợp Sân mở lộ thiên & Mái che 9m (1/2 sân):**
-   - Chiều dài 18m tạo khoảng đệm hoàn hảo cản bụi và tiếng ồn từ quốc lộ.
-   - **Mái che giảm còn 1/2 (dài 9m từ hiên nhà):** Thay vì che kín toàn bộ 18m, việc giảm mái che còn 1/2 tạo sự hài hòa tối đa cho cảnh quan:
-     + *9m phía ngoài giáp cổng rào:* Giữ lộ thiên để đón ánh nắng sớm dịu nhẹ, tạo khoảng không thoáng đãng cho ngôi nhà, giúp cây cảnh bonsai và thảm hoa sinh trưởng tươi tốt.
-     + *9m phía trong giáp nhà:* Có mái che khung thép hộp kết hợp kính dán an toàn/polycarbonate che mưa nắng tuyệt đối cho xe ô tô SUV 7 chỗ và tiền sảnh đón khách.
-   - **Bàn uống nước của Ba áp sát vách tường:** Được bố trí đặt áp sát vào vách tường bên trái, nằm trọn vẹn dưới bóng râm của mái che 9m. Ba có thể thảnh thơi ngồi ngắm cây cảnh sân trước, thưởng trà sáng, nhâm nhi cà phê hay trò chuyện với bạn bè làng xóm mà không sợ nắng rọi hay mưa hắt.
-   - **Đường luồng 2m bên phải:** Lối đi phụ từ cổng 2m dẫn thẳng ra sân sau, lát đá bước dặm tự nhiên trên nền sỏi trắng, viền cây xanh và chậu bonsai trang nhã.
-2. **Phòng khách kiêm Gian thờ Phật Quan Âm ($5\text{m} \times 5.8\text{m}$):**
-   - Vách tường bên trái tích hợp kệ TV treo tường tinh tế cùng Gian thờ Bồ Tát Quán Thế Âm trang nghiêm, ấm cúng.
-   - Bộ sofa êm ái đặt đối diện, tạo tầm nhìn bao quát và thoáng đãng.
-   - Cửa chính đặt ở bên phải kết nối với hành lang 1m, cửa sổ lớn ở bên trái đón ánh sáng bình minh.
-3. **Phòng ngủ Ba Mẹ ($4\text{m} \times 3.2\text{m}$):**
-   - Đặt ngay tầng trệt phía sau phòng khách, bảo đảm việc sinh hoạt và nghỉ ngơi an dưỡng tốt nhất cho Ba Mẹ mà không phải leo cầu thang.
-   - Tường ngăn phòng khách bố trí hệ vách kính 3 tấm ngang lấy sáng gián tiếp nhẹ nhàng từ phòng khách.
-   - Cửa phòng mở ra hành lang 1m bên phải, đối lưu khí mát từ cửa chính tới khu bếp.
-4. **Cầu thang chữ U an toàn & Tủ kỹ thuật thông minh:**
-   - Hai vế thang gập lại, chiếm khoảng 4m bề ngang; hành lang 1m bên phải dẫn thẳng xuống phòng ăn.
-   - Gầm cầu thang tận dụng tối đa làm Tủ điện tổng MDB thông minh, hệ lưu trữ pin Lithium và biến tần Inverter Hybrid Solar 5kW an toàn, kín đáo.
-5. **Bếp mở & Phòng ăn gia đình ($5\text{m} \times 6.4\text{m}$):**
-   - Hệ tủ bếp dài thiết kế dọc tường bên trái với đầy đủ thiết bị hiện đại: bếp từ âm, chậu rửa nano, lò nướng làm bánh.
-   - Bàn ăn tròn gỗ sồi 4-6 ghế đặt ở vị trí trung tâm ấm cúng, là nơi cả gia đình quây quần sau một ngày dài.
-   - 2 cửa sổ mở sang đường luồng 2m đón gió đối lưu mát lành cùng cửa hậu kính lớn mở ra sân sau.
-6. **Sân sau đa năng & Dãy công trình phụ dọc tường trái:**
-   - **Dãy công trình phụ (vách tường trái):** Bố trí thành một chuỗi liên hoàn khép kín gồm Nhà vệ sinh ($2.4\text{m} \times 1.6\text{m}$) $\to$ Phòng tắm đứng độc lập ($2.4\text{m} \times 1.6\text{m}$) $\to$ Phòng giặt đồ ($2.4\text{m} \times 1.6\text{m}$) $\to$ Khu phơi đồ thoáng sáng ($2.4\text{m} \times 2.2\text{m}$). Việc bố trí tập trung này giúp hệ thống cấp thoát nước đi thẳng, cực kỳ dễ bảo trì và hạn chế tối đa độ ẩm vào nhà chính.
-   - **Bàn ngồi chill & Bãi đỗ xe máy bên phải:** Nằm dưới sàn ban công tầng 2 vươn ra 8m, vừa mát mẻ râm mát cả ngày, vừa che chắn tuyệt đối cho các phương tiện xe máy, xe đạp.
-   - **Vườn rau hữu cơ cuối sân ($5\text{m} \times 4\text{m}$):** Không gian xanh cung cấp rau sạch quanh năm, mang lại nguồn sinh khí trong lành cho tổ ấm.
+1. **Sân trước 18m, Hiên nhà & Cái hè 3 bậc có 2 lan can dọc ngồi được:**
+   - **Từ cổng vào sân:** Hướng **phía Bắc** đỗ xe ô tô SUV 7 chỗ (+ trạm sạc EV tường Bắc), hướng **phía Nam** trồng hàng cây bonsai dọc lối vào đường luồng 2m.
+   - **Cái hè 3 bậc & 2 lan can dọc:** Nối liền giữa sân/hiên và nền nhà (`+0.54m`) là **bậc thang 3 bậc**; hai bên cái hè xây **2 lan can dọc mặt gỗ rộng có thể ngồi được** (nhìn qua hướng Nam lan can là đường luồng 2m).
+   - **Bàn ghế của Ba hướng Bắc của hiên:** Đặt ngay trên hiên phía Bắc (dưới bóng râm ban công trước 3m & mái kính 9m), **song song với Gian thờ bên trong** qua cửa sổ lớn hướng Bắc.
+2. **Cửa mặt tiền, Đường luồng trong nhà, Gian thờ sát vách Bắc, Vách tường xây 7 ô trống & Phòng khách ($5\text{m} \times 5.8\text{m}$):**
+   - **2 cửa mặt tiền:** **1 cửa chính hướng Nam** mở thẳng vào **đường luồng trong nhà phía Nam** và **1 cửa sổ lớn hướng Bắc** ngay cạnh Gian thờ.
+   - **Gian thờ sát vách Bắc & Tối giản đối diện:** Khi thắp nhang đứng **quay mặt về hướng Bắc**, **lưng hướng Nam**, nhìn qua phải (hướng Đông) qua cửa sổ Bắc thấy ngay Ba đang ngồi chill phía trước. **Đối diện gian thờ và toàn bộ tường đường luồng phía Nam để trơn thoáng tuyệt đối** (đã lược bỏ tủ console, gương và toàn bộ tranh treo tường Tầng 1).
+   - **Vách tường xây 7 ô trống trang trí & Khu Sofa – TV:** Thay vách gỗ bằng **vách tường xây sâu 28cm sơn trắng ấm đục 7 ô trống xuyên sáng so le 3 tầng**, lót đáy gỗ sồi ấm và gắn đèn LED hắt từng ô để trưng bày sách, mô hình biệt thự mini, mô hình thuyền buồm, tượng decor & cây xanh vừa ngăn không gian trang nghiêm vừa thoáng sáng. Tiếp sau là bộ Sofa chữ L ngồi xem TV (kệ TV & lam gỗ áp tường Bắc), bàn trà đá cẩm thạch đặt giữa phòng.
+3. **Phòng ngủ Ba Mẹ ($3.6\text{m} \times 3.1\text{m}$):**
+   - **2 cửa sổ nội thất Japandi tinh tế, cân đối:** Cả 2 cửa sổ căn **thẳng hàng đỉnh với cửa chính phòng (`Z1 + 2.22m`)**, bọc **khung hộp gỗ sồi ấm + bệ cửa nhô thanh thoát**, hệ nhôm đen slim và giấu gọn **hộp rèm cuốn vải linen** phía trên:
+     - **Cửa sổ 1 (vách Đông, `X = 4.30..5.86m`, 3 ô kính):** cân đối trục giường, mở ra thấy **Sofa** phòng khách.
+     - **Cửa sổ 2 (vách Tây, đặt sát tường phía Nam `X = 3.28..4.30m`, 2 ô kính + LED ấm gầm bệ):** nằm ngay vị trí thoáng nhất cạnh lối cầu thang đầu tiên, giúp Ba Mẹ dễ dàng đón gió mát từ phía sau và nhìn thẳng ra khu **Bếp**, đồng thời giữ đầu giường tựa vào mảng tường đặc vững chãi.
+   - **Cửa chính phòng:** Mở hướng Nam ra thẳng **đường luồng trong nhà**.
+   - **Nội thất chuẩn hướng & Tủ áo siêu dài kịch trần:** Giường ngủ kê **đầu phía Tây – chân hướng ra phía Đông**; **tủ quần áo kéo dài trọn tường Bắc bên trái giường (`Y = 5.90..8.92m`, dài `3.02m` × cao kịch trần `3.08m`, gồm 5 cánh chính + 5 cánh tủ kho phía trên)** chứa thoải mái quần áo, chăn màn & vali; **bàn ghế đọc sách đặt bên phải giường** (phía Nam) và **1 bàn nhỏ góc đầu giường** ngay dưới cửa sổ Tây-Nam để đặt sách và điện thoại trước khi ngủ.
+4. **Cầu thang gỗ 1 vế thẳng kiểu lửng cổ điển ấm áp — KHÔNG làm 2 vế chữ U (Đúng mẫu ảnh gỗ từ [tubepthien.vn/cau-thang-giua-phong-khach-va-bep.html](https://tubepthien.vn/cau-thang-giua-phong-khach-va-bep.html)):**
+   - **Chỉ 1 vế thẳng duy nhất kiểu gác lửng (`Y = 9.08..10.14m`, rộng `1.06 m`):** Bỏ hoàn toàn vế cầu thang thứ 2 nặng nề; từ hành lang trong nhà phía Nam (`X = 2.72m`) đi **1 vế thẳng duy nhất** lên thẳng **Sảnh Lửng Tầng 2 phía Bắc (`X = 5.92..6.78m, Z2 = 3.85m`)**, rồi mở thông trực tiếp ra Sảnh thông tầng & Hành lang 2m Tầng 2.
+   - **Chi tiết gỗ tự nhiên chuẩn mẫu ảnh:**
+     - **Bậc khởi đầu bo tròn rộng hai bên (`Starter Bullnose Step`)** kết hợp **2 trụ cái gỗ vuông lớn có đế, thân soi rãnh & mũ trụ (`Newel Posts`)** tạo điểm nhấn bề thế ngay chân thang.
+     - **16 bậc gỗ liền khối đóng kín cổ bậc** (`17` bậc cao `19.47 cm`, mặt bậc rộng `23.5 cm`) trải **dải thảm/lớp chống trượt màu kem ấm** ở giữa cực êm chân & an toàn cho Ba Mẹ.
+     - **Hệ con tiện gỗ dọc đều tăm tắp 2 bên + tay vịn gỗ bản lớn & má thang ốp chỉ**, giữ luồng gió và ánh sáng từ cửa sổ Nam–Tây phòng Ba Mẹ thoáng qua giữa các con tiện sang khu Bếp.
+     - **Vách ốp pano gỗ sồi chia ô dọc** đóng kín gọn gàng phần tam giác dưới gầm thang (tích hợp khoang lưu trữ kín dưới gầm), đồng bộ hoàn toàn với tủ chén bát & tủ xoong nồi bên cạnh.
+   - **Lan can con tiện gỗ & diềm sàn ốp gỗ kiểu gác lửng Tầng 2:** Toàn bộ mép sàn ô thông tầng Tầng 2 (`Y = 8.95..11.20m`) ốp **diềm gỗ sồi bản dày**, lắp **trụ cái gỗ góc + hệ con tiện gỗ dọc & tay vịn gỗ** đồng bộ 100% với cầu thang bên dưới.
+   - **Tủ kỹ thuật MDB & Inverter 5kW:** Giữ gọn trên mảng tường kỹ thuật dọc đường luồng phía Nam (`X = 2.22..2.36m, Y = 9.25..10.45m`).
+5. **Phòng Bếp chữ L (Bắc + Tây), 2 Tủ cúng giỗ + Tủ lạnh & Máy lọc nước gọn gầm thang & Mái hiên đường luồng dưới:**
+   - **Tủ 1 đặt sát tủ bếp Bắc hướng Nam (`X = 6.08..6.76m, Y = 11.18..12.22m`) & Tủ 2 xịt gọn gầm thang CAO NGANG BẰNG TỦ LẠNH (`1.86m`, `Z = 2.40m`):** Cả 3 khối **Tủ chén bát kính đồng – Tủ xoong nồi – Tủ lạnh 2 cánh** căn thẳng tắp 1 đường đỉnh ngang cực đẹp dưới chiếu nghỉ cầu thang (`12+8` bậc); **Máy lọc nước RO (`1.14m`)** đặt cạnh Tủ lạnh vẫn giữ thoáng cửa sổ Phòng Ba Mẹ.
+   - **Ghế băng chữ L trải thảm nằm chill góc Tây-Nam Bếp (`X = 2.22..3.48m, Y = 14.05..15.76m`):** Tận dụng trọn góc trống hướng Nam cửa chính hiên sau & hướng Tây cửa sổ đường luồng để xây bệ chữ L mặt gỗ sồi có LED hắt chân, **trải thảm nệm dày êm, gối nằm, chăn mỏng & gối tựa** kèm đèn tường ấm để ăn xong nằm thư giãn đón gió cửa sổ cực thích.
+   - **Bếp chữ L tối ưu công năng:** Nhánh Bắc bố trí liên hoàn **bồn rửa chén $\to$ máy rửa chén âm tủ 60cm $\to$ bếp hồng ngoại đôi + máy hút mùi đặt sát tường phía Bắc** (người nấu **quay mặt về hướng Bắc**, liếc sang **bên trái** là cửa sổ thoáng nhìn thẳng ra Phòng tắm/WC); nhánh Tây dưới cửa sổ làm bàn soạn, để hoa quả & gia vị thoáng sáng.
+   - **Cửa Bếp tinh gọn (đã bỏ bớt cửa sổ gần cửa sau) & Mái hiên đường luồng dưới:** Gồm **1 cửa chính phía sau** và **2 cửa sổ** (cửa sổ đường luồng sau bàn ăn + cửa sổ chỗ nấu ăn nhìn ra Phòng tắm/WC). Dọc toàn bộ đường luồng 2m phía Nam có thêm **mái hiên đường luồng dưới** bằng kính cường lực khung thép đen + xà gỗ + LED dốc nhẹ (`Z = 3.16m \to 2.86m`) chắn mưa tạt và nắng xiên cực hiệu quả.
+6. **Sân sau đa năng (1 bậc cửa sau), Phòng Tắm + WC + Máy giặt gộp `7.20 m²`, Nơi rửa chén cúng giỗ & Khu phơi đồ trên đất trồng rau:**
+   - **Cao độ sân sau gần sát nhà bếp (`Z = 0.34m`):** Cửa sau chỉ cần đúng **1 bậc thang đá có LED âm** (`0.44m`).
+   - **Phòng Tắm + Nhà Vệ Sinh + Máy Giặt gộp chung 1 phòng rộng rãi chuẩn spa trong Hiên sau (`X = 4.95..6.95m, Y = 16.65..20.25m`, `7.20 m²`):** Vị trí phòng giữ nguyên, cửa phòng **mặt ngoài hướng Nam, mặt trong hướng Bắc** (`Y = 17.14..17.88m`) nhìn thẳng vào **chỗ rửa tay Lavabo mặt đá & Gương tròn LED**; **phía Đông gương** xây **kệ tường chữ L kéo dài từ gương sang tường Đông rồi chạy dọc tường Đông tới sát tường Nam** (**ngăn trên chữ L** lót gỗ sồi + LED ấm đựng đồ linh tinh rộng rãi, **bên dưới** vẫn để gọn **thùng lau nhà & cây lau nhà** ngay trên nền gạch); **phía Tây gương** đặt **Bồn cầu** (áp tường Bắc, mặt hướng Nam) kèm **bức tường ngang nhô ra 1 chút phía trên** để giấy vệ sinh & chai Vim; **đối diện gương & bồn cầu** (tường phía Nam `Y = 17.94..19.26m`) lắp **cây treo đồ inox dài `1.28m`** để các thành viên treo đồ khô mỗi khi tắm; **bên phải bồn cầu & chỗ treo đồ khô là hướng Tây (`Y = 19.00..20.13m`)** bố trí **Khu ướt (Ngăn tắm Bắc-Tây + Máy giặt Nam-Tây)** **xây nền cao hơn nền Lavabo/Bồn cầu `+9 cm` kèm gờ đá chống trơn** tách biệt hoàn toàn khu ướt và khu khô, **cả hai đều hướng mặt ra hướng Đông (`-Y`)** — trong đó Ngăn tắm có **vòi tắm nóng lạnh bắt trên tường phía Bắc** cùng **2 khung ô xây ngay trên tường phía Bắc** để tiện tay lấy sữa tắm, dầu gội; **tất cả 3 lỗ thoát nước (Ngăn tắm, Máy giặt và sàn khô Lavabo/Bồn cầu) đều đánh dốc và nối ống thoát xuyên tường Tây thải thẳng ra rãnh thu nước có lưới inox phía sau nhà tắm (`Y = 20.25..20.52m`)**.
+   - **Chỗ dựng xe máy gần Nhà tắm (`X = 3.30..4.58m, Y = 18.66..19.12m`):** Chạy từ đường luồng Nam xuống rẽ vào dựng gọn dưới gầm ban công sau với **đầu xe hướng phía Bắc, bánh sau hướng phía Nam**.
+   - **Hiên sau che phủ trọn đến hết Nhà vệ sinh (`Y = 16.0..20.30m`, `7m × 4.3m`):** Che mưa nắng toàn bộ khu chill, máy giặt, xe máy, Tắm/WC và Nơi rửa chén cúng giỗ; từ `Y > 20.52m` **không đổ bê tông nền**, để hoàn toàn đất tự nhiên cho Vườn rau hứng trọn mưa nắng và Dây phơi đón nắng khô nhanh.
+   - **Nơi rửa chén ngoài trời cúng giỗ nằm trọn trong Hiên sau (`X = 0.30..2.85m, Y = 18.40..20.22m`):** Sàn đá chống trơn rộng `2.55m × 1.80m` ngồi 2–3 người rửa cỗ cực thoải mái bất kể mưa nắng; **trụ vòi nước đôi tầm thấp** quay mặt hướng **Đông** (phía trước là sân ngồi rửa rộng rãi có ghế đẩu, 2 thau inox & giá úp chén), **phía sau (hướng Tây)** là rãnh lưới inox và ống thoát nước chảy thẳng ra tưới **Vườn rau hữu cơ**.
+   - **Chỗ phơi đồ bên trên – bên dưới là đất làm rau không xây bê tông (`X = 3.95..6.80m, Y = 20.65..23.70m`):** Khung 3 dây phơi inox cao `1.85 m` cắm trụ gọn 4 góc đón trọn nắng gió, **bên dưới là nền đất vườn tự nhiên với 3 luống rau xanh** (không xây bê tông), nối ra khu phơi bằng hàng **5 viên đá bước dặm rời**.
+   - **Góc ngồi chill phía sau (chỉ 1 ghế dài + 1 bàn tròn) & Vườn rau hữu cơ:** Đặt gọn **phía Nam bậc thang cửa sau** tựa tường hậu phía Đông, mặt nhìn thẳng về phía Tây ngắm trọn Vườn rau hữu cơ cuối sân.
 
 ---
 
@@ -192,9 +235,9 @@
 - **Tường & Trần:**
   - Tường nhà dùng sơn nội thất cao cấp lau chùi được (Dulux EasyClean hoặc Jotun Majestic) chống bám bẩn, kháng nấm mốc.
   - Tường bếp và phòng vệ sinh ốp gạch men khổ lớn ($60\text{cm} \times 120\text{cm}$ hoặc $40\text{cm} \times 80\text{cm}$) kịch trần, đường ron dùng keo epoxy kháng khuẩn chống ố đen, lau dầu mỡ và bọt xà phòng nhẹ như không.
-- **Phân tách khu khô & Khu ướt trong nhà tắm:**
-  - Làm chung một phòng để tối ưu diện tích nhưng ngăn cách triệt để bằng vách kính cường lực 10mm có gioăng cao su từ tính và gờ đá chặn nước cao 5cm.
-  - Khi tắm nước không bao giờ bắn ra khu vực bồn cầu và lavabo, sàn nhà tắm bên ngoài luôn khô ráo, sạch sẽ và an toàn.
+- **Phân tách khu khô & Khu ướt + Hệ thoát nước dốc ra phía sau trong Nhà tắm Tầng 1:**
+  - Thiết kế **gộp chung Phòng Tắm + WC + Máy giặt thành 1 phòng rộng rãi `7.20 m²`**, chia tách triệt để 2 cao độ nền: **toàn bộ khu ướt (Ngăn tắm + chỗ đặt Máy giặt) xây nền cao hơn nền khu khô (Lavabo + Bồn cầu) `+9 cm`**, lát đá nhám chống trơn kết hợp **gờ đá phân tách** và **vách kính cường lực 10mm** chắn bắn sang bồn cầu, giúp bước ra khỏi ngăn tắm luôn khô ráo, không trơn trượt.
+  - **Thoát nước dốc 1 chiều thẳng ra sân sau:** Toàn bộ **3 lỗ/phễu thoát sàn** (Ngăn tắm, Máy giặt, và cả sàn khu khô Lavabo/Bồn cầu) đều tạo độ dốc về hướng Tây (`+Y`) và nối **3 ống thoát xuyên tường Tây thải thẳng vào rãnh thu nước có lưới inox chạy dọc chân tường sau nhà tắm (`Y = 20.25..20.52m`)** rồi dẫn ra phía sau, đảm bảo thoát nước tức thì, không đọng vũng, dễ vệ sinh bảo trì.
 
 ### 4.4. Nâng cấp Họa tiết Kiến trúc Chân thực & Kịch bản Ánh sáng Đêm Lung linh
 - **Hệ lam gỗ mặt tiền thông tầng tích hợp LED (Signature Louver Facade):**
@@ -240,44 +283,50 @@
 ## 6. CẢNH QUAN VÀ KHÔNG GIAN NGOÀI TRỜI
 
 ```
-        [MẶT ĐƯỜNG QUỐC LỘ]
-                |
-    [CỔNG XE 3.6M & CỔNG PHỤ 2.0M]
-                |
-  +--------------------------------+-------+
-  | SÂN TRƯỚC (18m x 5m)           | LUỒNG |
-  | - 9m ngoài: Sân mở lộ thiên    | 2m    |
-  | - 9m trong: MÁI CHE KÍNH 1/2   | ĐÁ    |
-  | - Đỗ ô tô SUV & BÀN TRÀ CỦA BA | BƯỚC  |
-  |   (ÁP SÁT VÁCH TƯỜNG TRÁI)     | DẶM   |
-  +--------------------------------+ BONSAI|
-  | NGÔI NHÀ 2 TẦNG (16m x 5m)     |       |
-  | T1: PK, Thờ, Ngủ Ba Mẹ, Thang, |       |
-  |     Bếp mở & Bàn ăn tròn       |       |
-  | T2: Master Chị Ba (Piano/Yoga) |       |
-  |     Thang/Giếng trời, 2 PN     |       |
-  +--------------------------------+-------+
-  | SÂN SAU (~12m x 5m)            | THÔNG |
-  | - Dãy phụ trái: WC, Tắm, Giặt, | THẲNG |
-  |   Phơi đồ có mái thoáng        | RA    |
-  | - Ban công T2 (8m x 5m) che phủ| SÂN   |
-  |   Bàn chill & chỗ để xe máy    | SAU   |
-  | - VƯỜN RAU XANH HỮU CƠ (5m x 4m|       |
-  +--------------------------------+-------+
-    [TƯỜNG RÀO SAU KIÊN CỐ 2.2m]
+        [MẶT ĐƯỜNG QUỐC LỘ — HƯỚNG ĐÔNG]
+                 |
+    [CỔNG PHỤ 2.0M (NAM) & CỔNG XE 3.6M (BẮC)]
+                 |
+  +-------+--------------------------------+
+  | LUỒNG | SÂN TRƯỚC (18m x 5m - PHÍA BẮC)|
+  | 2m    | - 9m ngoài: Sân mở lộ thiên    |
+  | PHÍA  | - 9m trong: MÁI CHE KÍNH 1/2   |
+  | NAM   | - Đỗ ô tô SUV & BÀN TRÀ CỦA BA |
+  | (TRÁNH|   (DƯỚI BẬC THANG PHÍA BẮC)    |
+  | GIÓ   +--------------------------------+
+  | BẤC)  | NGÔI NHÀ 2 TẦNG (16m x 5m BẮC) |
+  | CÓ    | T1: Thờ 7 ô, PK, Ba Mẹ (tủ 3m),|
+  | MÁI   |     Thang 1 vế lửng, Bếp L & Ghế L |
+  | HIÊN  | T2: Mở rộng 7m (+HL 2m Nam)    |
+  | KÍNH  |     Master, Giếng trời, 2 PN   |
+  +-------+--------------------------------+
+  | HIÊN SAU CHE ĐẾN HẾT WC (Y=16..20.30m) |
+  | - Bắc: Phòng Tắm+WC+Giặt 7.20m² (khu   |
+  |   ướt cao +9cm, 3 ống thoát dốc ra sau)|
+  | - Giữa: Xe máy (đầu Bắc) + 1 ghế dài & |
+  |   1 bàn tròn chill ngắm vườn rau       |
+  | - Nam: Nơi rửa chén cúng giỗ (vòi Đông,|
+  |   nước xả thẳng ra vườn rau!)          |
+  +----------------------------------------+
+  | ĐẤT TỰ NHIÊN KHÔNG BÊ TÔNG (Y>20.52m)  |
+  | - Nam: Vườn rau hữu cơ 4 luống đón nắng|
+  | - Giữa: 5 viên đá bước dặm rời sạch    |
+  | - Bắc: GIÀN PHƠI ĐỒ 3 DÂY BÊN TRÊN —   |
+  |   BÊN DƯỚI LÀ 3 LUỐNG ĐẤT TRỒNG RAU!   |
+  +----------------------------------------+
+       [TƯỜNG RÀO SAU KIÊN CỐ — HƯỚNG TÂY]
 ```
 
-1. **Sân trước 18m — Kết hợp sân mở đón nắng & Mái che 9m (1/2 sân):**
+1. **Sân trước 18m — Kết hợp sân mở đón nắng & Mái che 9m (1/2 sân, rộng trọn 7m):**
    - Khoảng sân rộng thênh thang lát gạch nhám chống rêu màu xám ghi sạch sẽ.
    - 9m phía ngoài từ cổng rào giữ lộ thiên đón trọn ánh nắng ban mai và khí trời trong lành cho cây cảnh bonsai phát triển.
-   - 9m phía trong giáp nhà có mái che kiên cố bảo vệ xe ô tô SUV 7 chỗ và góc bàn trà của Ba được đặt **áp sát vào vách tường bên trái**, tạo cảm giác vững chãi, ấm cúng và kín gió mưa. Ba có thể thảnh thơi nhâm nhi trà sớm, trò chuyện cùng người thân mà hoàn toàn không lo mưa hắt.
-2. **Hành lang đường luồng 2m bên phải:**
-   - Lối đi lát đá bước dặm tự nhiên xen lẫn cây cảnh bonsai và rãnh sỏi trắng, dẫn thẳng từ cổng 2m vào khu để xe máy và dãy công trình phụ sân sau.
-   - Giúp xe cộ không đi qua phòng khách, giữ sàn nhà luôn sạch bong và không có mùi xăng xe.
-3. **Sân sau 12m & Ban công tầng 2 che phủ:**
-   - **Khu để xe máy & Bàn ngồi chill bên phải:** Được sàn ban công Tầng 2 vươn dài 8m che mát, là nơi dựng xe máy sạch sẽ và góc ngồi hóng mát ngắm vườn rau.
-   - **Dãy công trình phụ khép kín bên trái:** Chuỗi công năng WC - Phòng tắm kính - Phòng giặt - Khu phơi đồ thiết kế thẳng hàng áp sát tường, thoát nước ngầm cực tốt và kín đáo.
-   - **Vườn rau hữu cơ cuối sân ($5\text{m} \times 4\text{m}$):** Cung cấp rau củ xanh sạch tươi ngon mỗi ngày cho bữa cơm gia đình.
+   - 9m phía trong giáp nhà có mái che kính nối liền Ban công Tầng 2 bảo vệ xe ô tô SUV 7 chỗ và góc bàn trà của Ba đặt **dưới bậc thang phía Bắc**, kín gió bấc và không lo mưa hắt.
+2. **Hành lang đường luồng 2m bên trái (PHÍA NAM — tránh gió bấc) có Mái hiên kính đường luồng dưới:**
+   - Lối đi lát đá bước dặm tự nhiên xen lẫn cây cảnh bonsai và thảm cỏ xanh, dẫn thẳng từ cổng phụ 2m phía Nam vào khu để xe máy và vườn rau sân sau.
+   - Bổ sung **mái hiên kính cường lực khung thép đen + 3 xà gỗ + LED dốc nhẹ (`Z = 3.16m \to 2.86m`)** che chắn mưa tạt cho toàn bộ đường luồng dưới & 2 cửa sổ Nam, đồng thời chừa khe thoáng `51 cm` trên tường rào đón trọn gió Nam/Đông Nam mát lành.
+3. **Sân sau 12m — Hiên sau che trọn đến hết WC & Nền đất tự nhiên hoàn toàn từ `Y > 20.52m`:**
+   - **Hiên sau che phủ (`Y = 16.0..20.30m`, rộng `7m × 4.3m`):** Bảo vệ mưa nắng toàn bộ **Phòng Tắm + WC + Máy giặt gộp `7.20 m²`** (tường Bắc, có kệ chữ L để đồ linh tinh + thùng lau nhà, bồn cầu có tường ngang để giấy/Vim, cây treo đồ khô `1.28 m` đối diện gương, khu ướt Tắm + Máy giặt nâng cao `+9 cm` hướng mặt Đông & 3 ống thoát nước dốc thải thẳng ra rãnh lưới inox sau nhà tắm), **xe máy dựng đầu Bắc**, **góc chill 1 ghế dài + 1 bàn tròn**, và **nơi rửa chén cúng giỗ ngoài trời** (ngồi rửa mát như trong nhà, nước xả thẳng ra vườn rau).
+   - **Toàn bộ khu sau `Y = 20.52..24.0m` KHÔNG đổ bê tông nền:** Giữ 100% **đất vườn tự nhiên thấm nước** — phía Nam là **4 luống vườn rau hữu cơ**, ở giữa đặt **5 viên đá bước dặm rời**, và phía Bắc là **giàn phơi đồ inox 3 dây cao `1.85 m` bên trên – 3 luống đất trồng rau xanh trực tiếp bên dưới** đón trọn nắng mưa tự nhiên.
 
 ---
 
@@ -396,13 +445,13 @@ Toàn bộ 6 mắt camera sử dụng công nghệ **PoE (Power over Ethernet)**
 
 Để xem trực quan từng góc cạnh, xoay 360 độ, kiểm tra vị trí WiFi/Điện/Camera và bóc tách từng tầng của ngôi nhà **Fullhouse**:
 1. **Xem trực tiếp trên Trình duyệt Web (Không cần cài phần mềm):**
-   - Mở tệp [Fullhouse_3D_Viewer.html](file:///c:/Users/nconghau/Desktop/new%20fe/myhome/myhome/Fullhouse_3D_Viewer.html) bằng trình duyệt (Google Chrome, Microsoft Edge, Safari).
+   - Mở tệp [Fullhouse_3D_Viewer.html](file:///c:/Users/Administrator/Desktop/myhome/Fullhouse_3D_Viewer.html) bằng trình duyệt (Google Chrome, Microsoft Edge, Safari).
    - **Các tính năng nổi bật:**
      - **🌙 Ban Đêm Lung Linh / ☀️ Ban Ngày Chân Thực:** Chiêm ngưỡng hệ lam gỗ mặt tiền hắt đèn LED vàng ấm, đèn hắt khe trần, đèn rọi tranh, đèn ngủ đầu giường, đèn gầm bậc cầu thang và 8 trụ đèn nấm sân vườn.
      - **📡 Nhãn Smart Home & Bảng Sơ đồ Kỹ thuật (góc trái):** Bấm vào từng hạng mục (*Hệ thống WiFi Mesh*, *6 Camera An ninh*, *Tủ điện & Solar*, *Khóa cửa & Cổng*, *Điều hòa & Cảm biến*, *Đèn thông minh*) hoặc bấm trực tiếp vào các nhãn nổi màu xanh trên mô hình 3D để bay camera tới đúng vị trí lắp đặt.
      - **🔍 Sóng WiFi & Góc Cam:** Bật hiển thị trực quan các vòng sóng phủ WiFi 6E và nón vùng quét hồng ngoại 3D (FOV Cone) của 6 mắt camera an ninh.
 2. **Mở trong phần mềm Blender chuyên nghiệp:**
-   - Khởi động Blender ➔ Mở tệp [Fullhouse_Model.blend](file:///c:/Users/nconghau/Desktop/new%20fe/myhome/myhome/Fullhouse_Model.blend) hoặc chạy script [build_fullhouse_blender.py](file:///c:/Users/nconghau/Desktop/new%20fe/myhome/myhome/build_fullhouse_blender.py) trong thẻ *Scripting*.
+   - Khởi động Blender ➔ Mở tệp [Fullhouse_Model.blend](file:///c:/Users/Administrator/Desktop/myhome/Fullhouse_Model.blend) hoặc chạy script [build_fullhouse_blender.py](file:///c:/Users/Administrator/Desktop/myhome/build_fullhouse_blender.py) trong thẻ *Scripting*.
    - Trong cây **Outliner** của Blender đã được phân tách rõ ràng 10 Collection chuyên biệt:
      - `01_Site_Landscape_Trees` đến `06_Roof_Solar_Technical`: Kiến trúc, cảnh quan và nội thất chi tiết với vật liệu Procedural PBR (gỗ xương cá, đá Calacatta vân mây, đá chẻ tự nhiên, tấm pin mặt trời).
      - `07_Lighting_And_Night_LEDs`: Toàn bộ hệ đèn LED thanh, đèn hắt khe và nguồn sáng ban đêm.
@@ -412,11 +461,31 @@ Toàn bộ 6 mắt camera sử dụng công nghệ **PoE (Power over Ethernet)**
 
 ---
 
-## 11. NHẬT KÝ CẬP NHẬT PHƯƠNG ÁN KIẾN TRÚC & MÔ HÌNH 3D (21/11/2026)
+## 11. NHẬT KÝ CẬP NHẬT PHƯƠNG ÁN KIẾN TRÚC & MÔ HÌNH 3D (22/11/2026)
 
-Các điều chỉnh kiến trúc mới nhất đã được đồng bộ trực tiếp vào mô hình 3D Blender (`Fullhouse_Model.blend`, `build_fullhouse_blender.py`, `Fullhouse_Model.obj/.mtl`):
+Các điều chỉnh kiến trúc mới nhất đã được đồng bộ trực tiếp vào mô hình 3D Blender (`Fullhouse_Model.blend`, `build_fullhouse_blender.py`, `Fullhouse_Model.obj/.mtl`) và trình xem 3D Web (`Fullhouse_3D_Viewer.html`):
 
-1. **Mở rộng Tầng 2 lên bề ngang 7.0m — Thêm Hành lang 2m nằm trên đường luồng Tầng 1:**
+- **Cập nhật Mới nhất (22/11/2026 — 1.829 vật thể 3D): Cầu thang gỗ 1 vế thẳng kiểu lửng (đúng mẫu ảnh gỗ [tubepthien.vn](https://tubepthien.vn/cau-thang-giua-phong-khach-va-bep.html), KHÔNG làm 2 vế chữ U), Hoàn thiện Phòng Ba Mẹ, Bếp + Ghế chữ L, Mái hiên đường luồng dưới, Nơi rửa chén cúng giỗ, Phòng Tắm+WC+Giặt gộp `7.20 m²` (kệ chữ L, nền khu ướt cao `+9 cm`, 3 ống thoát dốc ra sau) & Giàn phơi đồ trên đất trồng rau (KHÔNG bê tông):**
+  0. **Cầu thang gỗ 1 vế thẳng kiểu lửng cổ điển ấm áp (KHÔNG làm 2 cầu thang):** Thiết kế đúng mẫu ảnh khách gửi — **chỉ 1 vế thẳng duy nhất (`Y = 9.08..10.14m`)** gồm **bậc khởi đầu bo tròn rộng 2 bên**, **2 trụ cái gỗ vuông lớn có mũ trụ**, **16 bậc gỗ liền khối trải thảm kem chống trượt**, **hệ con tiện gỗ dọc 2 bên + tay vịn gỗ bản lớn**, **vách ốp pano gỗ chia ô dọc đóng kín gầm thang** và **diềm sàn ốp gỗ + lan can con tiện gỗ** đồng bộ quanh ô thông tầng Sảnh Lửng Tầng 2 (`Y = 8.95..11.20m`).
+  1. **Phòng Ba Mẹ:** Dời cửa sổ hướng Tây sang **sát tường phía Nam (`X = 3.28..4.30m`)** để Ba Mẹ đón gió sau & nhìn thẳng ra Bếp (giữ đầu giường tựa tường đặc); kéo dài **tủ quần áo kịch trần suốt tường Bắc (`Y = 5.90..8.92m`, dài `3.02m` × cao `3.08m`, 5 cánh chính + 5 cánh tủ kho trên)**.
+  2. **Gầm cầu thang, Bếp & Mái hiên đường luồng dưới:** Xếp thẳng hàng đỉnh `1.86 m` cho **Tủ chén bát kính đồng (sát tủ bếp Bắc, mặt hướng Nam) – Tủ xoong nồi gầm thang (cao ngang bằng Tủ lạnh) – Tủ lạnh 2 cánh – Máy lọc nước RO (`1.14 m`)**; xây **Ghế băng chữ L trải thảm, gối nằm & chăn mỏng** tại góc Tây-Nam Bếp (`X = 2.22..3.48m, Y = 14.05..15.76m`); bổ sung **Mái hiên kính đường luồng dưới (`X = 0.02..2.00m, Y = -1.60..16.20m`)** dốc từ `Z = 3.16m \to 2.86m`.
+  3. **Sân sau, Hiên sau & Nơi rửa chén cúng giỗ:** Nâng nền sân sau lên `Z = 0.34m` nên cửa sau chỉ cần **1 bậc thang**; góc chill phía sau giữ gọn **1 ghế dài + 1 bàn tròn** tựa tường Đông ngắm Vườn rau phía Tây; dựng **xe máy gần Nhà tắm đầu hướng Bắc, bánh sau hướng Nam**; **Hiên sau che phủ đến hết Nhà vệ sinh (`Y = 16.0..20.30m`)**; thiết kế **Nơi rửa chén ngoài trời cúng giỗ nằm trọn trong Hiên sau (`X = 0.30..2.85m, Y = 18.40..20.22m`)** với vòi đôi hướng Đông và rãnh nước thải chảy thẳng ra Vườn rau.
+  4. **Phòng Tắm + WC + Máy giặt gộp chung 1 phòng `7.20 m²` (`X = 4.95..6.95m, Y = 16.65..20.25m`):**
+     - Cửa phòng mặt ngoài hướng Nam, mặt trong hướng Bắc (`Y = 17.14..17.88m`), nhìn thẳng vào **Gương tròn LED & Chỗ rửa tay Lavabo**.
+     - **Phía Đông gương:** Xây **kệ tường chữ L** kéo liền từ gương sang tường Đông rồi chạy dọc tường Đông tới sát tường Nam — **ngăn trên chữ L** lót gỗ sồi + LED đựng đồ linh tinh, **bên dưới** vẫn để gọn **thùng & cây lau nhà** ngay trên nền gạch.
+     - **Phía Tây gương:** Đặt **Bồn cầu** áp tường Bắc mặt hướng Nam, phía trên xây **bức tường ngang nhô ra `19 cm`** để 2 cuộn giấy vệ sinh & chai Vim tẩy rửa.
+     - **Đối diện gương & bồn cầu (tường Nam `Y = 17.94..19.26m`):** Gắn **cây treo đồ inox dài `1.28 m`** treo đồ khô mỗi khi tắm.
+     - **Hướng Tây (`Y = 19.00..20.13m`) — Khu ướt (Ngăn tắm + Máy giặt) xây nền cao hơn nền khô `+9 cm` & hướng mặt Đông (`-Y`):** Ngăn cách bằng gờ đá chống trơn + vách xây kín nước + vách kính chắn bắn; **Ngăn tắm (Bắc-Tây)** gắn **vòi tắm nóng lạnh** và **xây 2 khung ô tường ngay trên tường phía Bắc** đựng sữa tắm, dầu gội; **Máy giặt (Nam-Tây)** đặt trên nền cao `+9 cm` hướng mặt ra Đông kèm 2 đợt kệ tường Tây.
+     - **Thoát nước dốc ra thẳng sân sau:** Cả **3 phễu/lỗ thoát nước** (Ngăn tắm, Máy giặt, và sàn khô Lavabo/Bồn cầu) đều thoát dốc xuyên tường Tây thải thẳng vào **rãnh thu nước có lưới inox chạy dọc chân tường sau nhà tắm (`Y = 20.25..20.52m`)** rồi ra phía sau.
+  5. **Chỗ phơi đồ bên trên – Đất làm rau bên dưới (KHÔNG xây bê tông):** Dừng lát nền cứng tại `Y = 20.52m`; toàn bộ phần cuối sân (`Y = 20.52..24.0m`) để **đất vườn tự nhiên**, bên trên dựng **giàn phơi inox 3 dây (`X = 3.95..6.80m`)**, bên dưới trồng **3 luống rau xanh trực tiếp trên đất** cùng lối **5 viên đá bước dặm rời** ở giữa.
+
+0. **Chuyển Đường luồng 2m & Hành lang Tầng 2 sang PHÍA NAM để tránh gió bấc (22/11/2026):**
+   - Do mặt tiền quay **hướng Đông** (nhìn từ đường Quốc lộ vào nhà: trái = **Nam**, phải = **Bắc**), toàn bộ **Đường luồng 2m Tầng 1** và **Hành lang kính 2m Tầng 2** được chuyển từ phía Bắc (`X = 5..7m`) sang **phía Nam (`X = 0..2m`)**.
+   - **Hiệu quả vi khí hậu vượt trội:** Khối nhà chính `5m × 16m` áp ranh đất phía Bắc (`X = 2..7m`) tạo thành bức tường chắn **gió bấc (gió mùa Đông Bắc)** vững chắc mùa đông, trong khi toàn bộ 4 khung kính Hành lang Tầng 2 và 2 cửa sổ khu Bếp Tầng 1 mở sang phía Nam đón gió Nam/Đông Nam mát lành quanh năm.
+   - **Đồng bộ toàn mặt bằng đối xứng hợp lý:** Cổng phụ 2m & bonsai chuyển sang phía Nam; Cổng ô tô 3.6m, xe SUV, trạm sạc EV và Bàn trà của Ba chuyển áp tường rào Bắc kín gió bấc; Dãy WC/Tắm/Giặt/Phơi sân sau áp tường Bắc thẳng trục nước với Bếp; Vườn rau hữu cơ đặt cuối sân phía Nam đón trọn nắng phương Nam.
+   - **Đồng bộ 3D Blender & Web Viewer:** Mở mặt cắt kiến trúc sang vách Bắc (`X = 7.0m`), căn Camera cắt nội thất từ phía Bắc (`1.224 vật thể`), chuẩn hóa hệ tọa độ Đông–Tây–Nam–Bắc và cập nhật đồng bộ `Fullhouse_3D_Viewer.html`.
+
+1. **Mở rộng Tầng 2 lên bề ngang 7.0m — Thêm Hành lang 2m nằm trên đường luồng Tầng 1 (21/11/2026):**
    - Sàn Tầng 2 và Mái vươn phủ lên toàn bộ đường luồng 2m bên phải Tầng 1 (kết cấu cột đỡ đặt gọn sát tường rào phải, bổ sung đèn LED âm trần chiếu sáng lối đá bước dặm bên dưới).
    - Tạo **Hành lang Tầng 2 rộng 2.0m × 16.0m** với 4 ô cửa kính toàn cảnh khung nhôm đen, 2 cửa kính nối thẳng ra Ban công trước và Ban công sau, kèm ghế băng đọc sách, kệ console, cây xanh và đèn thả.
    - Xóa bỏ hành lang hẹp 1m cũ bên trong Tầng 2 → mở rộng diện tích sử dụng cho **Walk-in Closet Master**, **Phòng Sếu (Em Út)** và **Phòng Chị Hai** thêm ~1.0m bề ngang (~4.7m rộng).
