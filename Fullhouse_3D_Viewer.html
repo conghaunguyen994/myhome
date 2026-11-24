@@ -677,6 +677,55 @@
       return mesh;
     }
 
+    function addRampY(parent, minX, maxX, yLow, yHigh, zBase, zTop, mat) {
+      // Khối dốc (wedge) tăng dần theo trục Y kiến trúc từ (yLow, zBase) lên (yHigh, zTop)
+      const p = (x, y, z) => [x, z, -y];
+      const v0 = p(minX, yLow, zBase), v1 = p(maxX, yLow, zBase);
+      const v2 = p(maxX, yHigh, zBase), v3 = p(minX, yHigh, zBase);
+      const v4 = p(minX, yHigh, zTop), v5 = p(maxX, yHigh, zTop);
+      const verts = new Float32Array([
+        ...v0, ...v1, ...v5,  ...v0, ...v5, ...v4, // mặt dốc trên
+        ...v3, ...v4, ...v5,  ...v3, ...v5, ...v2, // mặt lưng cao
+        ...v0, ...v3, ...v2,  ...v0, ...v2, ...v1, // mặt đáy
+        ...v0, ...v4, ...v3,                        // mặt hông minX
+        ...v1, ...v2, ...v5                         // mặt hông maxX
+      ]);
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.BufferAttribute(verts, 3));
+      geo.computeVertexNormals();
+      const mesh = new THREE.Mesh(geo, mat);
+      mesh.castShadow = true;
+      mesh.receiveShadow = true;
+      parent.add(mesh);
+      return mesh;
+    }
+
+    function addB40MeshPanel(parent, x1, x2, yPos, z1, z2, spacing = 0.14, wireD = 0.01, mat = mats.metalStainless) {
+      const w = x2 - x1, h = z2 - z1;
+      for (let c = -w + spacing * 0.5; c < h; c += spacing) {
+        const xa = Math.max(0, -c), xb = Math.min(w, h - c);
+        if (xb - xa > 0.04) {
+          const za = xa + c, zb = xb + c;
+          const seg = Math.hypot(xb - xa, zb - za);
+          const m = new THREE.Mesh(new THREE.BoxGeometry(seg, wireD, wireD), mat);
+          m.position.set(x1 + (xa + xb) / 2, z1 + (za + zb) / 2, -yPos);
+          m.rotation.z = Math.PI / 4;
+          parent.add(m);
+        }
+      }
+      for (let d = spacing * 0.5; d < w + h; d += spacing) {
+        const xa = Math.max(0, d - h), xb = Math.min(w, d);
+        if (xb - xa > 0.04) {
+          const za = d - xa, zb = d - xb;
+          const seg = Math.hypot(xb - xa, zb - za);
+          const m = new THREE.Mesh(new THREE.BoxGeometry(seg, wireD, wireD), mat);
+          m.position.set(x1 + (xa + xb) / 2, z1 + (za + zb) / 2, -yPos);
+          m.rotation.z = -Math.PI / 4;
+          parent.add(m);
+        }
+      }
+    }
+
     function addBedsideLamp(parent, x, y, z) {
       const stand = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.09, 0.18, 12), mats.gold);
       stand.position.set(x, z + 0.09, -y);
@@ -687,28 +736,28 @@
     }
 
     // =========================================================================
-    // 4. SITE & SÂN TRƯỚC 18M: ĐƯỜNG LUỒNG 2M PHÍA NAM (X=0..2), BÀN TRÀ & SUV PHÍA BẮC
+    // 4. SITE & SÂN TRƯỚC RỘNG TỐI ĐA 19.50M (LÙI NHÀ SÁT TƯỜNG RÀO SAU Y=22.50M!)
     // =========================================================================
-    addBox(groupSite, -4, -24, -0.35, 11, -18.8, -0.20, mats.road);
-    addBox(groupSite, -2, -18.8, -0.20, 9, -18.0, 0.0, mats.wallWhite);
-    addBox(groupSite, -0.5, -18.5, -0.45, 7.5, 24.5, -0.01, mats.wallCharcoal);
-    addBox(groupSite, 0, -18, 0.0, 7, 0, 0.15, mats.paver);
+    addBox(groupSite, -4, -25.5, -0.35, 11, -20.3, -0.20, mats.road);
+    addBox(groupSite, -2, -20.3, -0.20, 9, -19.5, 0.0, mats.wallWhite);
+    addBox(groupSite, -0.5, -20.0, -0.45, 7.5, 23.0, -0.01, mats.wallCharcoal);
+    addBox(groupSite, 0, -19.5, 0.0, 7, 0, 0.15, mats.paver);
 
-    // Trụ cổng đá chẻ & Cổng sắt (Cổng phụ 2m phía Nam X=0.15..2.85; Cổng ô tô 3.6m phía Bắc X=3.15..6.65)
-    addBox(groupSite, -0.18, -18.18, 0, 0.15, -17.82, 2.65, mats.wallStone);
-    addBox(groupSite, 2.85, -18.18, 0, 3.15, -17.82, 2.65, mats.wallStone);
-    addBox(groupSite, 6.65, -18.18, 0, 7.18, -17.82, 2.65, mats.wallStone);
+    // Trụ cổng đá chẻ & Cổng sắt (Y=-19.50m — chừa sân trước rộng tối đa 19.50m!)
+    addBox(groupSite, -0.18, -19.68, 0, 0.15, -19.32, 2.65, mats.wallStone);
+    addBox(groupSite, 2.85, -19.68, 0, 3.15, -19.32, 2.65, mats.wallStone);
+    addBox(groupSite, 6.65, -19.68, 0, 7.18, -19.32, 2.65, mats.wallStone);
     [0.0, 3.0, 6.92].forEach(gx => {
-      addBox(groupSite, gx - 0.11, -18.10, 2.65, gx + 0.11, -17.90, 2.88, mats.ledBulbWarm);
+      addBox(groupSite, gx - 0.11, -19.60, 2.65, gx + 0.11, -19.40, 2.88, mats.ledBulbWarm);
     });
-    addBox(groupSite, 0.15, -18.0, 0.18, 2.85, -17.94, 2.25, mats.metalBlack);
-    addBox(groupSite, 3.15, -18.0, 0.18, 6.65, -17.94, 2.25, mats.metalBlack);
+    addBox(groupSite, 0.15, -19.5, 0.18, 2.85, -19.44, 2.25, mats.metalBlack);
+    addBox(groupSite, 3.15, -19.5, 0.18, 6.65, -19.44, 2.25, mats.metalBlack);
 
-    // Tường rào (Tường rào trái/Nam chạy liền; tường rào phải/Bắc chừa Y=0..16 để mở mặt cắt nội thất)
-    addBox(groupSite, -0.18, -18, 0, 0, 24, 2.35, mats.wallWhite);
-    addBox(groupSite, 7.0, -18, 0, 7.18, 0, 2.35, mats.wallWhite);
-    addBox(groupSite, 7.0, 16, 0, 7.18, 24, 2.35, mats.wallWhite);
-    addBox(groupSite, -0.18, 24, 0, 7.18, 24.18, 2.35, mats.wallWhite);
+    // Tường rào (-19.50..22.50, tường hậu áp sát lưng Chòi bếp tại Y=22.50m!)
+    addBox(groupSite, -0.18, -19.5, 0, 0, 22.5, 2.35, mats.wallWhite);
+    addBox(groupSite, 7.0, -19.5, 0, 7.18, 0, 2.35, mats.wallWhite);
+    addBox(groupSite, 7.0, 16, 0, 7.18, 22.5, 2.35, mats.wallWhite);
+    addBox(groupSite, -0.18, 22.5, 0, 7.18, 22.68, 2.35, mats.wallWhite);
 
     // Mái che sân trước Tầng 1 (Y=-9..-3, rộng trọn 7m, đồng cao độ sàn T2 mới Z2=3.45 -> dầm Z=3.15..3.32)
     [-8.94, -6.0, -2.98].forEach(cy => {
@@ -730,26 +779,39 @@
     addBox(groupSite, 2.20, -1.52, 3.26, 6.60, -1.48, 3.30, mats.ledWarmStrip);
 
     // =========================================================================
-    // 4B. CÁI HÈ THU HẸP GỌN (Y=-1.45..0) + BẬC THANG 3 BẬC (Y=-2.35..-1.45)
+    // 4B. CÁI HÈ THU HẸP GỌN (Y=-1.45..0) + BẬC THANG 2 BẬC ÊM ÁI (Z1=0.45, 2x15cm)
+    //     + THANG TRƯỢT XE MÁY ĐI THẲNG VÀO NHÀ (X=2.38..3.56, Y=-2.60..-1.45)
     //     + 2 LAN CAN DỌC NGỒI ĐƯỢC + TỦ DÉP LAN CAN BẮC + BÀN BA DƯỚI BẬC THANG
     // =========================================================================
-    const Z1 = 0.54;
-    const H1 = 3.30; // Mục 17: Hạ thấp chiều cao T1 (Z2=3.45, trần H1=3.30m) để cầu thang đỡ dốc & mọi phòng tầng dưới bằng nhau!
+    const Z1 = 0.45; // Mục 2.1: Hạ cốt nền T1 còn 0.45m (chênh sân 30cm -> 2 bậc 15cm/bậc êm ái, không quá cao!)
+    const H1 = 3.30; // Mục 17: Trần thông thủy T1 đồng bộ H1=3.30m cho mọi phòng tầng dưới!
     addBox(groupSite, 2.0, -1.45, 0.15, 7.0, 0.0, Z1, mats.floorTile);
-    [[-2.35, -2.05, 0.28], [-2.05, -1.75, 0.41], [-1.75, -1.45, 0.54]].forEach(([sy1, sy2, szTop]) => {
-      addBox(groupSite, 2.38, sy1, 0.15, 6.62, sy2, szTop, mats.stepStone);
-      addBox(groupSite, 2.50, sy1 - 0.01, szTop - 0.03, 6.50, sy1 + 0.01, szTop - 0.01, mats.ledWarmStrip);
+    // 2 bậc thang đi bộ bên hướng Bắc (X=4.02..6.62, Y=-2.05..-1.45)
+    [[-2.05, -1.75, 0.30], [-1.75, -1.45, 0.45]].forEach(([sy1, sy2, szTop]) => {
+      addBox(groupSite, 4.02, sy1, 0.15, 6.62, sy2, szTop, mats.stepStone);
+      addBox(groupSite, 4.10, sy1 - 0.01, szTop - 0.025, 6.54, sy1 + 0.01, szTop - 0.008, mats.ledWarmStrip);
     });
-    // Giữ nguyên 2 lan can dọc hai bên cái hè có thể ngồi được
-    addBox(groupSite, 2.00, -2.35, 0.15, 2.38, 0.0, Z1 + 0.42, mats.wallWhite);
-    addBox(groupSite, 1.96, -2.38, Z1 + 0.42, 2.42, 0.0, Z1 + 0.48, mats.woodOak);
-    [-1.75, -0.75].forEach(scy => {
-      addBox(groupSite, 2.00, scy - 0.32, Z1 + 0.48, 2.38, scy + 0.32, Z1 + 0.53, mats.fabricMustard);
-    });
-    addBox(groupSite, 6.62, -2.35, 0.15, 7.00, 0.0, Z1 + 0.42, mats.wallWhite);
-    addBox(groupSite, 6.58, -2.38, Z1 + 0.42, 7.00, 0.0, Z1 + 0.48, mats.woodOak);
-    // Tủ dép đặt sát lan can phía Bắc trên hè (Y=-1.32..-0.20)
-    addBox(groupSite, 6.20, -1.32, Z1 + 0.04, 6.60, -0.20, Z1 + 0.72, mats.woodOak);
+    // Dốc bê tông xây liền khối hướng Nam thẳng trọn Cửa chính (X=2.38..3.95, Y=-2.65..-1.45) để đi xe máy vào nhà!
+    const matConcreteRamp = new THREE.MeshStandardMaterial({ color: 0xa2a7ac, roughness: 0.84 });
+    addRampY(groupSite, 2.38, 3.95, -2.65, -1.45, 0.15, Z1, matConcreteRamp);
+    addRampY(groupSite, 3.95, 4.02, -2.65, -1.45, 0.15, Z1 + 0.025, mats.wallStone);
+    const rampAng = Math.atan2(Z1 - 0.15, 1.20);
+    for (let ri = 0; ri < 7; ri++) {
+      const t = (ri + 0.6) / 7.2;
+      const ry = -2.65 + t * 1.20;
+      const rz = 0.15 + t * (Z1 - 0.15);
+      const grip = addBox(groupSite, 2.46, ry - 0.016, rz - 0.004, 3.87, ry + 0.016, rz + 0.008, mats.wallStone);
+      grip.rotation.x = rampAng;
+    }
+    const rampLed = addBox(groupSite, 3.93, -2.56, 0.305, 3.96, -1.52, 0.325, mats.ledWarmStrip);
+    rampLed.rotation.x = rampAng;
+    // 2 lan can dọc hai bên cái hè cao 86cm trên mặt hè (Z1+0.86 — cao hơn hẳn tủ dép 68cm!)
+    addBox(groupSite, 2.00, -2.05, 0.15, 2.38, 0.0, Z1 + 0.80, mats.wallWhite);
+    addBox(groupSite, 1.96, -2.08, Z1 + 0.80, 2.42, 0.0, Z1 + 0.86, mats.woodOak);
+    addBox(groupSite, 6.62, -2.05, 0.15, 7.00, 0.0, Z1 + 0.80, mats.wallWhite);
+    addBox(groupSite, 6.58, -2.08, Z1 + 0.80, 7.00, 0.0, Z1 + 0.86, mats.woodOak);
+    // Tủ dép đặt sát lan can phía Bắc trên hè (Y=-1.32..-0.20, cao 68cm — thấp hơn lan can 18cm!)
+    addBox(groupSite, 6.20, -1.32, Z1 + 0.04, 6.60, -0.20, Z1 + 0.68, mats.woodOak);
 
     // 🍵 BÀN GHẾ BA CHILL CÙNG ANH EM Ở DƯỚI BẬC THANG (Nền sân Z=0.15, Y=-5.25..-2.70)
     addBox(groupSite, 4.72, -5.25, 0.15, 6.95, -2.70, 0.17, mats.woodOak);
@@ -785,14 +847,12 @@
     carGroup.position.set(5.15, 0.15, 12.35);
     groupSite.add(carGroup);
 
-    // 🌳 Bonsai & Đèn nấm lối đi bên trái sân (PHÍA NAM dẫn vào đường luồng 2m)
-    [-16.2, -12.5, -8.8, -5.0, -1.6].forEach(by => {
-      addBox(groupSite, 0.55, by - 0.38, 0.15, 1.45, by + 0.38, 0.58, mats.wallStone);
-      const leaf = new THREE.Mesh(new THREE.SphereGeometry(0.45, 10, 10), mats.foliageGreen);
-      leaf.position.set(1.0, 1.15, -by);
+    // 🌳 Bonsai trưng bày gọn ÁP SÁT TƯỜNG RÀO NAM (X=0.02..0.58, trải đều sân trước rộng 19.50m!)
+    [-17.6, -13.6, -8.0, -4.6, -1.6].forEach(by => {
+      addBox(groupSite, 0.02, by - 0.36, 0.15, 0.58, by + 0.36, 0.56, mats.wallStone);
+      const leaf = new THREE.Mesh(new THREE.SphereGeometry(0.32, 10, 10), mats.foliageGreen);
+      leaf.position.set(0.32, 1.12, -by);
       groupSite.add(leaf);
-      addBox(groupSite, 1.70, by - 0.05, 0.15, 1.80, by + 0.05, 0.52, mats.metalBlack);
-      addBox(groupSite, 1.69, by - 0.06, 0.52, 1.81, by + 0.06, 0.62, mats.ledBulbWarm);
     });
 
     // 🌿 ĐƯỜNG LUỒNG 2M PHÍA NAM (X = 0.0..2.0, Y = 0..16 — tránh gió bấc, đón gió Nam) + MÁI HIÊN ĐƯỜNG LUỒNG DƯỚI
@@ -825,16 +885,29 @@
     // =========================================================================
     addBox(groupFl1, 2.0, 0, 0.15, 7.0, 16.0, Z1, mats.floorTile);
 
-    // Tường bao T1: Tường Bắc X=7 cắt thấp; Tường Nam X=2 có 2 CỬA SỔ (1 giữa Sofa & Phòng Ba Mẹ lệch phía Sofa nhiều hơn, 1 sau bàn ăn Bếp)
+    // Tường bao T1: Tường Bắc X=7 cắt thấp; Tường Nam X=2: Mục 1 đổi cửa sổ giữa Sofa & Phòng Ba Mẹ thành CỬA PHỤ đi ra đường luồng (Y=4.80..6.25), giữ cửa sổ sau bàn ăn Bếp (Y=12.60..14.50)
     addBox(groupFl1, 6.78, 0, Z1, 7.0, 16.0, Z1 + 0.38, mats.wallWhite);
     addBox(groupFl1, 2.0, 0, Z1, 2.22, 4.80, H1, mats.wallWhite);
-    addBox(groupFl1, 2.0, 4.80, Z1, 2.22, 6.25, Z1 + 0.90, mats.wallWhite);
     addBox(groupFl1, 2.0, 4.80, Z1 + 2.35, 2.22, 6.25, H1, mats.wallWhite);
-    addBox(groupFl1, 2.05, 4.80, Z1 + 0.90, 2.17, 6.25, Z1 + 2.35, mats.glassClear); // Cửa sổ 1 đường luồng (giữa Sofa & Phòng Ba Mẹ, lệch phía Sofa)
+    // Mục 1: Cửa phụ 2 cánh nhôm kính đi ra đường luồng giữa Sofa & Phòng Ba Mẹ (Y=4.80..6.25, Z=Z1..Z1+2.35) + 2 bậc đá xuống luồng Nam!
+    addBox(groupFl1, 2.05, 4.80, Z1, 2.17, 6.25, Z1 + 2.35, mats.glassClear);
+    addBox(groupFl1, 2.04, 4.80, Z1, 2.18, 4.86, Z1 + 2.35, mats.metalBlack);
+    addBox(groupFl1, 2.04, 6.19, Z1, 2.18, 6.25, Z1 + 2.35, mats.metalBlack);
+    addBox(groupFl1, 2.04, 5.50, Z1, 2.18, 5.55, Z1 + 2.35, mats.metalBlack);
+    addBox(groupFl1, 2.04, 4.80, Z1 + 2.29, 2.18, 6.25, Z1 + 2.35, mats.metalBlack);
+    addBox(groupFl1, 2.04, 4.84, Z1 + 0.02, 2.18, 6.21, Z1 + 0.28, mats.metalBlack);
+    addBox(groupFl1, 2.04, 4.82, Z1 + 1.94, 2.18, 6.23, Z1 + 1.98, mats.metalBlack);
+    [5.44, 5.61].forEach(sdhy => {
+      addBox(groupFl1, 2.00, sdhy - 0.018, Z1 + 0.88, 2.05, sdhy + 0.018, Z1 + 1.24, mats.gold);
+      addBox(groupFl1, 2.17, sdhy - 0.018, Z1 + 0.88, 2.22, sdhy + 0.018, Z1 + 1.24, mats.gold);
+    });
+    addBox(groupSite, 1.56, 4.80, 0.14, 1.78, 6.25, 0.25, mats.stepStone);
+    addBox(groupSite, 1.78, 4.80, 0.14, 2.00, 6.25, 0.35, mats.stepStone);
+    addBox(groupSite, 1.55, 4.86, 0.22, 1.57, 6.19, 0.24, mats.ledWarmStrip);
     addBox(groupFl1, 2.0, 6.25, Z1, 2.22, 12.60, H1, mats.wallWhite);
     addBox(groupFl1, 2.0, 12.60, Z1, 2.22, 14.50, Z1 + 0.90, mats.wallWhite);
     addBox(groupFl1, 2.0, 12.60, Z1 + 2.35, 2.22, 14.50, H1, mats.wallWhite);
-    addBox(groupFl1, 2.05, 12.60, Z1 + 0.90, 2.17, 14.50, Z1 + 2.35, mats.glassClear); // Cửa sổ 2 đường luồng (sau bàn ăn thấy xe về)
+    addBox(groupFl1, 2.05, 12.60, Z1 + 0.90, 2.17, 14.50, Z1 + 2.35, mats.glassClear); // Cửa sổ đường luồng sau bàn ăn thấy xe về
     addBox(groupFl1, 2.0, 14.50, Z1, 2.22, 16.0, H1, mats.wallWhite);
 
     // Mặt tiền T1: Cửa chính hướng Nam (X=2.35..3.95) & Cửa sổ lớn hướng Bắc (X=4.60..6.55)
@@ -862,9 +935,8 @@
     addBox(groupFl1, 4.95, 15.78, Z1 + 2.35, 6.35, 16.0, H1, mats.wallWhite);
     addBox(groupFl1, 4.95, 15.82, Z1 + 0.95, 6.35, 15.94, Z1 + 2.35, mats.glassClear); // Cửa sổ chỗ nấu ăn nhìn ra Phòng tắm
     addBox(groupFl1, 6.35, 15.78, Z1, 7.0, 16.0, H1, mats.wallWhite);
-    // Chỉ 1 bậc thang cửa sau (nền sân sau Z_REAR=0.34m sát cao độ bếp Z1=0.54m!)
-    addBox(groupFl1, 3.52, 16.00, 0.34, 4.78, 16.38, 0.44, mats.stepStone);
-    addBox(groupFl1, 3.60, 16.37, 0.39, 4.70, 16.39, 0.42, mats.ledWarmStrip);
+    // Sàn Hiên sau & Chòi bếp nâng bằng đúng sàn nhà (Z_REAR=Z1=0.45m) -> phẳng liền mạch, bỏ bậc thừa cửa sau!
+    addBox(groupFl1, 3.55, 15.94, Z1 - 0.02, 4.75, 16.04, Z1 + 0.005, mats.wallStone);
 
     // A. GIAN THỜ SÁT VÁCH BẮC (QUAY MẶT HƯỚNG BẮC, LƯNG HƯỚNG NAM) -> VÁCH TƯỜNG XÂY 7 Ô TRỐNG TRANG TRÍ -> SOFA & TV
     for (let asl = 0; asl < 9; asl++) {
@@ -1205,182 +1277,156 @@
     addBox(groupSite, 6.76, -11.38, 1.25, 6.78, -11.22, 1.52, mats.ledGreenOk);
 
     // =========================================================================
-    // 6. SÂN SAU (Z_REAR=0.34m -> chỉ 1 bậc cửa sau! Hiên sau mở tới Y=21.15m + Hộc bê tông 2 ngăn Máy giặt + Tắm rộng bỏ vách ngăn có Cửa tắm & Vòi thấp mạnh + Vòi lau nhà & Pegboard áo mưa/mũ ngoài tường Nam + Cây phơi ngang 7m Bắc-Nam!)
+    // 6. SÂN SAU: NÂNG HIÊN SAU & CHÒI BẾP BẰNG CỐT SÀN NHÀ (Z_REAR=Z1=0.45m) & LÙI NHÀ SÁT RANH SAU Y=22.50M!
     // =========================================================================
-    const Z_REAR = 0.34;
+    const Z_REAR = Z1;
+    const Z_SOIL = 0.24;
     const soilGardenMat = new THREE.MeshStandardMaterial({ color: 0x3b2a1e, roughness: 0.96 });
-    // Nền lát gọn trong Hiên sau mở rộng & rãnh thoát nước sau nhà tắm (Y=16..21.35); phía sau (Y=21.35..24) là ĐẤT TỰ NHIÊN trồng rau KHÔNG xây bê tông!
-    addBox(groupSite, 0, 16, 0.0, 7, 21.35, Z_REAR, mats.paver);
-    addBox(groupSite, 0, 21.35, 0.0, 7, 24.0, Z_REAR - 0.04, soilGardenMat);
-    [21.65, 22.15, 22.75, 23.35].forEach(sty => {
-      addBox(groupSite, 2.74, sty - 0.18, Z_REAR - 0.04, 3.18, sty + 0.18, Z_REAR + 0.01, mats.stepStone);
+    // Hiên sau bằng cốt sàn nhà 0.45m (Y=16..20m); Vườn rau vừa đủ phía Nam (X=0..3.30, Y=20..22.50m) thấp 0.24m thoát nước tự nhiên!
+    addBox(groupSite, 0, 16, 0.0, 7, 20.00, Z_REAR, mats.paver);
+    addBox(groupSite, 0, 20.00, 0.0, 3.30, 22.50, Z_SOIL, soilGardenMat);
+    addBox(groupSite, 0.00, 19.96, Z_SOIL, 3.30, 20.04, Z_REAR, mats.wallStone);
+    addBox(groupSite, 2.72, 20.04, Z_SOIL, 3.20, 20.32, 0.34, mats.stepStone);
+    [20.62, 21.12, 21.62, 22.12].forEach(sty => {
+      addBox(groupSite, 2.74, sty - 0.16, Z_SOIL, 3.18, sty + 0.16, Z_SOIL + 0.05, mats.stepStone);
     });
-    addBox(groupSite, 0.05, 15.66, 0.14, 1.98, 16.00, 0.24, mats.stepStone);
+    addRampY(groupSite, 0.20, 1.98, 15.05, 16.00, 0.14, Z_REAR, matConcreteRamp);
+    // 🛡️ MỤC 3: CỬA LƯỚI B40 ĐƠN GIẢN TẠI ĐIỂM GIAO ĐƯỜNG LUỒNG & HIÊN SAU (X=0.20..2.00, Y=16.03, cao 1.38m)
+    addBox(groupSite, 0.20, 16.00, Z_REAR, 0.245, 16.05, Z_REAR + 1.40, mats.metalBlack);
+    addBox(groupSite, 1.955, 16.00, Z_REAR, 2.00, 16.05, Z_REAR + 1.40, mats.metalBlack);
+    [[0.255, 1.09], [1.11, 1.945]].forEach(([gx1, gx2]) => {
+      const gz1 = Z_REAR + 0.04, gz2 = Z_REAR + 1.34;
+      addBox(groupSite, gx1, 16.01, gz2 - 0.03, gx2, 16.04, gz2, mats.metalStainless);
+      addBox(groupSite, gx1, 16.01, gz1, gx2, 16.04, gz1 + 0.03, mats.metalStainless);
+      addBox(groupSite, gx1, 16.015, (gz1 + gz2) / 2 - 0.014, gx2, 16.035, (gz1 + gz2) / 2 + 0.014, mats.metalStainless);
+      addBox(groupSite, gx1, 16.01, gz1, gx1 + 0.03, 16.04, gz2, mats.metalStainless);
+      addBox(groupSite, gx2 - 0.03, 16.01, gz1, gx2, 16.04, gz2, mats.metalStainless);
+      addB40MeshPanel(groupSite, gx1 + 0.03, gx2 - 0.03, 16.025, gz1 + 0.03, gz2 - 0.03, 0.14);
+    });
+    addBox(groupSite, 1.04, 16.00, Z_REAR + 0.88, 1.16, 16.055, Z_REAR + 0.92, mats.gold);
+    addBox(groupSite, 1.09, 15.995, Z_REAR + 0.86, 1.11, 16.06, Z_REAR + 0.95, mats.metalBlack);
 
-    // 🧺 HỘC BÊ TÔNG 2 NGĂN ĐẶT MÁY GIẶT NGOÀI HIÊN SAU — GẦN SÁT CỬA SỔ BẾP & PHÒNG TẮM (X=6.18..6.95, Y=16.04..17.24, MỞ HƯỚNG NAM -X!)
-    addBox(groupSite, 6.18, 16.04, Z_REAR, 6.95, 17.24, Z_REAR + 0.06, mats.stepStone); // Bệ bê tông chân hộc
-    addBox(groupSite, 6.18, 16.04, Z_REAR + 0.06, 6.95, 16.12, Z_REAR + 1.82, mats.wallWhite); // Vách bê tông Đông
-    addBox(groupSite, 6.18, 17.16, Z_REAR + 0.06, 6.95, 17.24, Z_REAR + 1.82, mats.wallWhite); // Vách bê tông Tây
-    addBox(groupSite, 6.87, 16.04, Z_REAR + 0.06, 6.95, 17.24, Z_REAR + 1.82, mats.wallWhite); // Tường hậu Bắc
-    addBox(groupSite, 6.16, 16.04, Z_REAR + 0.98, 6.95, 17.24, Z_REAR + 1.06, mats.stepStone); // Tấm bê tông ngăn giữa 2 ngăn
-    addBox(groupSite, 6.16, 16.04, Z_REAR + 1.74, 6.95, 17.24, Z_REAR + 1.82, mats.stepStone); // Nắp bê tông trên cùng
-    addBox(groupSite, 6.24, 16.18, Z_REAR + 1.71, 6.28, 17.10, Z_REAR + 1.74, mats.ledWarmStrip);
-    // Ngăn dưới: Máy giặt cửa trước mặt hướng Nam (-X) + giỏ đồ chờ giặt
-    addBox(groupSite, 6.23, 16.48, Z_REAR + 0.06, 6.85, 17.12, Z_REAR + 0.91, mats.metalStainless);
+    // 🧺 HỘC BÊ TÔNG 2 NGĂN ĐẶT MÁY GIẶT THU GỌN NGOÀI HIÊN SAU (X=6.18..6.95, Y=16.04..16.88, MỞ HƯỚNG NAM -X!)
+    addBox(groupSite, 6.18, 16.04, Z_REAR, 6.95, 16.88, Z_REAR + 0.06, mats.stepStone);
+    addBox(groupSite, 6.18, 16.04, Z_REAR + 0.06, 6.95, 16.10, Z_REAR + 1.82, mats.wallWhite);
+    addBox(groupSite, 6.18, 16.82, Z_REAR + 0.06, 6.95, 16.88, Z_REAR + 1.82, mats.wallWhite);
+    addBox(groupSite, 6.87, 16.04, Z_REAR + 0.06, 6.95, 16.88, Z_REAR + 1.82, mats.wallWhite);
+    addBox(groupSite, 6.16, 16.04, Z_REAR + 0.98, 6.95, 16.88, Z_REAR + 1.06, mats.stepStone);
+    addBox(groupSite, 6.16, 16.04, Z_REAR + 1.74, 6.95, 16.88, Z_REAR + 1.82, mats.stepStone);
+    addBox(groupSite, 6.24, 16.14, Z_REAR + 1.71, 6.28, 16.78, Z_REAR + 1.74, mats.ledWarmStrip);
+    addBox(groupSite, 6.23, 16.16, Z_REAR + 0.06, 6.85, 16.76, Z_REAR + 0.91, mats.metalStainless);
     const wDoorMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.20, 0.20, 0.04, 18), mats.glassBronze);
     wDoorMesh.rotation.z = Math.PI / 2;
-    wDoorMesh.position.set(6.22, Z_REAR + 0.49, -16.80);
+    wDoorMesh.position.set(6.22, Z_REAR + 0.49, -16.46);
     groupSite.add(wDoorMesh);
-    addBox(groupSite, 6.21, 16.52, Z_REAR + 0.77, 6.24, 17.08, Z_REAR + 0.88, mats.pianoGloss);
-    addBox(groupSite, 6.20, 16.84, Z_REAR + 0.80, 6.22, 17.00, Z_REAR + 0.85, mats.ledCyanTech);
-    addBox(groupSite, 6.32, 16.15, Z_REAR + 0.06, 6.76, 16.43, Z_REAR + 0.52, mats.woodOak); // Giỏ đồ chờ giặt
-    // Ngăn trên: Bột giặt lớn, nước giặt xả, kẹp đồ
-    addBox(groupSite, 6.30, 16.16, Z_REAR + 1.06, 6.76, 16.42, Z_REAR + 1.50, mats.fabricSage); // Túi bột giặt lớn 1
-    addBox(groupSite, 6.32, 16.46, Z_REAR + 1.06, 6.74, 16.68, Z_REAR + 1.44, mats.fabricMustard); // Túi bột giặt lớn 2
-    addBox(groupSite, 6.42, 16.74, Z_REAR + 1.06, 6.62, 16.90, Z_REAR + 1.44, mats.fabricBlush); // Can nước xả 1
-    addBox(groupSite, 6.43, 16.94, Z_REAR + 1.06, 6.61, 17.10, Z_REAR + 1.42, mats.fabricNavy); // Can nước giặt 2
-    addBox(groupSite, 6.26, 16.72, Z_REAR + 1.06, 6.40, 17.10, Z_REAR + 1.24, mats.woodOak);
+    addBox(groupSite, 6.21, 16.20, Z_REAR + 0.77, 6.24, 16.72, Z_REAR + 0.88, mats.pianoGloss);
+    addBox(groupSite, 6.20, 16.50, Z_REAR + 0.80, 6.22, 16.66, Z_REAR + 0.85, mats.ledCyanTech);
+    addBox(groupSite, 6.32, 16.13, Z_REAR + 1.06, 6.76, 16.35, Z_REAR + 1.48, mats.fabricSage);
+    addBox(groupSite, 6.34, 16.38, Z_REAR + 1.06, 6.74, 16.56, Z_REAR + 1.42, mats.fabricMustard);
+    addBox(groupSite, 6.44, 16.58, Z_REAR + 1.06, 6.64, 16.74, Z_REAR + 1.42, mats.fabricBlush);
+    addBox(groupSite, 6.24, 16.58, Z_REAR + 1.06, 6.38, 16.80, Z_REAR + 1.24, mats.woodOak);
 
-    // 🚿🚽 PHÒNG TẮM + NHÀ VỆ SINH RỘNG RÃI XÍCH RA THOẢI MÁI TRONG HIÊN SAU (X=4.95..6.95, Y=17.28..21.10 -> 7.64m²!)
-    const RB_H = H1; // Mục 17: Chiều cao Phòng tắm bằng đúng tất cả phòng tầng dưới (chạm trần mái Hiên sau H1=3.30m!)
-    addBox(groupSite, 4.95, 17.28, Z_REAR, 6.95, 21.10, Z_REAR + 0.04, mats.floorTile);
-    addBox(groupSite, 4.95, 17.28, Z_REAR, 6.95, 17.40, RB_H, mats.wallWhite); // Tường Đông
-    addBox(groupSite, 4.95, 20.98, Z_REAR, 6.95, 21.10, RB_H, mats.wallWhite); // Tường Tây
-    addBox(groupSite, 6.83, 17.28, Z_REAR, 6.95, 21.10, RB_H, mats.wallWhite); // Tường Bắc
-    addBox(groupSite, 4.95, 17.28, Z_REAR, 5.07, 17.78, RB_H, mats.wallWhite); // Tường Nam (chừa cửa Y=17.78..18.52)
-    addBox(groupSite, 4.95, 17.78, Z_REAR + 2.14, 5.07, 18.52, RB_H, mats.wallWhite);
-    addBox(groupSite, 4.95, 18.52, Z_REAR, 5.07, 21.10, RB_H, mats.wallWhite); // Tường Nam đối diện Gương & Bồn cầu & Khu tắm
-    // Khung gỗ tối & cửa chính nhà tắm gắn kín gọn trong khung (mặt ngoài hướng Nam, mặt trong hướng Bắc)
-    addBox(groupSite, 4.93, 17.76, Z_REAR, 5.09, 17.81, Z_REAR + 2.16, mats.woodDark);
-    addBox(groupSite, 4.93, 18.49, Z_REAR, 5.09, 18.54, Z_REAR + 2.16, mats.woodDark);
-    addBox(groupSite, 4.93, 17.76, Z_REAR + 2.12, 5.09, 18.54, Z_REAR + 2.18, mats.woodDark);
-    addBox(groupSite, 4.97, 17.81, Z_REAR + 0.04, 5.03, 18.49, Z_REAR + 2.12, mats.woodOak);
-    addBox(groupSite, 4.96, 17.93, Z_REAR + 1.18, 5.04, 18.37, Z_REAR + 1.96, mats.glassBronze);
-    addBox(groupSite, 4.93, 18.36, Z_REAR + 0.96, 4.97, 18.41, Z_REAR + 1.14, mats.gold);
-    addBox(groupSite, 5.03, 18.36, Z_REAR + 0.96, 5.07, 18.41, Z_REAR + 1.14, mats.gold);
-    // 1. Lavabo + Gương LED trên tường Bắc (Y=18.00..18.80) + Kệ trên gương
-    addBox(groupSite, 6.32, 18.02, Z_REAR + 0.16, 6.82, 18.78, Z_REAR + 0.78, mats.woodOak);
-    addBox(groupSite, 6.28, 18.00, Z_REAR + 0.78, 6.83, 18.80, Z_REAR + 0.84, mats.whiteMarble);
-    const rbMir = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.34, 0.03, 24), mats.ledBulbWarm);
+    // 🚿🚽 PHÒNG TẮM + WC GỌN TRONG MỐC 20.0M (X=4.95..6.95, Y=16.92..20.00 -> MỞ CỬA HƯỚNG NAM NHÌN RA XE MÁY & CHUNG TƯỜNG CHÒI BẾP Y=19.88..20.00!)
+    const RB_H = H1;
+    addBox(groupSite, 4.95, 16.92, Z_REAR, 6.95, 19.88, Z_REAR + 0.04, mats.floorTile);
+    addBox(groupSite, 4.95, 16.92, Z_REAR, 6.95, 17.04, RB_H, mats.wallWhite); // Tường Đông kín
+    addBox(groupSite, 6.83, 16.92, Z_REAR, 6.95, 19.88, RB_H, mats.wallWhite);
+    addBox(groupSite, 4.95, 16.92, Z_REAR, 5.07, 17.32, RB_H, mats.wallWhite);
+    addBox(groupSite, 4.95, 17.32, Z_REAR + 2.14, 5.07, 18.10, RB_H, mats.wallWhite);
+    addBox(groupSite, 4.95, 18.10, Z_REAR, 5.07, 19.88, RB_H, mats.wallWhite);
+    // Cửa chính nhà tắm hướng Nam (X=4.95..5.07, Y=17.32..18.10 — mở cửa thấy ngay xe máy!)
+    addBox(groupSite, 4.93, 17.30, Z_REAR, 5.09, 17.35, Z_REAR + 2.16, mats.woodDark);
+    addBox(groupSite, 4.93, 18.07, Z_REAR, 5.09, 18.12, Z_REAR + 2.16, mats.woodDark);
+    addBox(groupSite, 4.93, 17.30, Z_REAR + 2.12, 5.09, 18.12, Z_REAR + 2.18, mats.woodDark);
+    addBox(groupSite, 4.98, 17.35, Z_REAR + 0.04, 5.04, 18.07, Z_REAR + 2.12, mats.woodOak);
+    addBox(groupSite, 4.97, 17.47, Z_REAR + 1.18, 5.05, 17.95, Z_REAR + 1.96, mats.glassBronze);
+    addBox(groupSite, 4.94, 17.94, Z_REAR + 0.96, 4.98, 17.99, Z_REAR + 1.14, mats.gold);
+    addBox(groupSite, 5.04, 17.94, Z_REAR + 0.96, 5.08, 17.99, Z_REAR + 1.14, mats.gold);
+    // 1. Khu khô gọn (Y=17.04..18.36 -> 2.32 m²): Lavabo 60cm & Bồn cầu
+    addBox(groupSite, 6.32, 17.10, Z_REAR + 0.16, 6.82, 17.66, Z_REAR + 0.78, mats.woodOak);
+    addBox(groupSite, 6.28, 17.08, Z_REAR + 0.78, 6.83, 17.68, Z_REAR + 0.84, mats.whiteMarble);
+    const rbMir = new THREE.Mesh(new THREE.CylinderGeometry(0.27, 0.27, 0.03, 24), mats.ledBulbWarm);
     rbMir.rotation.z = Math.PI / 2;
-    rbMir.position.set(6.80, Z_REAR + 1.46, -18.40);
+    rbMir.position.set(6.80, Z_REAR + 1.46, -17.38);
     groupSite.add(rbMir);
-    addBox(groupSite, 6.64, 18.01, Z_REAR + 1.90, 6.83, 18.79, Z_REAR + 1.97, mats.woodOak);
-    // 2. Phía Đông gương: Kệ tường xây CHỮ L kéo dài từ gương sang tường Đông sát tường Nam (bên dưới để thùng & cây lau nhà)
-    addBox(groupSite, 6.35, 17.93, Z_REAR + 0.04, 6.83, 18.00, Z_REAR + 2.32, mats.wallWhite);
-    addBox(groupSite, 6.35, 17.40, Z_REAR + 1.08, 6.83, 17.93, Z_REAR + 1.16, mats.wallWhite);
-    addBox(groupSite, 5.07, 17.40, Z_REAR + 1.08, 6.35, 17.73, Z_REAR + 1.16, mats.wallWhite);
-    addBox(groupSite, 6.35, 17.40, Z_REAR + 2.24, 6.83, 18.00, Z_REAR + 2.32, mats.wallWhite);
-    addBox(groupSite, 5.07, 17.40, Z_REAR + 2.24, 6.35, 17.73, Z_REAR + 2.32, mats.wallWhite);
-    addBox(groupSite, 6.35, 17.41, Z_REAR + 1.16, 6.82, 17.92, Z_REAR + 1.185, mats.woodOak);
-    addBox(groupSite, 5.08, 17.41, Z_REAR + 1.16, 6.35, 17.72, Z_REAR + 1.185, mats.woodOak);
-    addBox(groupSite, 6.44, 17.45, Z_REAR + 1.185, 6.76, 17.71, Z_REAR + 1.42, mats.woodOak);
-    addBox(groupSite, 6.46, 17.74, Z_REAR + 1.185, 6.74, 17.90, Z_REAR + 1.32, mats.fabricSage);
-    addBox(groupSite, 5.92, 17.44, Z_REAR + 1.185, 6.28, 17.68, Z_REAR + 1.40, mats.woodOak);
-    addBox(groupSite, 5.56, 17.45, Z_REAR + 1.185, 5.84, 17.67, Z_REAR + 1.33, mats.fabricBlush);
-    addBox(groupSite, 5.20, 17.46, Z_REAR + 1.185, 5.44, 17.65, Z_REAR + 1.30, mats.wallWhite);
-    addBox(groupSite, 6.42, 17.47, Z_REAR + 0.04, 6.76, 17.85, Z_REAR + 0.34, mats.fabricNavy); // Thùng lau nhà bên dưới
-    addBox(groupSite, 6.45, 17.49, Z_REAR + 0.30, 6.73, 17.65, Z_REAR + 0.38, mats.metalStainless);
-    addBox(groupSite, 6.57, 17.55, Z_REAR + 0.38, 6.61, 17.59, Z_REAR + 1.04, mats.metalStainless);
-    // 3. Phía Tây gương: Bồn cầu (tường Bắc, mặt hướng Nam) + bức tường ngang nhô ra phía trên để giấy & chai Vim (Y=18.80..19.60)
-    addBox(groupSite, 6.56, 18.99, Z_REAR + 0.40, 6.81, 19.41, Z_REAR + 0.84, mats.wallWhite);
-    addBox(groupSite, 6.18, 19.01, Z_REAR + 0.04, 6.56, 19.39, Z_REAR + 0.48, mats.wallWhite);
-    addBox(groupSite, 6.64, 18.86, Z_REAR + 1.18, 6.83, 19.56, Z_REAR + 1.25, mats.wallWhite);
-    addBox(groupSite, 6.65, 18.87, Z_REAR + 1.25, 6.82, 19.55, Z_REAR + 1.27, mats.woodOak);
-    addBox(groupSite, 6.69, 18.94, Z_REAR + 1.27, 6.77, 19.16, Z_REAR + 1.39, mats.wallWhite); // Giấy vệ sinh
-    addBox(groupSite, 6.69, 19.32, Z_REAR + 1.27, 6.77, 19.40, Z_REAR + 1.52, mats.fabricNavy); // Chai Vim
-    // 4. Đối diện gương & bồn cầu (tường Nam Y=18.56..19.58): Cây treo đồ khô gọn trong khu khô
-    addBox(groupSite, 5.07, 18.56, Z_REAR + 1.56, 5.10, 19.58, Z_REAR + 1.68, mats.woodOak);
-    addBox(groupSite, 5.23, 18.58, Z_REAR + 1.61, 5.26, 19.56, Z_REAR + 1.64, mats.metalStainless);
-    addBox(groupSite, 5.21, 18.62, Z_REAR + 1.00, 5.27, 18.82, Z_REAR + 1.56, mats.fabricNavy);
-    addBox(groupSite, 5.21, 18.90, Z_REAR + 1.04, 5.27, 19.10, Z_REAR + 1.56, mats.fabricWarm);
-    addBox(groupSite, 5.21, 19.16, Z_REAR + 0.98, 5.27, 19.36, Z_REAR + 1.56, mats.fabricSage);
-    addBox(groupSite, 5.21, 19.38, Z_REAR + 1.06, 5.27, 19.56, Z_REAR + 1.56, mats.fabricBlush);
-    // 5. KHU TẮM ƯỚT RỘNG RÃI KHÔNG VÁCH NGĂN (X=5.07..6.83, Y=19.65..20.98 -> 2.34m²) + CỬA TẮM KÍNH NGĂN KHU BỒN CẦU & LAVABO!
-    addBox(groupSite, 5.07, 19.65, Z_REAR + 0.04, 6.83, 20.98, Z_REAR + 0.13, mats.stepStone); // Nền khu tắm rộng cao hơn +9cm
-    addBox(groupSite, 5.07, 19.61, Z_REAR + 0.04, 6.83, 19.69, Z_REAR + 0.135, mats.wallStone); // Gờ đá chống trơn
-    addBox(groupSite, 6.01, 19.41, Z_REAR + 0.04, 6.11, 19.51, Z_REAR + 0.048, mats.metalStainless); // Phễu thoát sàn khu khô
-    // 5.1 Cửa tắm trượt kính cường lực khung nhôm đen chia ô ngăn giữa chỗ tắm và sàn bồn cầu/lavabo ngoài (Y=19.65, suốt X=5.07..6.83)
-    addBox(groupSite, 5.07, 19.61, Z_REAR + 2.13, 6.83, 19.71, Z_REAR + 2.19, mats.metalStainless); // Thanh ray trượt inox trên cùng
-    addBox(groupSite, 5.07, 19.62, Z_REAR + 0.13, 6.83, 19.70, Z_REAR + 0.175, mats.metalBlack); // Nẹp chân chặn nước
-    addBox(groupSite, 6.78, 19.61, Z_REAR + 0.135, 6.83, 19.70, Z_REAR + 2.14, mats.metalBlack);
-    addBox(groupSite, 5.07, 19.61, Z_REAR + 0.135, 5.12, 19.70, Z_REAR + 2.14, mats.metalBlack);
-    addBox(groupSite, 5.95, 19.63, Z_REAR + 0.17, 6.78, 19.655, Z_REAR + 2.13, mats.glassBronze); // Vách kính cố định phía Bắc
-    addBox(groupSite, 5.92, 19.61, Z_REAR + 0.135, 5.97, 19.67, Z_REAR + 2.14, mats.metalBlack);
-    addBox(groupSite, 5.95, 19.62, Z_REAR + 0.84, 6.78, 19.665, Z_REAR + 0.88, mats.metalBlack);
-    addBox(groupSite, 5.95, 19.62, Z_REAR + 1.50, 6.78, 19.665, Z_REAR + 1.54, mats.metalBlack);
-    addBox(groupSite, 5.14, 19.665, Z_REAR + 0.18, 5.93, 19.695, Z_REAR + 2.10, mats.glassBronze); // Cánh cửa tắm trượt gắn khít ray
-    addBox(groupSite, 5.11, 19.655, Z_REAR + 0.16, 5.16, 19.705, Z_REAR + 2.13, mats.metalBlack);
-    addBox(groupSite, 5.91, 19.655, Z_REAR + 0.16, 5.96, 19.705, Z_REAR + 2.13, mats.metalBlack);
-    addBox(groupSite, 5.11, 19.655, Z_REAR + 0.16, 5.96, 19.705, Z_REAR + 0.21, mats.metalBlack);
-    addBox(groupSite, 5.11, 19.655, Z_REAR + 2.08, 5.96, 19.705, Z_REAR + 2.13, mats.metalBlack);
-    addBox(groupSite, 5.14, 19.66, Z_REAR + 0.84, 5.93, 19.70, Z_REAR + 0.88, mats.metalBlack);
-    addBox(groupSite, 5.14, 19.66, Z_REAR + 1.50, 5.93, 19.70, Z_REAR + 1.54, mats.metalBlack);
-    addBox(groupSite, 5.80, 19.60, Z_REAR + 0.92, 5.84, 19.63, Z_REAR + 1.38, mats.gold); // Tay nắm cửa tắm ngoài
-    addBox(groupSite, 5.80, 19.73, Z_REAR + 0.92, 5.84, 19.76, Z_REAR + 1.38, mats.gold); // Tay nắm cửa tắm trong
-    // 5.2 Thiết bị khu tắm rộng rãi (ĐÃ BỎ VÁCH NGĂN): Sen cây + 2 khung ô + Vòi nước thấp xả mạnh + Thau giặt/múc tắm!
-    addBox(groupSite, 5.65, 20.78, Z_REAR + 0.13, 6.25, 20.83, Z_REAR + 0.138, mats.metalStainless); // Phễu thoát sàn dài
-    addBox(groupSite, 6.72, 20.41, Z_REAR + 1.02, 6.83, 20.63, Z_REAR + 1.09, mats.metalStainless); // Bộ trộn nóng lạnh
-    addBox(groupSite, 6.74, 20.50, Z_REAR + 1.08, 6.78, 20.54, Z_REAR + 2.14, mats.metalStainless); // Ống sen đứng
-    addBox(groupSite, 6.42, 20.50, Z_REAR + 2.08, 6.77, 20.54, Z_REAR + 2.14, mats.metalStainless); // Tay sen mưa
-    // Vòi nước thấp hơn & xả mạnh hơn vòi hoa sen (Z_REAR+0.56m) + thau inox giặt đồ / múc tắm thoải mái!
-    addBox(groupSite, 6.58, 20.495, Z_REAR + 0.54, 6.83, 20.545, Z_REAR + 0.59, mats.metalStainless);
-    addBox(groupSite, 6.58, 20.50, Z_REAR + 0.48, 6.62, 20.54, Z_REAR + 0.56, mats.metalStainless);
-    addBox(groupSite, 6.65, 20.505, Z_REAR + 0.59, 6.77, 20.535, Z_REAR + 0.625, mats.gold);
+    addBox(groupSite, 6.64, 17.10, Z_REAR + 1.90, 6.83, 17.66, Z_REAR + 1.97, mats.woodOak);
+    addBox(groupSite, 6.56, 17.84, Z_REAR + 0.40, 6.81, 18.22, Z_REAR + 0.84, mats.wallWhite);
+    addBox(groupSite, 6.18, 17.85, Z_REAR + 0.04, 6.56, 18.21, Z_REAR + 0.48, mats.wallWhite);
+    addBox(groupSite, 6.64, 17.76, Z_REAR + 1.18, 6.83, 18.30, Z_REAR + 1.25, mats.wallWhite);
+    addBox(groupSite, 6.65, 17.77, Z_REAR + 1.25, 6.82, 18.29, Z_REAR + 1.27, mats.woodOak);
+    addBox(groupSite, 6.69, 17.82, Z_REAR + 1.27, 6.77, 18.02, Z_REAR + 1.39, mats.wallWhite);
+    addBox(groupSite, 6.69, 18.13, Z_REAR + 1.27, 6.77, 18.21, Z_REAR + 1.52, mats.fabricNavy);
+    addBox(groupSite, 5.16, 17.04, Z_REAR + 1.56, 6.12, 17.07, Z_REAR + 1.68, mats.woodOak); // Cây treo đồ khô trên tường Đông
+    addBox(groupSite, 5.18, 17.20, Z_REAR + 1.61, 6.10, 17.23, Z_REAR + 1.64, mats.metalStainless);
+    addBox(groupSite, 5.23, 17.18, Z_REAR + 1.04, 5.41, 17.24, Z_REAR + 1.56, mats.fabricNavy);
+    addBox(groupSite, 5.53, 17.18, Z_REAR + 1.06, 5.71, 17.24, Z_REAR + 1.56, mats.fabricWarm);
+    addBox(groupSite, 5.83, 17.18, Z_REAR + 1.02, 6.01, 17.24, Z_REAR + 1.56, mats.fabricSage);
+    addBox(groupSite, 5.16, 17.04, Z_REAR + 1.98, 6.12, 17.34, Z_REAR + 2.04, mats.woodOak);
+    addBox(groupSite, 5.58, 17.06, Z_REAR + 0.04, 5.94, 17.36, Z_REAR + 0.34, mats.fabricNavy);
+    addBox(groupSite, 5.67, 17.18, Z_REAR + 0.34, 5.71, 17.22, Z_REAR + 1.04, mats.metalStainless);
+    // 2. Chỗ tắm rộng hơn khu khô (Y=18.36..19.88 -> 2.68 m²): Gờ chắn nước xây cao chống tràn (Z_REAR+0.22) + Vách tường đặc 1 nửa che kín Bồn cầu + 1 cửa kính mờ đục!
+    const matFrostedGlass = new THREE.MeshStandardMaterial({ color: 0xe4edf2, roughness: 0.55, transparent: true, opacity: 0.92 });
+    addBox(groupSite, 5.07, 18.36, Z_REAR + 0.04, 6.83, 19.88, Z_REAR + 0.13, mats.stepStone);
+    addBox(groupSite, 5.07, 18.30, Z_REAR + 0.04, 6.83, 18.42, Z_REAR + 0.22, mats.wallStone); // Gờ chắn nước cao chống tràn!
+    addBox(groupSite, 6.01, 18.15, Z_REAR + 0.04, 6.11, 18.25, Z_REAR + 0.048, mats.metalStainless);
+    addBox(groupSite, 5.92, 18.30, Z_REAR + 0.04, 6.83, 18.42, RB_H, mats.wallWhite); // Tường xây đặc che kín bồn cầu!
+    addBox(groupSite, 5.07, 18.30, Z_REAR + 2.14, 5.92, 18.42, RB_H, mats.wallWhite);
+    addBox(groupSite, 5.07, 18.29, Z_REAR + 0.22, 5.12, 18.43, Z_REAR + 2.15, mats.metalBlack);
+    addBox(groupSite, 5.88, 18.29, Z_REAR + 0.22, 5.93, 18.43, Z_REAR + 2.15, mats.metalBlack);
+    addBox(groupSite, 5.07, 18.29, Z_REAR + 2.11, 5.93, 18.43, Z_REAR + 2.16, mats.metalBlack);
+    addBox(groupSite, 5.12, 18.34, Z_REAR + 0.24, 5.88, 18.39, Z_REAR + 2.11, matFrostedGlass); // 1 cửa duy nhất kính mờ đục
+    addBox(groupSite, 5.12, 18.33, Z_REAR + 0.22, 5.88, 18.40, Z_REAR + 0.42, mats.metalBlack);
+    addBox(groupSite, 5.12, 18.335, Z_REAR + 1.15, 5.88, 18.395, Z_REAR + 1.19, mats.metalBlack);
+    addBox(groupSite, 5.76, 18.28, Z_REAR + 0.94, 5.80, 18.31, Z_REAR + 1.32, mats.gold);
+    addBox(groupSite, 5.76, 18.42, Z_REAR + 0.94, 5.80, 18.45, Z_REAR + 1.32, mats.gold);
+    addBox(groupSite, 5.65, 19.64, Z_REAR + 0.13, 6.25, 19.69, Z_REAR + 0.138, mats.metalStainless);
+    addBox(groupSite, 6.72, 19.23, Z_REAR + 1.02, 6.83, 19.45, Z_REAR + 1.09, mats.metalStainless);
+    addBox(groupSite, 6.74, 19.32, Z_REAR + 1.08, 6.78, 19.36, Z_REAR + 2.14, mats.metalStainless);
+    addBox(groupSite, 6.42, 19.32, Z_REAR + 2.08, 6.77, 19.36, Z_REAR + 2.14, mats.metalStainless);
+    addBox(groupSite, 6.58, 19.315, Z_REAR + 0.54, 6.83, 19.365, Z_REAR + 0.59, mats.metalStainless);
+    addBox(groupSite, 6.58, 19.32, Z_REAR + 0.48, 6.62, 19.36, Z_REAR + 0.56, mats.metalStainless);
+    addBox(groupSite, 6.65, 19.325, Z_REAR + 0.59, 6.77, 19.355, Z_REAR + 0.625, mats.gold);
     const bathWashTub = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.21, 0.23, 20), mats.fabricSage);
-    bathWashTub.position.set(6.40, Z_REAR + 0.245, -20.52);
+    bathWashTub.position.set(6.40, Z_REAR + 0.245, -19.34);
     groupSite.add(bathWashTub);
     const bathStool = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.15, 0.23, 14), mats.woodOak);
-    bathStool.position.set(5.56, Z_REAR + 0.245, -20.48);
+    bathStool.position.set(5.56, Z_REAR + 0.245, -19.24);
     groupSite.add(bathStool);
-    // 2 khung ô tường xây trên tường Bắc (X=6.67..6.83, Y=19.80..20.28)
-    addBox(groupSite, 6.67, 19.80, Z_REAR + 0.94, 6.83, 19.85, Z_REAR + 1.78, mats.wallWhite);
-    addBox(groupSite, 6.67, 20.23, Z_REAR + 0.94, 6.83, 20.28, Z_REAR + 1.78, mats.wallWhite);
-    addBox(groupSite, 6.67, 19.80, Z_REAR + 0.94, 6.83, 20.28, Z_REAR + 0.99, mats.wallWhite);
-    addBox(groupSite, 6.67, 19.80, Z_REAR + 1.33, 6.83, 20.28, Z_REAR + 1.38, mats.wallWhite);
-    addBox(groupSite, 6.67, 19.80, Z_REAR + 1.73, 6.83, 20.28, Z_REAR + 1.78, mats.wallWhite);
-    addBox(groupSite, 6.68, 19.85, Z_REAR + 0.99, 6.82, 20.23, Z_REAR + 1.01, mats.woodOak);
-    addBox(groupSite, 6.68, 19.85, Z_REAR + 1.38, 6.82, 20.23, Z_REAR + 1.40, mats.woodOak);
-    // 5.3 Rãnh thu nước dốc & 3 ống thoát xuyên tường Tây thải thẳng ra phía sau (Tắm + Lavabo/Bồn cầu + Máy giặt)
-    addBox(groupSite, 4.95, 21.10, Z_REAR - 0.06, 6.95, 21.35, Z_REAR + 0.005, mats.wallStone);
-    addBox(groupSite, 5.02, 21.14, Z_REAR + 0.003, 6.88, 21.31, Z_REAR + 0.014, mats.metalStainless);
-    [[6.20, 0.06], [5.85, 0.025], [5.30, 0.050]].forEach(([px, pz]) => {
-      addBox(groupSite, px - 0.03, 20.97, Z_REAR + pz - 0.03, px + 0.03, 21.29, Z_REAR + pz + 0.03, mats.wallStone);
-    });
+    addBox(groupSite, 6.67, 18.56, Z_REAR + 0.94, 6.83, 18.61, Z_REAR + 1.78, mats.wallWhite);
+    addBox(groupSite, 6.67, 19.01, Z_REAR + 0.94, 6.83, 19.06, Z_REAR + 1.78, mats.wallWhite);
+    addBox(groupSite, 6.67, 18.56, Z_REAR + 0.94, 6.83, 19.06, Z_REAR + 0.99, mats.wallWhite);
+    addBox(groupSite, 6.67, 18.56, Z_REAR + 1.33, 6.83, 19.06, Z_REAR + 1.38, mats.wallWhite);
+    addBox(groupSite, 6.67, 18.56, Z_REAR + 1.73, 6.83, 19.06, Z_REAR + 1.78, mats.wallWhite);
+    addBox(groupSite, 6.68, 18.61, Z_REAR + 0.99, 6.82, 19.01, Z_REAR + 1.01, mats.woodOak);
+    addBox(groupSite, 6.68, 18.61, Z_REAR + 1.38, 6.82, 19.01, Z_REAR + 1.40, mats.woodOak);
 
-    // 🚰🧥 PHÍA NGOÀI TƯỜNG NAM GẦN CỬA NHÀ TẮM (X=4.95, Y=18.68..20.48) — VÒI NƯỚC LAU NHÀ + TẤM ĐỤC LỖ PEGBOARD TREO ÁO MƯA & MŨ BẢO HIỂM!
-    addBox(groupSite, 4.58, 18.68, Z_REAR, 4.95, 19.08, Z_REAR + 0.02, mats.wallStone); // Ô thu nước dưới vòi
-    addBox(groupSite, 4.66, 18.78, Z_REAR + 0.018, 4.86, 18.98, Z_REAR + 0.026, mats.metalStainless);
-    addBox(groupSite, 4.74, 18.865, Z_REAR + 0.545, 4.95, 18.895, Z_REAR + 0.575, mats.metalStainless); // Ống vòi lau nhà hướng Nam
-    addBox(groupSite, 4.74, 18.865, Z_REAR + 0.49, 4.77, 18.895, Z_REAR + 0.56, mats.metalStainless); // Miệng vòi
-    addBox(groupSite, 4.79, 18.865, Z_REAR + 0.575, 4.89, 18.895, Z_REAR + 0.605, mats.ledRedCam); // Tay vặn van đỏ
-    // Tấm đục lỗ Pegboard + kệ mũ bảo hiểm + thanh móc treo áo mưa ngay bên trên tường Nam
-    addBox(groupSite, 4.90, 18.70, Z_REAR + 1.26, 4.95, 20.48, Z_REAR + 2.06, mats.woodDark);
-    addBox(groupSite, 4.89, 18.74, Z_REAR + 1.30, 4.92, 20.44, Z_REAR + 2.02, mats.woodOak);
+    // 🧥 PHÍA NGOÀI TƯỜNG NAM NHÀ TẮM (X=4.95, Y=18.22..19.72) — CHỈ GIỮ PEGBOARD ÁO MƯA/MŨ (ĐÃ BỎ VÒI NƯỚC NGOÀI SÁT TƯỜNG TẮM!)
+    addBox(groupSite, 4.90, 18.22, Z_REAR + 1.26, 4.95, 19.72, Z_REAR + 2.06, mats.woodDark);
+    addBox(groupSite, 4.89, 18.26, Z_REAR + 1.30, 4.92, 19.68, Z_REAR + 2.02, mats.woodOak);
     for (let phr = 0; phr < 4; phr++) {
       const phz = Z_REAR + 1.40 + phr * 0.16;
-      for (let phc = 0; phc < 9; phc++) {
-        const phy = 18.86 + phc * 0.18;
+      for (let phc = 0; phc < 8; phc++) {
+        const phy = 18.36 + phc * 0.175;
         addBox(groupSite, 4.882, phy - 0.014, phz - 0.014, 4.892, phy + 0.014, phz + 0.014, mats.metalBlack);
       }
     }
-    addBox(groupSite, 4.66, 19.40, Z_REAR + 1.76, 4.91, 20.38, Z_REAR + 1.80, mats.metalBlack); // Kệ mũ bảo hiểm
-    [[19.65, mats.wallWhite], [20.12, mats.fabricNavy]].forEach(([hy, hmat]) => {
+    addBox(groupSite, 4.66, 18.76, Z_REAR + 1.76, 4.91, 19.64, Z_REAR + 1.80, mats.metalBlack);
+    [[18.98, mats.wallWhite], [19.40, mats.fabricNavy]].forEach(([hy, hmat]) => {
       const hlm = new THREE.Mesh(new THREE.SphereGeometry(0.13, 12, 10), hmat);
       hlm.position.set(4.78, Z_REAR + 1.92, -hy);
       groupSite.add(hlm);
     });
-    addBox(groupSite, 4.78, 18.82, Z_REAR + 1.72, 4.90, 19.22, Z_REAR + 1.82, mats.metalBlack); // Khay chìa khóa/găng tay
-    addBox(groupSite, 4.82, 18.78, Z_REAR + 1.43, 4.85, 20.38, Z_REAR + 1.46, mats.metalStainless); // Thanh móc áo mưa
-    [18.92, 19.26, 19.60, 19.94, 20.26].forEach(rhy => {
+    addBox(groupSite, 4.78, 18.32, Z_REAR + 1.72, 4.90, 18.66, Z_REAR + 1.82, mats.metalBlack);
+    addBox(groupSite, 4.82, 18.30, Z_REAR + 1.43, 4.85, 19.64, Z_REAR + 1.46, mats.metalStainless);
+    [18.42, 18.72, 19.02, 19.32, 19.56].forEach(rhy => {
       addBox(groupSite, 4.78, rhy - 0.012, Z_REAR + 1.40, 4.85, rhy + 0.012, Z_REAR + 1.45, mats.gold);
     });
-    addBox(groupSite, 4.76, 19.12, Z_REAR + 0.78, 4.85, 19.44, Z_REAR + 1.42, mats.fabricSage); // Áo mưa 1
-    addBox(groupSite, 4.76, 19.50, Z_REAR + 0.82, 4.85, 19.82, Z_REAR + 1.42, mats.fabricMustard); // Áo mưa 2
+    addBox(groupSite, 4.76, 18.56, Z_REAR + 0.78, 4.85, 18.88, Z_REAR + 1.42, mats.fabricSage);
+    addBox(groupSite, 4.76, 18.94, Z_REAR + 0.82, 4.85, 19.26, Z_REAR + 1.42, mats.fabricMustard);
 
-    // 👕🥬 VƯỜN RAU TỰ NHIÊN KHÔNG BÊ TÔNG & CÂY PHƠI ĐỒ HÀNG NGANG ĐỔI SANG PHÍA NAM (X=0.00..3.30, Y=21.35..24.00 — ĐÓN NẮNG NAM!)
+    // 👕🥬 VƯỜN RAU VỪA ĐỦ & CÂY PHƠI ĐỒ HÀNG NGANG PHÍA NAM (X=0.00..3.30, Y=20.00..22.50)
     const rearClothMats = [mats.wallWhite, mats.fabricSage, mats.fabricNavy, mats.fabricBlush, mats.fabricMustard];
-    [22.62, 23.32].forEach((ly, li) => {
+    [20.78, 21.58].forEach((ly, li) => {
       addBox(groupSite, 0.00, ly - 0.055, Z_REAR + 1.84, 0.04, ly + 0.055, Z_REAR + 1.96, mats.metalStainless);
       addBox(groupSite, 3.25, ly - 0.028, Z_REAR + 1.15, 3.31, ly + 0.028, Z_REAR + 1.98, mats.metalStainless);
       addBox(groupSite, 3.23, ly - 0.055, Z_REAR + 1.84, 3.28, ly + 0.055, Z_REAR + 1.96, mats.metalStainless);
@@ -1389,48 +1435,46 @@
         addBox(groupSite, cx - 0.20, ly - 0.022, Z_REAR + 1.26, cx + 0.20, ly + 0.022, Z_REAR + 1.87, rearClothMats[(li * 4 + ci) % 5]);
       });
     });
-    // 3 luống đất trồng rau xanh tự nhiên phía Nam (X=0.22..2.58 — KHÔNG bê tông!)
-    [21.52, 22.32, 23.12].forEach((dvy, dvi) => {
-      addBox(groupSite, 0.22, dvy, Z_REAR - 0.04, 2.58, dvy + 0.54, Z_REAR + 0.08, soilGardenMat);
+    [20.18, 20.94, 21.70].forEach((dvy, dvi) => {
+      addBox(groupSite, 0.22, dvy, Z_SOIL, 2.58, dvy + 0.54, Z_SOIL + 0.12, soilGardenMat);
       for (let dvc = 0; dvc < 5; dvc++) {
         const dvLeaf = new THREE.Mesh(new THREE.SphereGeometry(0.135, 8, 8), (dvi + dvc) % 2 === 0 ? mats.foliageLime : mats.foliageGreen);
-        dvLeaf.position.set(0.46 + dvc * 0.44, Z_REAR + 0.16, -(dvy + 0.27));
+        dvLeaf.position.set(0.46 + dvc * 0.44, Z_SOIL + 0.20, -(dvy + 0.27));
         groupSite.add(dvLeaf);
       }
     });
 
-    // ☕ Bàn ghế chill phía sau (CHỈ 1 ghế dài + 1 bàn tròn) — phía Nam bậc thang cửa sau, tựa tường Đông hướng Tây ra Vườn rau!
-    addBox(groupSite, 1.85, 16.00, Z_REAR, 3.48, 17.90, Z_REAR + 0.02, mats.woodOak);
-    addBox(groupSite, 1.94, 16.08, Z_REAR + 0.02, 3.44, 16.64, Z_REAR + 0.38, mats.woodOak);
+    // ☕ Bàn ghế chill phía sau (1 ghế dài + 1 bàn tròn, Y=16.0..17.72)
+    addBox(groupSite, 1.85, 16.00, Z_REAR, 3.48, 17.72, Z_REAR + 0.02, mats.woodOak);
+    addBox(groupSite, 1.94, 16.08, Z_REAR + 0.02, 3.44, 16.60, Z_REAR + 0.38, mats.woodOak);
     addBox(groupSite, 1.94, 16.00, Z_REAR + 0.38, 3.44, 16.09, Z_REAR + 0.98, mats.woodSlats);
-    addBox(groupSite, 1.98, 16.10, Z_REAR + 0.38, 3.40, 16.60, Z_REAR + 0.46, mats.fabricMustard);
-    const rearRoundTop = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.42, 0.05, 24), mats.whiteMarble);
-    rearRoundTop.position.set(2.69, Z_REAR + 0.485, -17.28);
+    addBox(groupSite, 1.98, 16.10, Z_REAR + 0.38, 3.40, 16.56, Z_REAR + 0.46, mats.fabricMustard);
+    const rearRoundTop = new THREE.Mesh(new THREE.CylinderGeometry(0.40, 0.40, 0.05, 24), mats.whiteMarble);
+    rearRoundTop.position.set(2.69, Z_REAR + 0.485, -17.16);
     groupSite.add(rearRoundTop);
     const rearRoundLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.12, 0.44, 16), mats.metalBlack);
-    rearRoundLeg.position.set(2.69, Z_REAR + 0.24, -17.28);
+    rearRoundLeg.position.set(2.69, Z_REAR + 0.24, -17.16);
     groupSite.add(rearRoundLeg);
-    // 🛵 Xe máy dựng gần nhà tắm & ngay dưới tấm Pegboard treo áo mưa/mũ: đầu hướng Bắc (+X), bánh sau hướng Nam (-X)!
-    addBox(groupSite, 3.25, 19.58, Z_REAR + 0.27, 4.52, 20.04, Z_REAR + 0.80, mats.wallWhite);
-    addBox(groupSite, 3.36, 19.62, Z_REAR + 0.77, 4.12, 20.00, Z_REAR + 0.89, mats.woodDark);
-    addBox(groupSite, 4.38, 19.48, Z_REAR + 1.02, 4.48, 20.14, Z_REAR + 1.10, mats.metalBlack);
-    addBox(groupSite, 4.49, 19.73, Z_REAR + 0.86, 4.53, 19.89, Z_REAR + 0.96, mats.ledBulbWarm);
+    // 🛵 Xe máy dựng ngay trước cửa nhà tắm hướng Nam (X=3.05..4.32, Y=18.05..18.55 — tách xa khu rửa chén 1.57m!)
+    addBox(groupSite, 3.05, 18.08, Z_REAR + 0.27, 4.32, 18.54, Z_REAR + 0.80, mats.wallWhite);
+    addBox(groupSite, 3.16, 18.12, Z_REAR + 0.77, 3.92, 18.50, Z_REAR + 0.89, mats.woodDark);
+    addBox(groupSite, 4.18, 17.98, Z_REAR + 1.02, 4.28, 18.64, Z_REAR + 1.10, mats.metalBlack);
+    addBox(groupSite, 4.29, 18.23, Z_REAR + 0.86, 4.33, 18.39, Z_REAR + 0.96, mats.ledBulbWarm);
 
-    // 🫧 Nơi rửa chén ngoài trời hiên sau (X=0.00..2.75, Y=19.15..21.05 — VÒI RỬA GẮN TƯỜNG PHÍA NAM X=0.00, KHÔNG GẮN CHÍNH GIỮA!)
-    addBox(groupSite, 0.00, 19.15, Z_REAR, 2.75, 21.05, Z_REAR + 0.03, mats.stepStone);
-    addBox(groupSite, 0.04, 19.50, Z_REAR + 0.01, 0.26, 21.05, Z_REAR + 0.04, mats.wallStone);
-    addBox(groupSite, 0.08, 19.56, Z_REAR + 0.038, 0.22, 20.98, Z_REAR + 0.048, mats.metalStainless);
-    addBox(groupSite, 0.04, 20.92, Z_REAR + 0.01, 2.70, 21.06, Z_REAR + 0.045, mats.wallStone);
-    addBox(groupSite, 0.12, 20.95, Z_REAR + 0.042, 2.64, 21.03, Z_REAR + 0.052, mats.metalStainless);
-    // Ốp tường & 2 vòi nước gắn trực tiếp vào TƯỜNG PHÍA NAM (X=0.00, hướng ra Bắc +X)
-    addBox(groupSite, 0.00, 19.55, Z_REAR + 0.03, 0.06, 20.68, Z_REAR + 0.72, mats.wallCream);
-    addBox(groupSite, 0.00, 19.54, Z_REAR + 0.72, 0.08, 20.69, Z_REAR + 0.75, mats.wallStone);
-    [19.82, 20.38].forEach(ty => {
+    // 🫧 Nơi rửa chén hiên sau thu hẹp gọn tới chỗ ngồi rửa chén (X=0.00..1.48, Y=18.10..19.90 — tách xa xe máy 1.57m!)
+    addBox(groupSite, 0.00, 18.10, Z_REAR, 1.48, 19.90, Z_REAR + 0.03, mats.stepStone);
+    addBox(groupSite, 0.04, 18.42, Z_REAR + 0.01, 0.26, 19.90, Z_REAR + 0.04, mats.wallStone);
+    addBox(groupSite, 0.08, 18.48, Z_REAR + 0.038, 0.22, 19.84, Z_REAR + 0.048, mats.metalStainless);
+    addBox(groupSite, 0.04, 19.77, Z_REAR + 0.01, 1.44, 19.91, Z_REAR + 0.045, mats.wallStone);
+    addBox(groupSite, 0.12, 19.80, Z_REAR + 0.042, 1.38, 19.88, Z_REAR + 0.052, mats.metalStainless);
+    addBox(groupSite, 0.00, 18.45, Z_REAR + 0.03, 0.06, 19.56, Z_REAR + 0.72, mats.wallCream);
+    addBox(groupSite, 0.00, 18.44, Z_REAR + 0.72, 0.08, 19.57, Z_REAR + 0.75, mats.wallStone);
+    [18.72, 19.26].forEach(ty => {
       addBox(groupSite, 0.06, ty - 0.015, Z_REAR + 0.425, 0.22, ty + 0.015, Z_REAR + 0.455, mats.metalStainless);
       addBox(groupSite, 0.195, ty - 0.015, Z_REAR + 0.36, 0.225, ty + 0.015, Z_REAR + 0.44, mats.metalStainless);
       addBox(groupSite, 0.11, ty - 0.035, Z_REAR + 0.46, 0.16, ty + 0.035, Z_REAR + 0.485, mats.metalBlack);
     });
-    [19.82, 20.38].forEach(by => {
+    [18.72, 19.26].forEach(by => {
       const bsn = new THREE.Mesh(new THREE.CylinderGeometry(0.27, 0.22, 0.19, 18), mats.metalStainless);
       bsn.position.set(0.48, Z_REAR + 0.125, -by);
       groupSite.add(bsn);
@@ -1438,90 +1482,82 @@
       st.position.set(1.06, Z_REAR + 0.155, -by);
       groupSite.add(st);
     });
-    addBox(groupSite, 0.22, 19.20, Z_REAR + 0.03, 0.68, 19.52, Z_REAR + 0.24, mats.woodOak);
+    addBox(groupSite, 0.22, 18.14, Z_REAR + 0.03, 0.68, 18.44, Z_REAR + 0.24, mats.woodOak);
 
-    // 🔥🪵 MỤC 16, 17, 18, 20 & 21: CHÒI BẾP PHÍA BẮC CÙNG PHÍA NHÀ TẮM (X=3.30..7.00, Y=21.45..24.00 -> 9.44m²), CAO BẰNG H1=3.30M!
-    // - Mục 20: CỬA CHÍNH CHÒI BẾP đặt trên mặt tường giáp HIÊN SAU (Y=21.45..21.57, X=3.60..4.50) để mở ra bước thẳng vào Hiên sau có mái che!
-    // - Tường phía Nam (X=3.30..3.42, Y=21.57..24.00) làm tường lửng suốt chiều dài thoát khói!
-    addBox(groupSite, 3.30, 21.45, 0.0, 7.00, 24.00, Z_REAR + 0.03, mats.paver);
-    addBox(groupSite, 3.45, 21.35, 0.0, 4.65, 21.46, Z_REAR + 0.03, mats.stepStone); // Bậc thềm nối thẳng vào Hiên sau
-    addBox(groupSite, 3.30, 21.45, Z_REAR, 3.60, 21.57, H1, mats.wallWhite);
-    addBox(groupSite, 3.60, 21.45, Z_REAR + 2.14, 4.50, 21.57, H1, mats.wallWhite);
-    addBox(groupSite, 4.50, 21.45, Z_REAR, 7.00, 21.57, H1, mats.wallWhite);
-    addBox(groupSite, 3.57, 21.44, Z_REAR, 3.63, 21.58, Z_REAR + 2.16, mats.woodDark); // Khung cửa chính Chòi bếp mở thẳng vào Hiên sau!
-    addBox(groupSite, 4.47, 21.44, Z_REAR, 4.53, 21.58, Z_REAR + 2.16, mats.woodDark);
-    addBox(groupSite, 3.57, 21.44, Z_REAR + 2.12, 4.53, 21.58, Z_REAR + 2.18, mats.woodDark);
-    addBox(groupSite, 6.94, 21.45, 2.35, 7.00, 24.00, H1, mats.wallWhite);
-    addBox(groupSite, 3.30, 23.94, 2.35, 7.00, 24.00, H1, mats.wallWhite);
-    addBox(groupSite, 3.30, 21.57, Z_REAR, 3.42, 24.00, Z_REAR + 1.15, mats.wallWhite); // Tường lửng Nam suốt chiều dài thoáng khói
-    addBox(groupSite, 3.28, 21.57, Z_REAR + 1.15, 3.44, 24.00, Z_REAR + 1.19, mats.wallStone);
-    addBox(groupSite, 3.30, 23.84, Z_REAR + 1.19, 3.44, 24.00, H1, mats.wallWhite);
-    // Mục 15.1: Ngăn bếp gas áp TƯỜNG HƯỚNG BẮC (X=6.22..6.94, Y=21.59..23.94 — người nấu mặt hướng Bắc, lưng hướng Nam!)
-    addBox(groupSite, 6.22, 21.59, Z_REAR + 0.76, 6.94, 23.94, Z_REAR + 0.84, mats.stepStone);
-    addBox(groupSite, 6.22, 21.59, Z_REAR + 0.03, 6.94, 21.67, Z_REAR + 0.76, mats.wallWhite);
-    addBox(groupSite, 6.24, 22.52, Z_REAR + 0.03, 6.94, 22.60, Z_REAR + 0.76, mats.wallWhite);
-    addBox(groupSite, 6.24, 23.26, Z_REAR + 0.03, 6.94, 23.34, Z_REAR + 0.76, mats.wallWhite);
-    addBox(groupSite, 6.32, 21.82, Z_REAR + 0.84, 6.78, 22.58, Z_REAR + 0.94, mats.metalStainless); // Bếp gas đôi quay Nam
-    addBox(groupSite, 6.34, 21.84, Z_REAR + 0.94, 6.76, 22.56, Z_REAR + 0.96, mats.pianoGloss);
-    [22.02, 22.38].forEach(by => {
+    // 🔥🪵 CHÒI BẾP NÂNG BẰNG ĐÚNG SÀN NHÀ & HIÊN (Z=Z1=0.45m), ÁP SÁT TƯỜNG RÀO SAU Y=22.50M!
+    addBox(groupSite, 3.30, 19.88, 0.0, 7.00, 22.50, Z_REAR, mats.paver);
+    addBox(groupSite, 3.30, 19.88, Z_REAR, 3.60, 20.00, H1, mats.wallWhite);
+    addBox(groupSite, 3.60, 19.88, Z_REAR + 2.14, 4.50, 20.00, H1, mats.wallWhite);
+    addBox(groupSite, 4.50, 19.88, Z_REAR, 7.00, 20.00, H1, mats.wallWhite);
+    addBox(groupSite, 3.57, 19.87, Z_REAR, 3.63, 20.01, Z_REAR + 2.16, mats.woodDark);
+    addBox(groupSite, 4.47, 19.87, Z_REAR, 4.53, 20.01, Z_REAR + 2.16, mats.woodDark);
+    addBox(groupSite, 3.57, 19.87, Z_REAR + 2.12, 4.53, 20.01, Z_REAR + 2.18, mats.woodDark);
+    addBox(groupSite, 6.94, 19.88, 2.35, 7.00, 22.50, H1, mats.wallWhite);
+    addBox(groupSite, 3.30, 22.38, Z_REAR, 7.00, 22.50, H1, mats.wallWhite);
+    addBox(groupSite, 3.30, 20.00, Z_REAR, 3.42, 22.50, Z_REAR + 1.15, mats.wallWhite);
+    addBox(groupSite, 3.28, 20.00, Z_REAR + 1.15, 3.44, 22.50, Z_REAR + 1.19, mats.wallStone);
+    addBox(groupSite, 3.30, 22.34, Z_REAR + 1.19, 3.44, 22.50, H1, mats.wallWhite);
+    addBox(groupSite, 6.22, 20.02, Z_REAR + 0.76, 6.94, 22.33, Z_REAR + 0.84, mats.stepStone);
+    addBox(groupSite, 6.22, 20.02, Z_REAR + 0.03, 6.94, 20.10, Z_REAR + 0.76, mats.wallWhite);
+    addBox(groupSite, 6.24, 20.95, Z_REAR + 0.03, 6.94, 21.03, Z_REAR + 0.76, mats.wallWhite);
+    addBox(groupSite, 6.24, 21.69, Z_REAR + 0.03, 6.94, 21.77, Z_REAR + 0.76, mats.wallWhite);
+    addBox(groupSite, 6.32, 20.25, Z_REAR + 0.84, 6.78, 21.01, Z_REAR + 0.94, mats.metalStainless);
+    addBox(groupSite, 6.34, 20.27, Z_REAR + 0.94, 6.76, 20.99, Z_REAR + 0.96, mats.pianoGloss);
+    [20.45, 20.81].forEach(by => {
       addBox(groupSite, 6.29, by - 0.022, Z_REAR + 0.87, 6.32, by + 0.022, Z_REAR + 0.91, mats.metalBlack);
       const brn = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 0.03, 14), mats.metalBlack);
       brn.position.set(6.55, Z_REAR + 0.975, -by);
       groupSite.add(brn);
     });
     const gasPot1 = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.16, 16), mats.metalStainless);
-    gasPot1.position.set(6.55, Z_REAR + 1.07, -22.02);
+    gasPot1.position.set(6.55, Z_REAR + 1.07, -20.45);
     groupSite.add(gasPot1);
     const foodPot1 = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.14, 0.18, 16), mats.metalStainless);
-    foodPot1.position.set(6.55, Z_REAR + 0.93, -22.96);
+    foodPot1.position.set(6.55, Z_REAR + 0.93, -21.39);
     groupSite.add(foodPot1);
     const foodPot2 = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 0.14, 14), mats.fabricSage);
-    foodPot2.position.set(6.55, Z_REAR + 0.91, -23.48);
+    foodPot2.position.set(6.55, Z_REAR + 0.91, -21.91);
     groupSite.add(foodPot2);
-    const gasCyl = new THREE.Mesh(new THREE.CylinderGeometry(0.155, 0.155, 0.56, 16), mats.fabricNavy); // Bình gas 12kg dưới bếp gas
-    gasCyl.position.set(6.56, Z_REAR + 0.31, -22.10);
+    const gasCyl = new THREE.Mesh(new THREE.CylinderGeometry(0.155, 0.155, 0.56, 16), mats.fabricNavy);
+    gasCyl.position.set(6.56, Z_REAR + 0.31, -20.53);
     groupSite.add(gasCyl);
-    addBox(groupSite, 6.32, 22.68, Z_REAR + 0.03, 6.78, 23.16, Z_REAR + 0.56, mats.wallWhite); // Thùng gạo lớn dưới ngăn Bắc
-    addBox(groupSite, 6.31, 22.67, Z_REAR + 0.56, 6.79, 23.17, Z_REAR + 0.61, mats.woodOak);
-
-    // Mục 21: Bỏ ngăn đựng củi gần kiềng ba chân (X=3.42..4.34 để trống chống cháy!); chỉ giữ 2 khoang chất củi phía Bắc (X=4.48..6.18) có vách bê tông chắn lửa ở X=4.34..4.44!
-    addBox(groupSite, 4.34, 23.30, Z_REAR + 0.76, 6.22, 23.94, Z_REAR + 0.84, mats.stepStone);
-    addBox(groupSite, 4.34, 23.30, Z_REAR + 0.03, 4.44, 23.94, Z_REAR + 0.76, mats.wallWhite);
-    addBox(groupSite, 5.26, 23.32, Z_REAR + 0.03, 5.34, 23.94, Z_REAR + 0.76, mats.wallWhite);
+    addBox(groupSite, 6.32, 21.11, Z_REAR + 0.03, 6.78, 21.59, Z_REAR + 0.56, mats.wallWhite);
+    addBox(groupSite, 6.31, 21.10, Z_REAR + 0.56, 6.79, 21.60, Z_REAR + 0.61, mats.woodOak);
+    addBox(groupSite, 4.34, 21.70, Z_REAR + 0.76, 6.22, 22.33, Z_REAR + 0.84, mats.stepStone);
+    addBox(groupSite, 4.34, 21.70, Z_REAR + 0.03, 4.44, 22.33, Z_REAR + 0.76, mats.wallWhite);
+    addBox(groupSite, 5.26, 21.72, Z_REAR + 0.03, 5.34, 22.33, Z_REAR + 0.76, mats.wallWhite);
     const foodPot3 = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.13, 0.16, 16), mats.metalStainless);
-    foodPot3.position.set(5.72, Z_REAR + 0.92, -23.62);
+    foodPot3.position.set(5.72, Z_REAR + 0.92, -22.02);
     groupSite.add(foodPot3);
-    addBox(groupSite, 4.56, 23.44, Z_REAR + 0.84, 5.08, 23.80, Z_REAR + 0.87, mats.woodOak);
+    addBox(groupSite, 4.56, 21.84, Z_REAR + 0.84, 5.08, 22.20, Z_REAR + 0.87, mats.woodOak);
     [[4.48, 5.22], [5.38, 6.18]].forEach(([bx1, bx2]) => {
-      addBox(groupSite, bx1, 23.34, Z_REAR + 0.03, bx2, 23.92, Z_REAR + 0.07, mats.metalBlack);
+      addBox(groupSite, bx1, 21.74, Z_REAR + 0.03, bx2, 22.31, Z_REAR + 0.07, mats.metalBlack);
       for (let flr = 0; flr < 4; flr++) {
         const flz = Z_REAR + 0.08 + flr * 0.105;
-        addBox(groupSite, bx1 + 0.03, 23.37, flz, bx2 - 0.03, 23.90, flz + 0.085, mats.trunk);
+        addBox(groupSite, bx1 + 0.03, 21.77, flz, bx2 - 0.03, 22.29, flz + 0.085, mats.trunk);
       }
     });
-
-    // Mục 15.3: KIỀNG BA CHÂN sát TƯỜNG LỬNG PHÍA NAM chòi bếp (X=3.44..4.28, Y=22.48..23.26) cho khói bay ra ngoài!
-    addBox(groupSite, 3.44, 22.48, Z_REAR + 0.03, 4.28, 23.26, Z_REAR + 0.08, mats.wallStone);
+    addBox(groupSite, 3.44, 20.91, Z_REAR + 0.03, 4.28, 21.69, Z_REAR + 0.08, mats.wallStone);
     const tripodRing = new THREE.Mesh(new THREE.CylinderGeometry(0.19, 0.19, 0.04, 18), mats.metalBlack);
-    tripodRing.position.set(3.86, Z_REAR + 0.26, -22.87);
+    tripodRing.position.set(3.86, Z_REAR + 0.26, -21.30);
     groupSite.add(tripodRing);
     for (let tli = 0; tli < 3; tli++) {
       const tang = tli * (2 * Math.PI / 3) + Math.PI / 6;
       const tlx = 3.86 + 0.18 * Math.cos(tang);
-      const tly = 22.87 + 0.18 * Math.sin(tang);
+      const tly = 21.30 + 0.18 * Math.sin(tang);
       addBox(groupSite, tlx - 0.017, tly - 0.017, Z_REAR + 0.08, tlx + 0.017, tly + 0.017, Z_REAR + 0.28, mats.metalBlack);
     }
     const emberGlow = new THREE.Mesh(new THREE.SphereGeometry(0.085, 10, 10), mats.ledRedCam);
-    emberGlow.position.set(3.86, Z_REAR + 0.15, -22.87);
+    emberGlow.position.set(3.86, Z_REAR + 0.15, -21.30);
     groupSite.add(emberGlow);
     const woodBigPot = new THREE.Mesh(new THREE.CylinderGeometry(0.23, 0.22, 0.32, 20), mats.metalStainless);
-    woodBigPot.position.set(3.86, Z_REAR + 0.44, -22.87);
+    woodBigPot.position.set(3.86, Z_REAR + 0.44, -21.30);
     groupSite.add(woodBigPot);
     const woodBigLid = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.23, 0.04, 20), mats.metalStainless);
-    woodBigLid.position.set(3.86, Z_REAR + 0.62, -22.87);
+    woodBigLid.position.set(3.86, Z_REAR + 0.62, -21.30);
     groupSite.add(woodBigLid);
     const woodStool = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.14, 0.24, 14), mats.woodOak);
-    woodStool.position.set(4.54, Z_REAR + 0.15, -22.87);
+    woodStool.position.set(4.54, Z_REAR + 0.15, -21.30);
     groupSite.add(woodStool);
 
     // =========================================================================
@@ -1533,20 +1569,31 @@
     addBox(groupFl2, 2.0, -3.0, Z2 - 0.15, 7.0, 8.95, Z2, mats.woodOak);
     addBox(groupFl2, 2.0, 8.95, Z2 - 0.15, 3.05, 11.20, Z2, mats.woodOak);
     addBox(groupFl2, 2.0, 11.20, Z2 - 0.15, 7.0, 16.00, Z2, mats.woodOak);
-    addBox(groupFl2, 2.0, 16.00, Z2 - 0.15, 7.0, 21.00, Z2, mats.woodOak); // Ban công sau T2 gọn đúng 5m x 5m!
-    // Mái che Hiên sau phần Nam (khu rửa chén) & Mái che Chòi bếp (cùng cao độ H1=3.30m, không phải ban công đi lại; Vườn rau X=0..3.30 để trống trời!)
-    addBox(groupFl2, 0.0, 16.00, H1, 2.0, 21.35, H1 + 0.10, mats.wallCharcoal);
-    addBox(groupFl2, 2.0, 21.00, H1, 3.30, 21.35, H1 + 0.10, mats.wallCharcoal);
-    addBox(groupFl2, 3.30, 21.00, H1, 7.0, 24.00, H1 + 0.10, mats.wallCharcoal);
-    addBox(groupFl2, 0.20, 21.27, H1 - 0.04, 3.25, 21.31, H1, mats.ledWarmStrip);
-    addBox(groupFl2, 3.34, 21.35, H1 - 0.04, 3.38, 23.85, H1, mats.ledWarmStrip);
+    addBox(groupFl2, 2.0, 16.00, Z2 - 0.15, 7.0, 20.00, Z2, mats.woodOak); // Ban công sau T2 gọn đúng 5m x 4m (thẳng mốc 20m!)
+    // Mái che Hiên sau phần Nam (Y=16..20m) & Mái tôn Chòi bếp đua dài ra hướng Nam 75cm (X=2.55..7.00, Y=19.92..22.55) dốc nhẹ chống mưa tạt & chảy xuống rau!
+    addBox(groupFl2, 0.0, 16.00, H1, 2.0, 20.00, H1 + 0.10, mats.wallCharcoal);
+    const hutRoofTilt = Math.atan2(0.22, 4.45);
+    const hutRoofMesh = addBox(groupFl2, 2.55, 19.92, H1 + 0.00, 7.00, 22.55, H1 + 0.06, mats.wallCharcoal);
+    hutRoofMesh.rotation.z = hutRoofTilt;
+    for (let hri = 0; hri < 7; hri++) {
+      const hry = 20.10 + hri * 0.38;
+      const rib = addBox(groupFl2, 2.55, hry - 0.022, H1 + 0.055, 7.00, hry + 0.022, H1 + 0.082, mats.metalBlack);
+      rib.rotation.z = hutRoofTilt;
+    }
+    [20.20, 21.28, 22.36].forEach(hby => {
+      const rf = addBox(groupFl2, 2.58, hby - 0.03, H1 - 0.13, 3.42, hby + 0.03, H1 - 0.07, mats.metalBlack);
+      rf.rotation.z = hutRoofTilt;
+    });
+    addBox(groupFl2, 2.52, 19.92, H1 - 0.14, 2.58, 22.55, H1 - 0.05, mats.metalBlack);
+    addBox(groupFl2, 0.20, 19.92, H1 - 0.04, 2.52, 19.96, H1, mats.ledWarmStrip);
+    addBox(groupFl2, 3.34, 20.02, H1 - 0.04, 3.38, 22.38, H1, mats.ledWarmStrip);
 
-    // Cột đỡ góc Nam Hiên sau (Y=16.0 & Y=21.25) & dầm biên
-    [16.00, 21.25].forEach(cy => {
+    // Cột đỡ góc Nam Hiên sau (Y=16.0 & Y=19.90) & dầm biên (gọn đúng mốc 20.0m!)
+    [16.00, 19.90].forEach(cy => {
       addBox(groupFl2, 0.00, cy - 0.10, 0.15, 0.20, cy + 0.10, Z2 - 0.15, mats.wallWhite);
     });
-    addBox(groupFl2, 6.78, 20.88, Z_REAR, 7.00, 21.12, Z2 - 0.15, mats.wallWhite);
-    addBox(groupFl2, 0.00, 16.00, Z2 - 0.30, 0.20, 21.35, Z2 - 0.14, mats.wallCharcoal);
+    addBox(groupFl2, 6.78, 19.78, Z_REAR, 7.00, 20.00, Z2 - 0.15, mats.wallWhite);
+    addBox(groupFl2, 0.00, 16.00, Z2 - 0.30, 0.20, 20.00, Z2 - 0.14, mats.wallCharcoal);
     addBox(groupFl2, 1.98, -3.02, Z2 - 0.28, 7.0, -2.86, Z2 - 0.14, mats.wallCharcoal);
     addBox(groupFl2, 1.98, -3.02, Z2 - 0.28, 2.16, 0.02, Z2 - 0.14, mats.wallCharcoal);
 
@@ -1566,27 +1613,52 @@
       addBox(groupFl2, 3.045, lby - 0.015, Z2, 3.075, lby + 0.015, Z2 + 0.90, mats.woodOak);
     }
 
-    // Tường bao khối nhà chính 5m Tầng 2 (X=2.0..7.0) — mở 3 cửa sổ lớn hướng Nam nhìn xuống mái kính đường luồng!
+    // Tường bao khối nhà chính 5m Tầng 2 (X=2.0..7.0) — 2 cửa sổ hai bên kích thước vừa đúng như cửa sổ đường luồng Tầng 1 (1.90m x 1.40m)!
     addBox(groupFl2, 6.78, 0, Z2, 7.0, 16.0, Z2 + 0.38, mats.wallWhite); // Mặt cắt Bắc
-    addBox(groupFl2, 2.0, 0.0, Z2, 2.14, 1.40, H2, mats.wallWhite);
-    addBox(groupFl2, 2.0, 1.40, Z2, 2.14, 3.60, Z2 + 0.95, mats.wallWhite);
-    addBox(groupFl2, 2.0, 1.40, Z2 + 2.55, 2.14, 3.60, H2, mats.wallWhite);
-    addBox(groupFl2, 2.02, 1.40, Z2 + 0.95, 2.12, 3.60, Z2 + 2.55, mats.glassClear);
-    addBox(groupFl2, 2.0, 3.60, Z2, 2.14, 7.40, H2, mats.wallWhite);
-    addBox(groupFl2, 2.0, 7.40, Z2, 2.14, 10.60, Z2 + 0.95, mats.wallWhite);
-    addBox(groupFl2, 2.0, 7.40, Z2 + 2.65, 2.14, 10.60, H2, mats.wallWhite);
-    addBox(groupFl2, 2.02, 7.40, Z2 + 0.95, 2.12, 10.60, Z2 + 2.65, mats.glassClear);
-    addBox(groupFl2, 2.0, 10.60, Z2, 2.14, 12.00, H2, mats.wallWhite);
-    addBox(groupFl2, 2.0, 12.00, Z2, 2.14, 14.80, Z2 + 0.95, mats.wallWhite);
-    addBox(groupFl2, 2.0, 12.00, Z2 + 2.55, 2.14, 14.80, H2, mats.wallWhite);
-    addBox(groupFl2, 2.02, 12.00, Z2 + 0.95, 2.12, 14.80, Z2 + 2.55, mats.glassClear);
-    addBox(groupFl2, 2.0, 14.80, Z2, 2.14, 16.0, H2, mats.wallWhite);
-    // Vách ngăn hành lang nội bộ 1m T2 TRONG 5M (X=2.14..3.12, Y=11.20..15.78 — Mục 22!) + khung cửa gỗ phòng Sếu & Chị Hai + thảm hành lang
+    addBox(groupFl2, 2.0, 0.0, Z2, 2.14, 1.55, H2, mats.wallWhite);
+    addBox(groupFl2, 2.0, 1.55, Z2, 2.14, 3.45, Z2 + 0.95, mats.wallWhite);
+    addBox(groupFl2, 2.0, 1.55, Z2 + 2.35, 2.14, 3.45, H2, mats.wallWhite);
+    addBox(groupFl2, 2.02, 1.55, Z2 + 0.95, 2.12, 3.45, Z2 + 2.35, mats.glassClear);
+    addBox(groupFl2, 2.0, 3.45, Z2, 2.14, 12.60, H2, mats.wallWhite); // Bít kín đoạn giữa chỗ lên cầu thang!
+    addBox(groupFl2, 2.0, 12.60, Z2, 2.14, 14.50, Z2 + 0.95, mats.wallWhite);
+    addBox(groupFl2, 2.0, 12.60, Z2 + 2.35, 2.14, 14.50, H2, mats.wallWhite);
+    addBox(groupFl2, 2.02, 12.60, Z2 + 0.95, 2.12, 14.50, Z2 + 2.35, mats.glassClear);
+    addBox(groupFl2, 2.0, 14.50, Z2, 2.14, 16.0, H2, mats.wallWhite);
+    // Vách ngăn đường luồng 1m T2 THÔNG SUỐT từ Ban công trước (Y=0.22) tới Ban công sau (Y=15.78) — CẢ 3 PHÒNG THẲNG 1 HÀNG (X=3.22..6.78)!
+    // Phòng Chị Ba: Cửa chính đường luồng đặt CHÍNH GIỮA GIƯỜNG NGỦ (Y=3.25..4.05); góc Nam phía Đông (Y=0.22..3.25) đặt kệ sách; đoạn NVS (Y=4.05..7.02) xây đặc!
+    addBox(groupFl2, 3.12, 0.22, Z2, 3.22, 3.25, H2, mats.wallWhite);
+    addBox(groupFl2, 3.12, 3.25, Z2 + 2.25, 3.22, 4.05, H2, mats.wallWhite);
+    addBox(groupFl2, 3.12, 4.05, Z2, 3.22, 7.02, H2, mats.wallWhite);
+    addBox(groupFl2, 3.10, 3.23, Z2, 3.24, 3.28, Z2 + 2.26, mats.woodDark);
+    addBox(groupFl2, 3.10, 4.02, Z2, 3.24, 4.07, Z2 + 2.26, mats.woodDark);
+    addBox(groupFl2, 3.10, 3.23, Z2 + 2.22, 3.24, 4.07, Z2 + 2.28, mats.woodDark);
+    addBox(groupFl2, 3.14, 3.28, Z2 + 0.02, 3.20, 4.02, Z2 + 2.22, mats.woodOak);
+    addBox(groupFl2, 2.34, 0.45, Z2, 2.92, 6.80, Z2 + 0.02, mats.fabricWarm);
     addBox(groupFl2, 3.12, 11.20, Z2, 3.22, 11.35, H2, mats.wallWhite);
     addBox(groupFl2, 3.12, 11.35, Z2 + 2.25, 3.22, 12.15, H2, mats.wallWhite);
-    addBox(groupFl2, 3.12, 12.15, Z2, 3.22, 13.65, H2, mats.wallWhite);
+    addBox(groupFl2, 3.12, 12.15, Z2, 3.22, 12.28, H2, mats.wallWhite);
+    addBox(groupFl2, 3.12, 12.28, Z2, 3.22, 13.30, Z2 + 0.96, mats.wallWhite);
+    addBox(groupFl2, 3.12, 12.28, Z2 + 2.25, 3.22, 13.30, H2, mats.wallWhite);
+    addBox(groupFl2, 3.12, 13.30, Z2, 3.22, 13.65, H2, mats.wallWhite);
+    // Cửa sổ tường Nam chỗ bàn làm việc Phòng Sếu (Y=12.28..13.30) — mở ra nhìn thấy đường luồng!
+    addBox(groupFl2, 3.10, 12.25, Z2 + 0.945, 3.29, 13.33, Z2 + 0.985, mats.woodOak);
+    addBox(groupFl2, 3.10, 12.26, Z2 + 2.215, 3.24, 13.32, Z2 + 2.255, mats.woodOak);
+    addBox(groupFl2, 3.10, 12.27, Z2 + 0.985, 3.24, 12.31, Z2 + 2.215, mats.woodOak);
+    addBox(groupFl2, 3.10, 13.27, Z2 + 0.985, 3.24, 13.31, Z2 + 2.215, mats.woodOak);
+    addBox(groupFl2, 3.15, 12.31, Z2 + 0.985, 3.19, 13.27, Z2 + 2.215, mats.glassClear);
+    addBox(groupFl2, 3.145, 12.78, Z2 + 0.985, 3.195, 12.80, Z2 + 2.215, mats.metalBlack);
     addBox(groupFl2, 3.12, 13.65, Z2 + 2.25, 3.22, 14.45, H2, mats.wallWhite);
-    addBox(groupFl2, 3.12, 14.45, Z2, 3.22, 15.78, H2, mats.wallWhite);
+    addBox(groupFl2, 3.12, 14.45, Z2, 3.22, 14.58, H2, mats.wallWhite);
+    addBox(groupFl2, 3.12, 14.58, Z2, 3.22, 15.60, Z2 + 0.96, mats.wallWhite);
+    addBox(groupFl2, 3.12, 14.58, Z2 + 2.25, 3.22, 15.60, H2, mats.wallWhite);
+    addBox(groupFl2, 3.12, 15.60, Z2, 3.22, 15.78, H2, mats.wallWhite);
+    // Cửa sổ tường Nam chỗ bàn làm việc Phòng Chị Hai (Y=14.58..15.60) — đồng bộ như Phòng Sếu!
+    addBox(groupFl2, 3.10, 14.55, Z2 + 0.945, 3.29, 15.63, Z2 + 0.985, mats.woodOak);
+    addBox(groupFl2, 3.10, 14.56, Z2 + 2.215, 3.24, 15.62, Z2 + 2.255, mats.woodOak);
+    addBox(groupFl2, 3.10, 14.57, Z2 + 0.985, 3.24, 14.61, Z2 + 2.215, mats.woodOak);
+    addBox(groupFl2, 3.10, 15.57, Z2 + 0.985, 3.24, 15.61, Z2 + 2.215, mats.woodOak);
+    addBox(groupFl2, 3.15, 14.61, Z2 + 0.985, 3.19, 15.57, Z2 + 2.215, mats.glassClear);
+    addBox(groupFl2, 3.145, 15.08, Z2 + 0.985, 3.195, 15.10, Z2 + 2.215, mats.metalBlack);
     [[11.35, 12.15], [13.65, 14.45]].forEach(([ry1, ry2]) => {
       addBox(groupFl2, 3.10, ry1 - 0.02, Z2, 3.24, ry1 + 0.03, Z2 + 2.26, mats.woodDark);
       addBox(groupFl2, 3.10, ry2 - 0.03, Z2, 3.24, ry2 + 0.02, Z2 + 2.26, mats.woodDark);
@@ -1595,93 +1667,280 @@
     });
     addBox(groupFl2, 2.34, 11.35, Z2, 2.92, 15.55, Z2 + 0.02, mats.fabricWarm);
 
-    // Tường trước & sau T2 (khối 5m X=2.0..7.0)
-    addBox(groupFl2, 2.0, 0.0, Z2, 2.75, 0.22, H2, mats.wallWhite);
-    addBox(groupFl2, 6.25, 0.0, Z2, 7.0, 0.22, H2, mats.wallWhite);
-    addBox(groupFl2, 2.75, 0.0, Z2 + 2.65, 6.25, 0.22, H2, mats.wallWhite);
-    addBox(groupFl2, 2.75, 0.06, Z2, 6.25, 0.18, Z2 + 2.65, mats.glassClear);
+    // Tường trước T2: Cửa kính cuối đường luồng 1m (X=2.18..3.08) + CỬA SỔ HƯỚNG ĐÔNG trên bàn học (X=3.92..5.45) + Tường đặc Đông phía Bắc (X=5.45..7.0) kê bàn trang điểm!
+    addBox(groupFl2, 2.0, 0.0, Z2, 2.18, 0.22, H2, mats.wallWhite);
+    addBox(groupFl2, 2.18, 0.0, Z2 + 2.55, 3.08, 0.22, H2, mats.wallWhite);
+    addBox(groupFl2, 2.18, 0.06, Z2, 3.08, 0.18, Z2 + 2.55, mats.glassClear);
+    addBox(groupFl2, 3.08, 0.0, Z2, 3.92, 0.22, H2, mats.wallWhite);
+    addBox(groupFl2, 3.92, 0.0, Z2, 5.45, 0.22, Z2 + 0.96, mats.wallWhite);
+    addBox(groupFl2, 3.92, 0.0, Z2 + 2.25, 5.45, 0.22, H2, mats.wallWhite);
+    addBox(groupFl2, 5.45, 0.0, Z2, 7.0, 0.22, H2, mats.wallWhite);
+    addBox(groupFl2, 3.88, 0.02, Z2 + 0.94, 5.49, 0.28, Z2 + 0.98, mats.woodOak);
+    addBox(groupFl2, 3.92, 0.06, Z2 + 0.98, 5.45, 0.18, Z2 + 2.25, mats.glassClear);
+    addBox(groupFl2, 4.67, 0.05, Z2 + 0.98, 4.70, 0.19, Z2 + 2.25, mats.metalBlack);
 
+    // Tường sau T2: Cửa kính hành lang (X=2.18..3.08) + Cửa sổ hướng Tây VỪA ĐỦ (1.20m x 1.13m, X=4.60..5.80) Phòng Chị Hai nhìn ra Ban công sau!
     addBox(groupFl2, 2.0, 15.78, Z2, 2.18, 16.0, H2, mats.wallWhite);
-    addBox(groupFl2, 3.08, 15.78, Z2, 3.50, 16.0, H2, mats.wallWhite);
-    addBox(groupFl2, 5.85, 15.78, Z2, 7.0, 16.0, H2, mats.wallWhite);
-    addBox(groupFl2, 2.18, 15.78, Z2 + 2.55, 5.85, 16.0, H2, mats.wallWhite);
+    addBox(groupFl2, 2.18, 15.78, Z2 + 2.55, 3.08, 16.0, H2, mats.wallWhite);
     addBox(groupFl2, 2.18, 15.80, Z2, 3.08, 15.94, Z2 + 2.55, mats.glassClear);
-    addBox(groupFl2, 3.50, 15.80, Z2, 5.85, 15.94, Z2 + 2.55, mats.glassClear);
+    addBox(groupFl2, 3.08, 15.78, Z2, 4.60, 16.0, H2, mats.wallWhite);
+    addBox(groupFl2, 4.60, 15.78, Z2, 5.80, 16.0, Z2 + 1.12, mats.wallWhite);
+    addBox(groupFl2, 4.60, 15.78, Z2 + 2.25, 5.80, 16.0, H2, mats.wallWhite);
+    addBox(groupFl2, 5.80, 15.78, Z2, 7.0, 16.0, H2, mats.wallWhite);
+    addBox(groupFl2, 4.56, 15.72, Z2 + 1.10, 5.84, 15.90, Z2 + 1.14, mats.woodOak);
+    addBox(groupFl2, 4.60, 15.83, Z2 + 1.14, 5.80, 15.95, Z2 + 2.25, mats.glassClear);
+    addBox(groupFl2, 5.19, 15.82, Z2 + 1.14, 5.21, 15.96, Z2 + 2.25, mats.metalBlack);
 
-    // Ban công trước 5m x 3.0m (X=2.0..7.0)
-    addBox(groupFl2, 2.0, -3.00, Z2, 7.0, -2.94, Z2 + 1.12, mats.glassBronze);
-    addBox(groupFl2, 2.0, -3.00, Z2, 2.06, 0.0, Z2 + 1.12, mats.glassBronze);
-    addBox(groupFl2, 6.95, -3.00, Z2, 7.0, 0.0, Z2 + 1.12, mats.glassBronze);
+    // Ban công trước hướng Đông 5m x 3.0m: XÂY TƯỜNG CHẮN ĐẶC 3 MẶT (cao 1.14m che kín thân dưới khi đứng, mặc váy không bị lộ!) + Khu tập thể dục, tắm nắng & tắm trăng!
+    addBox(groupFl2, 2.00, -3.00, Z2, 7.00, -2.86, Z2 + 1.08, mats.wallWhite);
+    addBox(groupFl2, 1.98, -3.02, Z2 + 1.08, 7.02, -2.84, Z2 + 1.14, mats.wallStone);
+    addBox(groupFl2, 2.00, -3.00, Z2, 2.14, 0.00, Z2 + 1.08, mats.wallWhite);
+    addBox(groupFl2, 1.98, -3.02, Z2 + 1.08, 2.16, 0.00, Z2 + 1.14, mats.wallStone);
+    addBox(groupFl2, 6.86, -3.00, Z2, 7.00, 0.00, Z2 + 1.08, mats.wallWhite);
+    addBox(groupFl2, 6.84, -3.02, Z2 + 1.08, 7.02, 0.00, Z2 + 1.14, mats.wallStone);
+    for (let bwi = 0; bwi < 9; bwi++) {
+      const bwx = 2.35 + bwi * 0.54;
+      addBox(groupFl2, bwx, -3.03, Z2 + 0.16, bwx + 0.12, -2.99, Z2 + 0.96, mats.woodSlats);
+    }
+    addBox(groupFl2, 2.20, -2.86, Z2 + 1.04, 6.80, -2.83, Z2 + 1.07, mats.ledWarmStrip);
     addBox(groupFl2, 2.1, -2.98, Z2 - 0.18, 6.9, -2.92, Z2 - 0.14, mats.ledWarmStrip);
-    addBox(groupFl2, 2.25, -2.30, Z2 + 0.08, 3.65, -1.48, Z2 + 0.50, mats.fabricWarm);
-    const bcTbl = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.36, 0.05, 20), mats.whiteMarble);
-    bcTbl.position.set(4.98, Z2 + 0.48, 1.62);
+    // Khu tập thể dục / Yoga & tắm nắng tắm trăng
+    addBox(groupFl2, 4.15, -2.45, Z2, 6.45, -0.65, Z2 + 0.03, mats.woodOak);
+    addBox(groupFl2, 4.35, -2.20, Z2 + 0.03, 6.15, -1.52, Z2 + 0.06, mats.fabricSage);
+    addBox(groupFl2, 4.35, -1.42, Z2 + 0.03, 6.15, -0.78, Z2 + 0.06, mats.fabricMustard);
+    addBox(groupFl2, 2.24, -2.68, Z2 + 0.08, 3.56, -1.66, Z2 + 0.48, mats.fabricWarm); // Ghế tắm nắng/tắm trăng
+    const bcTbl = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.28, 0.05, 20), mats.whiteMarble);
+    bcTbl.position.set(3.84, Z2 + 0.445, 2.28);
     groupFl2.add(bcTbl);
-    addBox(groupFl2, 3.80, -2.86, Z2, 6.00, -2.52, Z2 + 0.38, mats.wallStone);
 
-    // A. PHÒNG MASTER CHỊ BA (X = 2.14..6.78, Y = 0.22..7.0)
-    addBox(groupFl2, 4.28, 1.85, Z2 + 0.02, 6.22, 4.05, Z2 + 0.54, mats.fabricWarm);
-    addBox(groupFl2, 4.30, 1.87, Z2 + 0.54, 6.20, 3.30, Z2 + 0.62, mats.fabricNavy);
-    addBox(groupFl2, 4.24, 3.97, Z2 + 0.20, 6.26, 4.07, Z2 + 1.24, mats.woodSlats);
-    addBedsideLamp(groupFl2, 4.00, 3.82, Z2 + 0.48);
-    addBedsideLamp(groupFl2, 6.50, 3.82, Z2 + 0.48);
-    // 🎹 Piano áp tường Nam trong Master (X = 2.18..2.74)
-    addBox(groupFl2, 2.18, 0.85, Z2 + 0.04, 2.74, 2.38, Z2 + 1.24, mats.pianoGloss);
-    addBox(groupFl2, 2.70, 0.88, Z2 + 0.66, 3.00, 2.35, Z2 + 0.75, mats.pianoGloss);
-    addBox(groupFl2, 2.74, 0.94, Z2 + 0.75, 2.98, 2.29, Z2 + 0.79, mats.wallWhite);
-    addBox(groupFl2, 3.14, 1.25, Z2 + 0.44, 3.54, 1.98, Z2 + 0.52, mats.pianoGloss);
-    // Yoga trước cửa kính
-    addBox(groupFl2, 4.50, 0.58, Z2, 6.00, 1.38, Z2 + 0.03, mats.fabricMustard);
-    // Walk-in Closet (X=2.14..4.65) + Cửa trượt WC + Phòng tắm riêng (X=4.75..6.78)
-    addBox(groupFl2, 2.14, 4.15, Z2, 2.80, 4.25, H2, mats.wallWhite);
-    addBox(groupFl2, 2.80, 4.15, Z2 + 2.30, 3.75, 4.25, H2, mats.wallWhite);
-    addBox(groupFl2, 3.75, 4.15, Z2, 6.78, 4.25, H2, mats.wallWhite);
-    addBox(groupFl2, 4.65, 4.25, Z2, 4.75, 4.36, H2, mats.wallWhite);
-    addBox(groupFl2, 4.65, 4.36, Z2 + 2.25, 4.75, 5.22, H2, mats.wallWhite);
-    addBox(groupFl2, 4.65, 5.22, Z2, 4.75, 6.95, H2, mats.wallWhite);
-    addBox(groupFl2, 4.59, 4.98, Z2 + 0.02, 4.64, 5.84, Z2 + 2.24, mats.woodOak); // Cửa trượt WC
-    addBox(groupFl2, 2.14, 6.92, Z2, 2.95, 7.02, H2, mats.wallWhite);
-    addBox(groupFl2, 2.95, 6.92, Z2 + 2.25, 3.85, 7.02, H2, mats.wallWhite);
-    addBox(groupFl2, 3.85, 6.92, Z2, 6.78, 7.02, H2, mats.wallWhite);
-    addBox(groupFl2, 5.70, 4.28, Z2 + 0.16, 6.64, 4.82, Z2 + 0.85, mats.whiteMarble); // Lavabo
-    addBox(groupFl2, 5.12, 6.04, Z2, 6.66, 6.86, Z2 + 0.58, mats.wallWhite); // Bồn tắm
-    addBox(groupFl2, 2.16, 4.32, Z2, 2.70, 6.88, Z2 + 2.55, mats.woodOak); // Tủ áo
-    addBox(groupFl2, 4.08, 5.88, Z2, 4.62, 6.88, Z2 + 2.55, mats.woodOak);
-    addWarmLight(groupFl2, 4.7, 2.5, 6.0, 2.6, 9.0, 0xffb74d);
+    // A. PHÒNG NGỦ CHỊ BA (X = 3.22..6.78, Y = 0.22..6.92):
+    //    - Bỏ Piano -> Bàn làm việc ngay dưới cửa sổ hướng Đông (X=4.20..5.75, Y=0.26..0.90)
+    //    - Tủ quần áo dài 4.22m suốt tường Bắc (X=6.28..6.78, Y=0.36..4.58)
+    //    - Giường ngủ bằng đúng Phòng Sếu & Chị Hai (1.24m x 1.86m) + Bàn nhỏ đầu giường để sách & ĐT
+    //    - Bỏ tường ngăn Closet/WC -> Gộp trọn phía sau (Y=4.75..6.92, X=3.22..6.78) thành Phòng tắm + Lavabo + Bồn cầu rộng rãi!
+    addBox(groupFl2, 4.46, 2.72, Z2 + 0.02, 5.70, 4.58, Z2 + 0.54, mats.fabricWarm);
+    addBox(groupFl2, 4.48, 2.74, Z2 + 0.54, 5.68, 3.94, Z2 + 0.62, mats.fabricNavy);
+    addBox(groupFl2, 4.42, 4.50, Z2 + 0.20, 5.74, 4.60, Z2 + 1.18, mats.woodSlats);
+    // Bàn nhỏ đầu giường bên cạnh giường (X=4.08..4.44, Y=4.18..4.56) để sách & điện thoại
+    addBox(groupFl2, 4.08, 4.18, Z2 + 0.02, 4.44, 4.56, Z2 + 0.48, mats.woodOak);
+    addBedsideLamp(groupFl2, 4.26, 4.42, Z2 + 0.48);
+    addBox(groupFl2, 4.12, 4.21, Z2 + 0.48, 4.28, 4.36, Z2 + 0.535, mats.fabricMustard); // Sách
+    addBox(groupFl2, 4.32, 4.21, Z2 + 0.48, 4.40, 4.35, Z2 + 0.50, mats.ledCyanTech); // Điện thoại
+    // 💻 Bàn học / làm việc ngay dưới cửa sổ hướng Đông (X=3.92..5.32, Y=0.26..0.88) + ghế quay mặt Đông
+    addBox(groupFl2, 3.92, 0.26, Z2 + 0.72, 5.32, 0.88, Z2 + 0.77, mats.woodOak);
+    addBox(groupFl2, 3.95, 0.30, Z2, 4.01, 0.84, Z2 + 0.72, mats.metalBlack);
+    addBox(groupFl2, 4.86, 0.30, Z2, 5.26, 0.84, Z2 + 0.72, mats.woodOak);
+    addBox(groupFl2, 4.38, 0.48, Z2 + 0.77, 4.76, 0.72, Z2 + 0.79, mats.metalStainless);
+    addBox(groupFl2, 4.38, 0.45, Z2 + 0.79, 4.76, 0.48, Z2 + 1.05, mats.tvScreenGlow);
+    addBox(groupFl2, 4.36, 0.96, Z2, 4.80, 1.38, Z2 + 0.48, mats.fabricNavy);
+    // 🪞 Bàn trang điểm phía Bắc bàn học (X=5.44..6.66, Y=0.26..0.78 — hướng mặt về phía Tây, xoay lưng về phía Đông!)
+    addBox(groupFl2, 5.44, 0.26, Z2 + 0.72, 6.66, 0.78, Z2 + 0.76, mats.whiteMarble);
+    addBox(groupFl2, 5.46, 0.28, Z2 + 0.58, 6.64, 0.76, Z2 + 0.72, mats.woodOak);
+    const vanityMir = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.32, 0.04, 24), mats.ledBulbWarm);
+    vanityMir.rotation.x = Math.PI / 2;
+    vanityMir.position.set(6.05, Z2 + 1.26, -0.28);
+    groupFl2.add(vanityMir);
+    const vanityStool = new THREE.Mesh(new THREE.CylinderGeometry(0.19, 0.17, 0.50, 18), mats.fabricBlush);
+    vanityStool.position.set(6.05, Z2 + 0.25, -1.06);
+    groupFl2.add(vanityStool);
+    // 📚 Kệ sách 5 tầng góc tường hướng Nam (X=3.24..3.60, Y=0.40..2.20)
+    addBox(groupFl2, 3.22, 0.40, Z2, 3.25, 2.20, Z2 + 2.15, mats.woodOak);
+    addBox(groupFl2, 3.24, 0.40, Z2, 3.60, 0.44, Z2 + 2.15, mats.woodOak);
+    addBox(groupFl2, 3.24, 2.16, Z2, 3.60, 2.20, Z2 + 2.15, mats.woodOak);
+    [0.04, 0.46, 0.88, 1.30, 1.72, 2.11].forEach(bsz => {
+      addBox(groupFl2, 3.24, 0.42, Z2 + bsz, 3.60, 2.18, Z2 + bsz + 0.035, mats.woodOak);
+    });
+    // 🧥 Tủ quần áo dài suốt tường hướng Bắc (X=6.28..6.78, Y=1.48..4.58 — ngay sau ghế bàn trang điểm!)
+    addBox(groupFl2, 6.28, 1.48, Z2, 6.78, 4.58, Z2 + 2.55, mats.woodOak);
+    for (let mwd = 0; mwd < 5; mwd++) {
+      const mwy1 = 1.48 + mwd * (3.10 / 5) + 0.015;
+      const mwy2 = 1.48 + (mwd + 1) * (3.10 / 5) - 0.015;
+      addBox(groupFl2, 6.255, mwy1, Z2 + 0.04, 6.285, mwy2, Z2 + 2.51, mats.wallCream);
+    }
+    // Vách ngăn Phòng ngủ & Phòng tắm + WC suốt bề ngang (Y=4.65..4.75, cửa trượt X=3.28..4.04)
+    addBox(groupFl2, 3.22, 4.65, Z2, 3.28, 4.75, H2, mats.wallWhite);
+    addBox(groupFl2, 3.28, 4.65, Z2 + 2.25, 4.04, 4.75, H2, mats.wallWhite);
+    addBox(groupFl2, 4.04, 4.65, Z2, 6.78, 4.75, H2, mats.wallWhite);
+    addBox(groupFl2, 3.31, 4.68, Z2 + 0.02, 4.01, 4.73, Z2 + 2.23, mats.woodOak);
+    addBox(groupFl2, 3.22, 6.92, Z2, 6.78, 7.02, H2, mats.wallWhite);
+    // Phòng tắm + Lavabo + Bồn cầu rộng suốt bề ngang (X=3.22..6.78, Y=4.75..6.92 = 7.73 m²)
+    // Khu khô bên Nam (X=3.22..4.82 -> 3.47 m²): Lavabo + các hộc âm tường + Bồn cầu + cây treo đồ khô tường Đông
+    addBox(groupFl2, 3.22, 5.12, Z2 + 0.16, 3.78, 5.96, Z2 + 0.84, mats.whiteMarble);
+    addBox(groupFl2, 3.22, 5.12, Z2 + 1.84, 3.42, 5.96, Z2 + 1.91, mats.woodOak);
+    addBox(groupFl2, 3.22, 5.12, Z2 + 2.12, 3.42, 5.96, Z2 + 2.19, mats.woodOak);
+    addBox(groupFl2, 3.22, 5.12, Z2 + 2.40, 3.42, 5.96, Z2 + 2.45, mats.wallWhite);
+    addBox(groupFl2, 3.22, 6.12, Z2 + 1.12, 3.42, 6.78, Z2 + 1.19, mats.woodOak);
+    addBox(groupFl2, 3.22, 6.12, Z2 + 1.52, 3.42, 6.78, Z2 + 1.59, mats.woodOak);
+    addBox(groupFl2, 3.22, 6.12, Z2 + 1.91, 3.42, 6.78, Z2 + 1.96, mats.wallWhite);
+    addBox(groupFl2, 4.12, 6.66, Z2 + 0.40, 4.50, 6.90, Z2 + 0.84, mats.wallWhite); // Bồn cầu
+    addBox(groupFl2, 4.14, 6.28, Z2 + 0.02, 4.48, 6.66, Z2 + 0.46, mats.wallWhite);
+    addBox(groupFl2, 4.02, 6.72, Z2 + 1.18, 4.62, 6.92, Z2 + 1.27, mats.woodOak);
+    addBox(groupFl2, 4.12, 4.88, Z2 + 1.58, 4.74, 4.91, Z2 + 1.61, mats.metalStainless); // Cây treo đồ khô
+    // Khu tắm ướt bên Bắc RỘNG HƠN HẲN (X=4.82..6.78 -> 4.25 m²): Gờ chắn nước xây cao chống tràn (Z2+0.16) + Vách tường đặc 1 nửa che kín Bồn cầu + 1 cửa kính mờ đục!
+    addBox(groupFl2, 4.82, 4.75, Z2, 6.78, 6.92, Z2 + 0.06, mats.stepStone);
+    addBox(groupFl2, 4.76, 4.75, Z2, 4.88, 6.92, Z2 + 0.16, mats.wallStone); // Gờ chắn nước cao chống tràn!
+    addBox(groupFl2, 4.76, 5.75, Z2, 4.88, 6.92, H2, mats.wallWhite); // Tường xây đặc che kín bồn cầu!
+    addBox(groupFl2, 4.76, 4.75, Z2, 4.88, 4.84, H2, mats.wallWhite);
+    addBox(groupFl2, 4.76, 4.84, Z2 + 2.14, 4.88, 5.75, H2, mats.wallWhite);
+    addBox(groupFl2, 4.75, 4.84, Z2 + 0.16, 4.89, 4.89, Z2 + 2.15, mats.metalBlack);
+    addBox(groupFl2, 4.75, 5.70, Z2 + 0.16, 4.89, 5.75, Z2 + 2.15, mats.metalBlack);
+    addBox(groupFl2, 4.75, 4.84, Z2 + 2.10, 4.89, 5.75, Z2 + 2.15, mats.metalBlack);
+    addBox(groupFl2, 4.80, 4.89, Z2 + 0.18, 4.85, 5.70, Z2 + 2.10, matFrostedGlass); // 1 cửa duy nhất kính mờ đục
+    addBox(groupFl2, 4.79, 4.89, Z2 + 0.16, 4.86, 5.70, Z2 + 0.36, mats.metalBlack);
+    addBox(groupFl2, 4.795, 4.89, Z2 + 1.12, 4.855, 5.70, Z2 + 1.16, mats.metalBlack);
+    addBox(groupFl2, 5.76, 6.81, Z2 + 1.00, 5.98, 6.92, Z2 + 1.07, mats.metalStainless); // Sen tắm
+    addBox(groupFl2, 5.85, 6.83, Z2 + 1.06, 5.89, 6.87, Z2 + 2.12, mats.metalStainless);
+    addBox(groupFl2, 5.85, 6.52, Z2 + 2.08, 5.89, 6.86, Z2 + 2.12, mats.metalStainless);
+    addBox(groupFl2, 5.06, 6.76, Z2 + 0.94, 5.56, 6.92, Z2 + 1.01, mats.woodOak); // Hộp tủ âm tường khu tắm
+    addBox(groupFl2, 5.06, 6.76, Z2 + 1.33, 5.56, 6.92, Z2 + 1.40, mats.woodOak);
+    addBox(groupFl2, 5.06, 6.76, Z2 + 1.73, 5.56, 6.92, Z2 + 1.78, mats.wallWhite);
+    addWarmLight(groupFl2, 5.0, 2.5, 6.0, 2.6, 9.0, 0xffb74d);
 
-    // C. PHÒNG SẾU (X = 3.22..6.78, Y = 11.20..13.45)
-    addBox(groupFl2, 3.12, 11.15, Z2, 6.78, 11.25, H2, mats.wallWhite);
-    addBox(groupFl2, 3.24, 11.36, Z2 + 0.02, 5.10, 12.56, Z2 + 0.54, mats.fabricWarm);
-    addBox(groupFl2, 3.80, 11.38, Z2 + 0.54, 5.08, 12.54, Z2 + 0.62, mats.fabricSage);
-    addBox(groupFl2, 5.28, 12.76, Z2, 6.66, 13.36, Z2 + 0.76, mats.woodOak);
-    addBox(groupFl2, 5.32, 11.28, Z2, 6.68, 11.82, Z2 + 2.40, mats.woodOak);
+    // C. PHÒNG SẾU (X = 3.22..6.78, Y = 11.20..13.45):
+    //    - Cửa sổ tường hướng Đông (X=4.48..5.88, Y=11.20) mở ra thấy Cầu thang!
+    //    - Giường ngủ đầu hướng Tây (Y=13.42), cuối giường hướng Đông (Y=11.56) -> thức dậy nhìn thẳng hướng Đông!
+    //    - Bàn nhỏ bên cạnh giường (X=4.16..4.54, Y=13.04..13.42) để sách & điện thoại; Tủ quần áo dài tường Bắc (Y=11.28..13.42); Bàn làm việc tường Nam dưới cửa sổ Nam!
+    addBox(groupFl2, 3.12, 11.15, Z2, 6.78, 11.25, Z2 + 0.96, mats.wallWhite);
+    addBox(groupFl2, 3.12, 11.15, Z2 + 2.25, 6.78, 11.25, H2, mats.wallWhite);
+    addBox(groupFl2, 3.12, 11.15, Z2 + 0.96, 4.48, 11.25, Z2 + 2.25, mats.wallWhite);
+    addBox(groupFl2, 5.88, 11.15, Z2 + 0.96, 6.78, 11.25, Z2 + 2.25, mats.wallWhite);
+    // Cửa sổ Japandi tường Đông mở ra thấy Cầu thang (X=4.48..5.88, Y=11.20)
+    addBox(groupFl2, 4.44, 11.12, Z2 + 0.945, 5.92, 11.34, Z2 + 0.985, mats.woodOak);
+    addBox(groupFl2, 4.46, 11.12, Z2 + 2.215, 5.90, 11.28, Z2 + 2.255, mats.woodOak);
+    addBox(groupFl2, 4.47, 11.12, Z2 + 0.985, 4.51, 11.28, Z2 + 2.215, mats.woodOak);
+    addBox(groupFl2, 5.85, 11.12, Z2 + 0.985, 5.89, 11.28, Z2 + 2.215, mats.woodOak);
+    addBox(groupFl2, 4.51, 11.19, Z2 + 0.985, 5.85, 11.21, Z2 + 2.215, mats.glassClear);
+    addBox(groupFl2, 4.95, 11.18, Z2 + 0.985, 4.97, 11.22, Z2 + 2.215, mats.metalBlack);
+    addBox(groupFl2, 5.40, 11.18, Z2 + 0.985, 5.42, 11.22, Z2 + 2.215, mats.metalBlack);
+    // Giường ngủ (đầu Tây Y=13.42, chân Đông Y=11.56)
+    addBox(groupFl2, 4.58, 11.56, Z2 + 0.02, 5.82, 13.42, Z2 + 0.54, mats.fabricWarm);
+    addBox(groupFl2, 4.60, 11.58, Z2 + 0.54, 5.80, 12.78, Z2 + 0.62, mats.fabricSage);
+    addBox(groupFl2, 4.54, 13.34, Z2 + 0.20, 5.86, 13.44, Z2 + 1.18, mats.woodSlats);
+    // Bàn nhỏ cạnh giường để sách & điện thoại (X=4.16..4.54, Y=13.04..13.42)
+    addBox(groupFl2, 4.16, 13.04, Z2 + 0.02, 4.54, 13.42, Z2 + 0.48, mats.woodOak);
+    addBedsideLamp(groupFl2, 4.35, 13.23, Z2 + 0.48);
+    addBox(groupFl2, 4.20, 13.08, Z2 + 0.48, 4.36, 13.24, Z2 + 0.54, mats.fabricMustard); // Sách
+    addBox(groupFl2, 4.40, 13.07, Z2 + 0.49, 4.48, 13.21, Z2 + 0.51, mats.ledCyanTech);   // Điện thoại
+    // Tủ quần áo dài suốt tường Bắc (X=6.28..6.78, Y=11.28..13.42)
+    addBox(groupFl2, 6.28, 11.28, Z2, 6.78, 13.42, Z2 + 2.45, mats.woodOak);
+    for (let swd = 0; swd < 4; swd++) {
+      const swy1 = 11.28 + swd * (2.14 / 4) + 0.015;
+      const swy2 = 11.28 + (swd + 1) * (2.14 / 4) - 0.015;
+      addBox(groupFl2, 6.255, swy1, Z2 + 0.05, 6.285, swy2, Z2 + 2.41, mats.wallCream);
+    }
+    // Bàn làm việc áp tường Nam ngay dưới cửa sổ tường Nam (X=3.24..3.74, Y=12.22..13.32) + ghế quay mặt Nam
+    addBox(groupFl2, 3.24, 12.22, Z2, 3.74, 13.32, Z2 + 0.76, mats.woodOak);
+    addBox(groupFl2, 3.38, 12.46, Z2 + 0.76, 3.60, 12.82, Z2 + 0.78, mats.metalStainless);
+    addBox(groupFl2, 3.36, 12.46, Z2 + 0.78, 3.39, 12.82, Z2 + 1.03, mats.tvScreenGlow);
+    addBox(groupFl2, 3.80, 12.44, Z2, 4.16, 12.84, Z2 + 0.48, mats.fabricSage);
     addWarmLight(groupFl2, 4.9, 12.3, 6.0, 2.0, 7.5, 0xffb74d);
 
-    // D. PHÒNG CHỊ HAI (X = 3.22..6.78, Y = 13.50..15.78)
+    // D. PHÒNG CHỊ HAI SÁT BAN CÔNG SAU (X = 3.22..6.78, Y = 13.50..15.78 — ĐỒNG BỘ NHƯ PHÒNG SẾU, CỬA SỔ HƯỚNG TÂY RA BAN CÔNG VỪA ĐỦ!)
     addBox(groupFl2, 3.12, 13.45, Z2, 6.78, 13.55, H2, mats.wallWhite);
-    addBox(groupFl2, 3.24, 13.66, Z2 + 0.02, 5.10, 14.86, Z2 + 0.54, mats.fabricWarm);
-    addBox(groupFl2, 3.80, 13.68, Z2 + 0.54, 5.08, 14.84, Z2 + 0.62, mats.fabricBlush);
-    addBox(groupFl2, 5.28, 13.62, Z2, 6.66, 14.22, Z2 + 0.76, mats.woodOak);
-    addBox(groupFl2, 5.72, 15.16, Z2, 6.74, 15.72, Z2 + 2.40, mats.woodOak);
+    // Giường ngủ đầu hướng Tây (Y=15.76 dưới cửa sổ ban công), cuối giường hướng Đông (Y=13.90)
+    addBox(groupFl2, 4.58, 13.90, Z2 + 0.02, 5.82, 15.76, Z2 + 0.54, mats.fabricWarm);
+    addBox(groupFl2, 4.60, 13.92, Z2 + 0.54, 5.80, 15.12, Z2 + 0.62, mats.fabricBlush);
+    addBox(groupFl2, 4.54, 15.68, Z2 + 0.20, 5.86, 15.78, Z2 + 1.02, mats.woodSlats);
+    // Bàn nhỏ bên cạnh giường để sách & điện thoại (X=4.16..4.54, Y=15.38..15.76)
+    addBox(groupFl2, 4.16, 15.38, Z2 + 0.02, 4.54, 15.76, Z2 + 0.48, mats.woodOak);
+    addBedsideLamp(groupFl2, 4.35, 15.57, Z2 + 0.48);
+    addBox(groupFl2, 4.20, 15.42, Z2 + 0.48, 4.36, 15.58, Z2 + 0.54, mats.fabricBlush);
+    addBox(groupFl2, 4.40, 15.41, Z2 + 0.49, 4.48, 15.55, Z2 + 0.51, mats.ledCyanTech);
+    // Tủ quần áo dài suốt tường Bắc (X=6.28..6.78, Y=13.60..15.74)
+    addBox(groupFl2, 6.28, 13.60, Z2, 6.78, 15.74, Z2 + 2.45, mats.woodOak);
+    for (let s2d = 0; s2d < 4; s2d++) {
+      const s2y1 = 13.60 + s2d * (2.14 / 4) + 0.015;
+      const s2y2 = 13.60 + (s2d + 1) * (2.14 / 4) - 0.015;
+      addBox(groupFl2, 6.255, s2y1, Z2 + 0.05, 6.285, s2y2, Z2 + 2.41, mats.wallCream);
+    }
+    // Bàn làm việc áp tường Nam ngay dưới cửa sổ tường Nam (X=3.24..3.74, Y=14.56..15.66) + ghế quay mặt Nam
+    addBox(groupFl2, 3.24, 14.56, Z2, 3.74, 15.66, Z2 + 0.76, mats.woodOak);
+    addBox(groupFl2, 3.38, 14.80, Z2 + 0.76, 3.60, 15.16, Z2 + 0.78, mats.metalStainless);
+    addBox(groupFl2, 3.36, 14.80, Z2 + 0.78, 3.39, 15.16, Z2 + 1.03, mats.tvScreenGlow);
+    addBox(groupFl2, 3.80, 14.78, Z2, 4.16, 15.18, Z2 + 0.48, mats.fabricBlush);
     addWarmLight(groupFl2, 4.9, 14.6, 6.0, 2.0, 7.5, 0xffb74d);
 
-    // E. BAN CÔNG SAU TẦNG 2 GỌN ĐÚNG 5M x 5M (X=2..7, Y=16..21 = 25m²!)
-    addBox(groupFl2, 2.00, 16.00, Z2, 2.06, 21.00, Z2 + 1.12, mats.glassBronze);
-    addBox(groupFl2, 2.00, 20.94, Z2, 7.00, 21.00, Z2 + 1.12, mats.glassBronze);
-    addBox(groupFl2, 6.94, 16.00, Z2, 7.00, 21.00, Z2 + 1.12, mats.glassBronze);
-    addBox(groupFl2, 4.95, 16.60, Z2, 6.65, 19.80, Z2 + 0.05, mats.woodOak);
-    addBox(groupFl2, 5.30, 17.10, Z2 + 0.05, 6.30, 19.30, Z2 + 0.08, mats.fabricMustard);
-    addBox(groupFl2, 2.25, 16.80, Z2 + 0.08, 3.15, 19.60, Z2 + 0.52, mats.fabricWarm);
-    addBox(groupFl2, 3.45, 17.45, Z2 + 0.36, 4.20, 18.95, Z2 + 0.42, mats.whiteMarble);
-    addWarmLight(groupFl2, 4.5, 18.5, 5.2, 1.8, 7.5, 0xffb74d);
+    // E. BAN CÔNG SAU TẦNG 2 (X=2..7, Y=16..20 = 20m²): RÀO LƯỚI SẮT 3 MẶT + CHỖ ĐẶT MÁY GIẶT TƯƠNG LAI + GIÀN PHƠI ĐỒ + GÓC LOUNGE!
+    addBox(groupFl2, 2.00, 16.00, Z2, 2.06, 20.00, Z2 + 1.12, mats.glassBronze);
+    addBox(groupFl2, 2.00, 19.94, Z2, 7.00, 20.00, Z2 + 1.12, mats.glassBronze);
+    addBox(groupFl2, 6.94, 16.00, Z2, 7.00, 20.00, Z2 + 1.12, mats.glassBronze);
+    // Trụ sắt & rào lưới sắt 3 mặt chống bay đồ (Z2+1.16..H2-0.22)
+    const meshZ1 = Z2 + 1.16, meshZ2 = H2 - 0.22;
+    [[2.04, 18.00], [2.04, 19.95], [4.50, 19.95], [6.95, 19.95], [6.95, 18.00]].forEach(([px, py]) => {
+      addBox(groupFl2, px - 0.04, py - 0.04, Z2, px + 0.04, py + 0.04, H2 - 0.16, mats.metalBlack);
+    });
+    for (let hmi = 0; hmi < 6; hmi++) {
+      const hmz = meshZ1 + (hmi + 0.5) * ((meshZ2 - meshZ1) / 6);
+      addBox(groupFl2, 2.01, 16.02, hmz - 0.009, 2.05, 19.96, hmz + 0.009, mats.metalStainless);
+      addBox(groupFl2, 2.02, 19.94, hmz - 0.009, 6.98, 19.98, hmz + 0.009, mats.metalStainless);
+      addBox(groupFl2, 6.94, 16.02, hmz - 0.009, 6.98, 19.96, hmz + 0.009, mats.metalStainless);
+    }
+    for (let vmi = 0; vmi < 13; vmi++) {
+      const vmy = 16.28 + vmi * 0.295;
+      addBox(groupFl2, 2.01, vmy - 0.009, meshZ1, 2.05, vmy + 0.009, meshZ2, mats.metalStainless);
+      addBox(groupFl2, 6.94, vmy - 0.009, meshZ1, 6.98, vmy + 0.009, meshZ2, mats.metalStainless);
+    }
+    for (let wmi = 0; wmi < 16; wmi++) {
+      const wmx = 2.28 + wmi * 0.295;
+      addBox(groupFl2, wmx - 0.009, 19.94, meshZ1, wmx + 0.009, 19.98, meshZ2, mats.metalStainless);
+    }
+    // 🧺 Chỗ đặt máy giặt tương lai góc Đông-Bắc (X=6.08..6.90, Y=16.04..16.90) + kệ trên & đầu chờ nước/điện
+    addBox(groupFl2, 6.08, 16.04, Z2, 6.90, 16.90, Z2 + 0.08, mats.stepStone);
+    [[6.12, 16.09], [6.86, 16.09], [6.12, 16.85], [6.86, 16.85]].forEach(([wx, wy]) => {
+      addBox(groupFl2, wx - 0.025, wy - 0.025, Z2 + 0.08, wx + 0.025, wy + 0.025, Z2 + 1.80, mats.metalBlack);
+    });
+    addBox(groupFl2, 6.08, 16.06, Z2 + 1.02, 6.90, 16.88, Z2 + 1.07, mats.woodOak);
+    addBox(groupFl2, 6.08, 16.06, Z2 + 1.75, 6.90, 16.88, Z2 + 1.80, mats.woodOak);
+    addBox(groupFl2, 6.32, 16.00, Z2 + 0.72, 6.37, 16.14, Z2 + 0.78, mats.metalStainless);
+    addBox(groupFl2, 6.56, 16.00, Z2 + 0.72, 6.68, 16.06, Z2 + 0.84, mats.wallWhite);
+    addBox(groupFl2, 6.18, 16.22, Z2 + 1.07, 6.54, 16.66, Z2 + 1.32, mats.woodOak);
+    // 👕 Giàn phơi đồ inox 2 thanh trên cao (X=4.35..6.75, Y=17.55 & 18.45)
+    [17.55, 18.45].forEach((dry, dri) => {
+      addBox(groupFl2, 4.35, dry - 0.018, Z2 + 2.08, 6.75, dry + 0.018, Z2 + 2.12, mats.metalStainless);
+      [4.75, 5.30, 5.85, 6.38].forEach((dcx, dci) => {
+        addBox(groupFl2, dcx - 0.19, dry - 0.022, Z2 + 1.48, dcx + 0.19, dry + 0.022, Z2 + 2.07,
+          [mats.wallWhite, mats.fabricSage, mats.fabricBlush, mats.fabricNavy][(dri + dci) % 4]);
+      });
+    });
+    // Góc Lounge thư giãn phía Nam
+    addBox(groupFl2, 2.25, 16.60, Z2 + 0.08, 3.12, 19.05, Z2 + 0.52, mats.fabricWarm);
+    addBox(groupFl2, 3.38, 17.20, Z2 + 0.36, 4.08, 18.50, Z2 + 0.42, mats.whiteMarble);
+    addWarmLight(groupFl2, 4.5, 18.0, 5.2, 1.8, 7.5, 0xffb74d);
 
     // =========================================================================
-    // 8. TẦNG MÁI KHỐI NHÀ CHÍNH 5M (X=2..7, KHÔNG CHE ĐƯỜNG LUỒNG 2M NAM!) & 6 TẤM PIN SOLAR PV
+    // 8. TẦNG MÁI KHỐI NHÀ CHÍNH 5M + MÁI TÔN BAN CÔNG TRƯỚC & BAN CÔNG SAU TẦNG 2 + 6 TẤM PIN SOLAR PV
     // =========================================================================
     const ZR = 6.95;
     addBox(groupRoof, 1.75, -0.35, ZR, 7.25, 16.35, ZR + 0.24, mats.wallCharcoal);
     addBox(groupRoof, 1.78, -0.36, ZR - 0.04, 7.22, -0.32, ZR, mats.ledWarmStrip);
     addBox(groupRoof, 2.05, 0.05, ZR + 0.24, 6.95, 15.95, ZR + 0.30, mats.wallWhite);
+    // 🏠 Mái tôn che Ban công trước Tầng 2 (X=1.96..7.04, Y=-3.18..0.05 — chống mưa tạt cửa sổ Phòng Chị Ba!)
+    const frontRoofPitch = Math.atan2(0.22, 3.23);
+    [2.06, 6.94].forEach(fpx => {
+      addBox(groupRoof, fpx - 0.04, -2.96, Z2 + 1.14, fpx + 0.04, -2.88, ZR - 0.16, mats.metalBlack);
+    });
+    addBox(groupRoof, 1.98, -3.02, ZR - 0.22, 7.02, -2.90, ZR - 0.14, mats.metalBlack);
+    const fRoofMesh = addBox(groupRoof, 1.96, -3.18, ZR - 0.09, 7.04, 0.05, ZR - 0.03, mats.wallCharcoal);
+    fRoofMesh.rotation.x = frontRoofPitch;
+    for (let fri = 0; fri < 9; fri++) {
+      const frx = 2.12 + fri * 0.59;
+      const rib = addBox(groupRoof, frx - 0.022, -3.18, ZR - 0.035, frx + 0.022, 0.05, ZR - 0.008, mats.metalBlack);
+      rib.rotation.x = frontRoofPitch;
+    }
+    addBox(groupRoof, 1.94, -3.22, ZR - 0.25, 7.06, -3.14, ZR - 0.15, mats.metalBlack);
+    addBox(groupRoof, 2.20, -2.92, ZR - 0.24, 6.80, -2.88, ZR - 0.21, mats.ledWarmStrip);
+    // 🏠 Mái tôn che Ban công sau Tầng 2 (X=1.96..7.04, Y=15.95..20.18 — che mưa nắng trọn khu giặt & phơi!)
+    const rearRoofPitch = -Math.atan2(0.24, 4.23);
+    addBox(groupRoof, 1.98, 19.90, ZR - 0.24, 7.02, 20.02, ZR - 0.16, mats.metalBlack);
+    const rRoofMesh = addBox(groupRoof, 1.96, 15.95, ZR - 0.10, 7.04, 20.18, ZR - 0.04, mats.wallCharcoal);
+    rRoofMesh.rotation.x = rearRoofPitch;
+    for (let rri = 0; rri < 9; rri++) {
+      const rrx = 2.12 + rri * 0.59;
+      const rib = addBox(groupRoof, rrx - 0.022, 15.95, ZR - 0.045, rrx + 0.022, 20.18, ZR - 0.018, mats.metalBlack);
+      rib.rotation.x = rearRoofPitch;
+    }
+    addBox(groupRoof, 1.94, 20.14, ZR - 0.27, 7.06, 20.22, ZR - 0.17, mats.metalBlack);
+    addBox(groupRoof, 2.20, 19.86, ZR - 0.26, 6.80, 19.90, ZR - 0.23, mats.ledWarmStrip);
     addBox(groupRoof, 3.45, 7.15, ZR + 0.30, 5.65, 10.05, ZR + 0.62, mats.glassClear);
     const tank = new THREE.Mesh(new THREE.CylinderGeometry(0.65, 0.65, 1.4, 20), mats.metalStainless);
     tank.rotation.x = Math.PI / 2;
@@ -1711,7 +1970,7 @@
     });
 
     const camSpecs = [
-      [6.65, -17.85, 2.55, 0.25, -0.4],
+      [6.65, -19.35, 2.55, 0.25, -0.4],
       [2.10, -0.15, 3.05, 0.3, 0.2],
       [1.80, 8.0, 2.72, 0.2, Math.PI],
       [2.20, 16.10, 3.05, 0.3, Math.PI],
@@ -1797,10 +2056,10 @@
         • <strong>Đường luồng 2m Tầng 1 (X = 0..2m — Phía Nam):</strong> Chạy từ cổng phụ 2m bên trái mặt tiền ra thẳng sân sau & vườn rau, được che chắn hoàn toàn bởi khối nhà chính 5m×16m ở phía Bắc nên tránh gió bấc mùa đông.<br>
         • <strong>Hành lang 2m Tầng 2 (X = 0..2m — Phía Nam):</strong> 4 ô cửa kính lớn toàn cảnh quay hướng Nam đón gió Nam/Đông Nam mát mẻ, kết nối thẳng Ban công trước 3m & Ban công sau chữ L.<br>
         • <strong>Cửa sổ Bếp mở sang luồng Nam:</strong> 2 ô cửa sổ lớn hút luồng gió mát tự nhiên vào khu bếp & bàn ăn.`,
-      canopy: `<strong>🍵 Cái Hè Gọn, Tủ Dép Lan Can Bắc & Bàn Ghế Ba Ở Dưới Bậc Thang:</strong><br>
-        • <strong>Đúng trình tự:</strong> Cửa chính → Cái hè thu hẹp (Y=-1.45..0m) có 2 lan can dọc ngồi được & <strong>Tủ dép sát lan can Bắc</strong> → <strong>Bậc thang 3 bậc</strong> (Y=-2.35..-1.45m) → <strong>Bàn ghế Ba chill dưới bậc thang</strong> (Y=-5.25..-2.70m, dưới mái che kính).<br>
-        • <strong>Đường luồng tầng dưới có 2 cửa sổ:</strong> 1 nằm giữa khu Sofa và Phòng Ba Mẹ (lệch về phía Sofa nhiều hơn), 1 sau bàn ăn Bếp để ngồi ăn thấy xe ai về.<br>
-        • <strong>Phòng bếp chữ L (3 cửa):</strong> 1 cửa chính sau + <strong>2 cửa sổ</strong> (cửa sổ đường luồng sau bàn ăn & cửa sổ chỗ nấu ăn nhìn ra Phòng tắm); <strong>Bếp hồng ngoại đặt sát tường phía Bắc</strong> (người nấu quay mặt Bắc, nhìn bên trái thấy cửa sổ Phòng tắm).`,
+      canopy: `<strong>🍵 Cái Hè Gọn (2 Bậc + Thang Trượt Xe), Cửa Phụ Luồng Nam & Cửa Lưới B40:</strong><br>
+        • <strong>Bậc thang 2 bậc êm ái + Thang trượt đi xe vô nhà:</strong> Cốt nền T1 hạ còn 0.45m (2 bậc 15cm/bậc không quá cao), tích hợp <strong>thang trượt chống trượt (X=2.38..3.56m)</strong> thẳng cửa chính cho xe máy chạy lên nhà dễ dàng.<br>
+        • <strong>Cửa phụ đi ra đường luồng & Cửa lưới B40:</strong> Đổi cửa sổ giữa Sofa & Phòng Ba Mẹ (Y=4.80..6.25m) thành <strong>cửa phụ 2 cánh đi ra đi vào</strong> đường luồng Nam (kèm 2 bậc đá); lắp <strong>cửa lưới B40 đơn giản</strong> tại giao điểm đường luồng – hiên sau (Y=16.03m) ngăn chó/vật nuôi chạy lên phía trước.<br>
+        • <strong>Nhà tắm mở cửa hướng Đông & Dùng chung tường Chòi bếp:</strong> Cửa nhà tắm mở hướng Đông (nhìn vô thấy nhà bếp) tiết kiệm diện tích, <strong>chỗ tắm (3.92m²) rộng hơn hẳn khu bồn cầu & lavabo (3.17m²)</strong>, bỏ đường ống nước ngoài và tiếp nối sát dùng chung 1 tường với Chòi bếp.`,
       wifi: `<strong>📍 Vị trí WiFi Mesh 6E & Màn Hình Trung Tâm 10":</strong><br>
         • <strong>Node 1 (Router Chính):</strong> Đặt tại Kệ TV Phòng khách áp tường Bắc (X=6.5m, Y=3.15m).<br>
         • <strong>Node 2 (Khu Bếp & Sân Sau):</strong> Gắn tường Nam khu Bếp (X=2.34m, Y=11.8m), phủ sóng sân sau & vườn rau.<br>

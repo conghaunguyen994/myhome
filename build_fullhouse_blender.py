@@ -156,6 +156,7 @@ create_mat("Mat_FloorTileCream", (0.94, 0.92, 0.88, 1.0), roughness=0.20, metall
 create_mat("Mat_AntiSlipWoodTile", (0.64, 0.44, 0.27, 1.0), roughness=0.38)
 create_mat("Mat_AntiSlipPavers", (0.36, 0.39, 0.44, 1.0), roughness=0.78)
 create_mat("Mat_StepStone", (0.75, 0.74, 0.70, 1.0), roughness=0.72)
+create_mat("Mat_ConcreteRamp", (0.64, 0.65, 0.66, 1.0), roughness=0.78)
 create_mat("Mat_WhiteMarble", (0.97, 0.97, 0.98, 1.0), roughness=0.12, metallic=0.06)
 create_mat("Mat_BacksplashTile", (0.86, 0.89, 0.90, 1.0), roughness=0.18)
 
@@ -187,6 +188,7 @@ create_mat("Mat_CurtainLinen", (0.70, 0.66, 0.60, 1.0), roughness=0.88)
 
 # Kính & Gương
 create_mat("Mat_GlassClear", (0.84, 0.93, 0.98, 0.28), roughness=0.04, transmission=0.90, alpha=0.28)
+create_mat("Mat_GlassFrosted", (0.90, 0.93, 0.95, 0.92), roughness=0.48, transmission=0.12, alpha=0.92)
 create_mat("Mat_GlassBronze", (0.48, 0.60, 0.68, 0.40), roughness=0.08, transmission=0.78, alpha=0.40)
 create_mat("Mat_BalconyGlassBronze", (0.42, 0.56, 0.64, 0.36), roughness=0.06, transmission=0.82, alpha=0.36)
 create_mat("Mat_CanopyGlass", (0.38, 0.50, 0.60, 0.35), roughness=0.08, transmission=0.75, alpha=0.35)
@@ -302,6 +304,61 @@ def add_sphere(collection, name, cx, cy, cz, r, mat_name=None, sx=1.0, sy=1.0, s
     if sx != 1.0 or sy != 1.0 or sz != 1.0:
         bmesh.ops.scale(bm, vec=(sx, sy, sz), verts=bm.verts)
     return link_mesh_obj(collection, name, bm, mat_name, loc=(cx, cy, cz), smooth=True)
+
+def add_ramp_y(collection, name, min_x, max_x, y_low, y_high, z_base, z_top, mat_name=None):
+    """Tạo khối dốc (wedge) khít sàn tăng dần theo trục Y từ (y_low, z_base) lên (y_high, z_top)."""
+    bm = bmesh.new()
+    v0 = bm.verts.new((min_x * S, y_low * S, z_base * S))
+    v1 = bm.verts.new((max_x * S, y_low * S, z_base * S))
+    v2 = bm.verts.new((max_x * S, y_high * S, z_base * S))
+    v3 = bm.verts.new((min_x * S, y_high * S, z_base * S))
+    v4 = bm.verts.new((min_x * S, y_high * S, z_top * S))
+    v5 = bm.verts.new((max_x * S, y_high * S, z_top * S))
+    bm.faces.new((v0, v3, v2, v1))  # đáy
+    bm.faces.new((v0, v1, v5, v4))  # mặt dốc
+    bm.faces.new((v3, v4, v5, v2))  # mặt lưng cao
+    bm.faces.new((v0, v4, v3))      # mặt hông min_x
+    bm.faces.new((v1, v2, v5))      # mặt hông max_x
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    return link_mesh_obj(collection, name, bm, mat_name, loc=(0, 0, 0))
+
+def add_b40_mesh_panel(collection, prefix, x1, x2, y_pos, z1, z2, spacing=0.13, wire_r=0.005, mat_name="Mat_MetalStainless"):
+    """Tạo lưới thép B40 mắt cáo chéo đơn giản (2 hướng ±45°) nằm gọn trong khung [x1..x2] x [z1..z2]."""
+    w = x2 - x1
+    h = z2 - z1
+    idx = 0
+    # Đường chéo hướng +1: z - z1 = (x - x1) + c
+    c = -w + spacing * 0.5
+    while c < h:
+        xa = max(0.0, -c)
+        xb = min(w, h - c)
+        if xb - xa > 0.04:
+            za, zb = xa + c, xb + c
+            mx = x1 + (xa + xb) / 2.0
+            mz = z1 + (za + zb) / 2.0
+            seg_len = math.hypot(xb - xa, zb - za)
+            add_box(collection, f"{prefix}_WireA_{idx}",
+                    mx - seg_len / 2.0, y_pos - wire_r, mz - wire_r,
+                    mx + seg_len / 2.0, y_pos + wire_r, mz + wire_r,
+                    mat_name, rot=(0, -math.pi / 4.0, 0))
+            idx += 1
+        c += spacing
+    # Đường chéo hướng -1: z - z1 = -(x - x1) + d
+    d = spacing * 0.5
+    while d < w + h:
+        xa = max(0.0, d - h)
+        xb = min(w, d)
+        if xb - xa > 0.04:
+            za, zb = d - xa, d - xb
+            mx = x1 + (xa + xb) / 2.0
+            mz = z1 + (za + zb) / 2.0
+            seg_len = math.hypot(xb - xa, zb - za)
+            add_box(collection, f"{prefix}_WireB_{idx}",
+                    mx - seg_len / 2.0, y_pos - wire_r, mz - wire_r,
+                    mx + seg_len / 2.0, y_pos + wire_r, mz + wire_r,
+                    mat_name, rot=(0, math.pi / 4.0, 0))
+            idx += 1
+        d += spacing
 
 # --- Composite Decor & Furniture Builders ---
 
@@ -535,6 +592,16 @@ def add_study_desk_set(col, prefix, x1, y1, z0, x2, y2, chair_side='Y_MIN'):
     add_box(col, f"{prefix}_Top", x1, y1, z0 + 0.72, x2, y2, z0 + 0.76, "Mat_WoodOakTable", bevel=0.01)
     for i, (lx, ly) in enumerate([(x1 + 0.06, y1 + 0.06), (x2 - 0.06, y1 + 0.06), (x1 + 0.06, y2 - 0.06), (x2 - 0.06, y2 - 0.06)]):
         add_box(col, f"{prefix}_Leg{i}", lx - 0.025, ly - 0.025, z0, lx + 0.025, ly + 0.025, z0 + 0.72, "Mat_MetalMatteBlack")
+    if chair_side == 'X_MAX':
+        # Bàn đặt áp tường Nam (x1), người ngồi từ hướng Bắc (x2+) quay mặt về hướng Nam (-X) nhìn qua cửa sổ!
+        add_box(col, f"{prefix}_Drawer", x1 + 0.04, y2 - 0.34, z0 + 0.12, x2 - 0.04, y2 - 0.04, z0 + 0.71, "Mat_WoodOakCabinet", bevel=0.008)
+        mx, my = (x1 + x2) / 2.0, y1 + 0.42
+        add_box(col, f"{prefix}_LaptopBase", mx - 0.12, my - 0.18, z0 + 0.76, mx + 0.12, my + 0.18, z0 + 0.78, "Mat_MetalStainless")
+        add_box(col, f"{prefix}_LaptopScr", mx - 0.13, my - 0.18, z0 + 0.78, mx - 0.10, my + 0.18, z0 + 1.03, "Mat_LaptopScreen")
+        add_dining_chair(col, f"{prefix}_Chair", x2 + 0.24, my, z0, math.pi / 2.0, "Mat_CushionSage", "Mat_WoodOakTable")
+        add_table_lamp(col, f"{prefix}_Lamp", mx - 0.04, y2 - 0.20, z0 + 0.76, scale=0.68)
+        add_potted_plant(col, f"{prefix}_MiniPlant", mx - 0.04, y1 + 0.14, z0 + 0.76, scale=0.34, pot_mat="Mat_CeramicWhite")
+        return
     # Hộc tủ bàn
     add_box(col, f"{prefix}_Drawer", x1 + 0.04, y1 + 0.06, z0 + 0.12, x1 + 0.42, y2 - 0.06, z0 + 0.71, "Mat_WoodOakCabinet", bevel=0.008)
     # Laptop & đèn học & cây mini
@@ -555,27 +622,29 @@ def add_study_desk_set(col, prefix, x1, y1, z0, x2, y2, chair_side='Y_MIN'):
 #    Nhìn từ đường Quốc lộ vào nhà: Trái (-X, X=0..2) = PHÍA NAM (đường luồng 2m
 #    tránh gió bấc, đón gió Nam mát); Phải (+X, X=2..7) = PHÍA BẮC (khối nhà chính).
 # ---------------------------------------------------------------------------
-add_box(col_site, "Site_FrontRoad", -4.0, -24.0, -0.35, 11.0, -18.8, -0.20, "Mat_RoadAsphalt")
-add_box(col_site, "Site_Sidewalk", -2.0, -18.8, -0.20, 9.0, -18.0, 0.0, "Mat_WallFacadeWarm")
-add_box(col_site, "Site_ArchitecturalBasePlinth", -0.5, -18.5, -0.45, 7.5, 24.5, -0.01, "Mat_RoofCharcoal")
-add_box(col_site, "Site_FrontYard_Slab", 0.0, -18.0, 0.0, 7.0, 0.0, 0.15, "Mat_AntiSlipPavers")
+# Lùi toàn bộ khối nhà áp sát ranh hậu (Y = 22.50m) để chừa Sân trước RỘNG TỐI ĐA (19.50m: Y = -19.50..0.00m)!
+# Tổng chiều dài khu đất giữ nguyên 42.0m = 19.50m (Sân trước rộng) + 20.00m (Nhà chính 16m + Hiên sau & WC 4m) + 2.50m (Chòi bếp & Vườn rau vừa đủ)!
+add_box(col_site, "Site_FrontRoad", -4.0, -25.5, -0.35, 11.0, -20.3, -0.20, "Mat_RoadAsphalt")
+add_box(col_site, "Site_Sidewalk", -2.0, -20.3, -0.20, 9.0, -19.5, 0.0, "Mat_WallFacadeWarm")
+add_box(col_site, "Site_ArchitecturalBasePlinth", -0.5, -20.0, -0.45, 7.5, 23.0, -0.01, "Mat_RoofCharcoal")
+add_box(col_site, "Site_FrontYard_Slab", 0.0, -19.5, 0.0, 7.0, 0.0, 0.15, "Mat_AntiSlipPavers")
 
-# Trụ cổng đá chẻ & Cổng sắt (Cổng phụ 2m phía Nam X=0.15..2.85, Cổng ô tô 3.6m phía Bắc X=3.15..6.65)
-add_box(col_site, "Gate_Pillar_L", -0.18, -18.18, 0.0, 0.15, -17.82, 2.65, "Mat_DarkGreyStone")
-add_box(col_site, "Gate_Pillar_M", 2.85, -18.18, 0.0, 3.15, -17.82, 2.65, "Mat_DarkGreyStone")
-add_box(col_site, "Gate_Pillar_R", 6.65, -18.18, 0.0, 7.18, -17.82, 2.65, "Mat_DarkGreyStone")
+# Trụ cổng đá chẻ & Cổng sắt (đẩy lên mốc Y=-19.50m để sân trước rộng tối đa 19.50m!)
+add_box(col_site, "Gate_Pillar_L", -0.18, -19.68, 0.0, 0.15, -19.32, 2.65, "Mat_DarkGreyStone")
+add_box(col_site, "Gate_Pillar_M", 2.85, -19.68, 0.0, 3.15, -19.32, 2.65, "Mat_DarkGreyStone")
+add_box(col_site, "Gate_Pillar_R", 6.65, -19.68, 0.0, 7.18, -19.32, 2.65, "Mat_DarkGreyStone")
 # Đèn trụ cổng
 for gi, gx in enumerate([0.0, 3.0, 6.92]):
-    add_box(col_lights, f"Gate_Lamp_{gi}", gx - 0.11, -18.10, 2.65, gx + 0.11, -17.90, 2.88, "Mat_WarmSconce", bevel=0.01)
+    add_box(col_lights, f"Gate_Lamp_{gi}", gx - 0.11, -19.60, 2.65, gx + 0.11, -19.40, 2.88, "Mat_WarmSconce", bevel=0.01)
 
-add_box(col_site, "SideGate_2m", 0.15, -18.0, 0.18, 2.85, -17.94, 2.25, "Mat_MetalMatteBlack")
-add_box(col_site, "MainCarGate_3m6", 3.15, -18.0, 0.18, 6.65, -17.94, 2.25, "Mat_MetalMatteBlack")
+add_box(col_site, "SideGate_2m", 0.15, -19.5, 0.18, 2.85, -19.44, 2.25, "Mat_MetalMatteBlack")
+add_box(col_site, "MainCarGate_3m6", 3.15, -19.5, 0.18, 6.65, -19.44, 2.25, "Mat_MetalMatteBlack")
 
-# Hàng rào: Tường rào trái (phía Nam) chạy liền; Tách tường rào phải (phía Bắc) chừa Y=0..16 để mở góc cắt nội thất!
-add_box(col_site, "Fence_Left", -0.18, -18.0, 0.0, 0.0, 24.0, 2.35, "Mat_WallWarmWhite")
-add_box(col_site, "Fence_Right_Front", 7.0, -18.0, 0.0, 7.18, 0.0, 2.35, "Mat_WallWarmWhite")
-add_box(col_site, "Fence_Right_Rear", 7.0, 16.0, 0.0, 7.18, 24.0, 2.35, "Mat_WallWarmWhite")
-add_box(col_site, "Fence_Rear", -0.18, 24.0, 0.0, 7.18, 24.18, 2.35, "Mat_WallWarmWhite")
+# Hàng rào: Tường rào trái (Nam) chạy liền từ -19.50 tới 22.50; Tường hậu áp sát lưng Chòi bếp tại Y=22.50!
+add_box(col_site, "Fence_Left", -0.18, -19.5, 0.0, 0.0, 22.5, 2.35, "Mat_WallWarmWhite")
+add_box(col_site, "Fence_Right_Front", 7.0, -19.5, 0.0, 7.18, 0.0, 2.35, "Mat_WallWarmWhite")
+add_box(col_site, "Fence_Right_Rear", 7.0, 16.0, 0.0, 7.18, 22.5, 2.35, "Mat_WallWarmWhite")
+add_box(col_site, "Fence_Rear", -0.18, 22.5, 0.0, 7.18, 22.68, 2.35, "Mat_WallWarmWhite")
 
 # Mái che sân trước Tầng 1 nối LIỀN MẠCH với mép trước Ban công Tầng 2 (Y = -9.0..-3.0, rộng trọn 7m, đồng cao độ sàn T2 mới Z2=3.45 -> dầm Z=3.15..3.32)
 for cy in [-8.94, -6.00, -2.98]:
@@ -598,39 +667,51 @@ add_box(col_site, "Canopy_GlassRoof_Flush", 0.06, -8.98, 3.30, 6.94, -2.98, 3.35
 add_box(col_lights, "BalconyUnder_LED_Mid", 2.20, -1.52, 3.26, 6.60, -1.48, 3.30, "Mat_WarmLED")
 
 # ---------------------------------------------------------------------------
-# 4B. CÁI HÈ THU HẸP GỌN (Y=-1.45..0) + BẬC THANG 3 BẬC (Y=-2.35..-1.45)
+# 4B. CÁI HÈ THU HẸP GỌN (Y=-1.45..0) + BẬC THANG 2 BẬC ÊM ÁI (Z1=0.45, 2x15cm)
+#     + THANG TRƯỢT / DỐC XE MÁY ĐI THẲNG VÀO NHÀ (X=2.38..3.58, Y=-2.60..-1.45)
 #     + 2 LAN CAN DỌC NGỒI ĐƯỢC + TỦ DÉP LAN CAN BẮC
 #     + BÀN GHẾ BA CHILL Ở DƯỚI BẬC THANG (Y=-5.25..-2.70, NỀN SÂN Z=0.15)
 # ---------------------------------------------------------------------------
-Z1 = 0.54
-H1 = 3.30  # Mục 17: Hạ thấp chiều cao tầng 1 (Z2=3.45, trần thông thủy H1=3.30m) để cầu thang đỡ dốc & tất cả phòng tầng 1 (gồm Nhà tắm & Chòi bếp) bằng nhau!
+Z1 = 0.45  # Mục 2.1: Hạ cốt nền T1 xuống 0.45m (chênh sân 30cm) để bậc thang trước chỉ còn 2 bậc êm ái (15cm/bậc), không quá cao cho dễ đi!
+H1 = 3.30  # Mục 17: Trần thông thủy Tầng 1 đồng bộ H1=3.30m cho tất cả các phòng tầng dưới (gồm Nhà tắm & Chòi bếp)!
 
-# Nền cái hè thu hẹp gọn (Y = -1.45..0.0, X = 2.0..7.0, cao độ bằng sàn nhà Z1 = 0.54)
+# Nền cái hè thu hẹp gọn (Y = -1.45..0.0, X = 2.0..7.0, cao độ bằng sàn nhà Z1 = 0.45)
 add_box(col_site, "Porch_He_Slab", 2.0, -1.45, 0.15, 7.0, 0.0, Z1, "Mat_FloorTileCream")
 
-# Bậc thang 3 bậc (bậc tam cấp) nối từ sân (Z=0.15) lên cái hè (Z1=0.54): Y = -2.35..-1.45
-for st_i, (sy1, sy2, sz_top) in enumerate([(-2.35, -2.05, 0.28), (-2.05, -1.75, 0.41), (-1.75, -1.45, 0.54)]):
-    add_box(col_site, f"Porch_Step_{st_i + 1}", 2.38, sy1, 0.15, 6.62, sy2, sz_top, "Mat_StepStone", bevel=0.008)
-    add_box(col_lights, f"Porch_StepLED_{st_i + 1}", 2.50, sy1 - 0.01, sz_top - 0.03, 6.50, sy1 + 0.01, sz_top - 0.01, "Mat_WarmLED")
+# Mục 2 & 2.1: Dốc bê tông đi xe máy bên hướng Nam thẳng trọn Cửa chính (X=2.38..3.95, Y=-2.65..-1.45) + 2 bậc thang đi bộ bên hướng Bắc (X=4.02..6.62, Y=-2.05..-1.45)!
+for st_i, (sy1, sy2, sz_top) in enumerate([(-2.05, -1.75, 0.30), (-1.75, -1.45, 0.45)]):
+    add_box(col_site, f"Porch_Step_{st_i + 1}", 4.02, sy1, 0.15, 6.62, sy2, sz_top, "Mat_StepStone", bevel=0.008)
+    add_box(col_lights, f"Porch_StepLED_{st_i + 1}", 4.10, sy1 - 0.01, sz_top - 0.025, 6.54, sy1 + 0.01, sz_top - 0.008, "Mat_WarmLED")
 
-# Giữ nguyên 2 lan can dọc hai bên cái hè có thể ngồi được (mặt gỗ rộng ngồi thoải mái)
+# Dốc bê tông xây liền khối hướng Nam để chạy xe máy thẳng vào Cửa chính (X=2.38..3.95, Y=-2.65..-1.45, dốc thoai thoải ~14.0°)
+add_ramp_y(col_site, "Porch_ConcreteRamp_Body", 2.38, 3.95, -2.65, -1.45, 0.15, Z1, "Mat_ConcreteRamp")
+# Gờ bê tông phân tách gọn giữa dốc xe máy hướng Nam & 2 bậc thang hướng Bắc (X=3.95..4.02) + LED dẫn hướng
+add_ramp_y(col_site, "Porch_ConcreteRamp_Curb", 3.95, 4.02, -2.65, -1.45, 0.15, Z1 + 0.025, "Mat_DarkGreyStone")
+# 7 rãnh khía bê tông chống trượt trên mặt dốc xe máy
+ramp_ang = math.atan2(Z1 - 0.15, 1.20)
+for ri in range(7):
+    t = (ri + 0.6) / 7.2
+    ry = -2.65 + t * 1.20
+    rz = 0.15 + t * (Z1 - 0.15)
+    add_box(col_site, f"Porch_ConcreteRamp_Grip_{ri}", 2.46, ry - 0.016, rz - 0.004, 3.87, ry + 0.016, rz + 0.008, "Mat_DarkGreyStone", rot=(ramp_ang, 0, 0))
+add_box(col_lights, "Porch_ConcreteRamp_LED", 3.93, -2.56, 0.305, 3.96, -1.52, 0.325, "Mat_WarmLED", rot=(ramp_ang, 0, 0))
+
+# 2 lan can dọc hai bên cái hè cao 86cm trên mặt hè (Z1+0.86 — cao hơn hẳn tủ dép 68cm, có mặt gỗ sồi rộng chắc chắn!)
 # 1. Lan can dọc phía Nam (X = 2.00..2.38) — nhìn qua hướng Nam là Đường luồng 2m!
-add_box(col_site, "Porch_SitWall_South_Base", 2.00, -2.35, 0.15, 2.38, 0.0, Z1 + 0.42, "Mat_WallWarmWhite", bevel=0.01)
-add_box(col_site, "Porch_SitWall_South_Top", 1.96, -2.38, Z1 + 0.42, 2.42, 0.0, Z1 + 0.48, "Mat_WoodOakTable", bevel=0.015)
-for sci, scy in enumerate([-1.75, -0.75]):
-    add_box(col_site, f"Porch_SitWall_South_Pad_{sci}", 2.00, scy - 0.32, Z1 + 0.48, 2.38, scy + 0.32, Z1 + 0.53, "Mat_CushionMustard", bevel=0.018)
+add_box(col_site, "Porch_SitWall_South_Base", 2.00, -2.05, 0.15, 2.38, 0.0, Z1 + 0.80, "Mat_WallWarmWhite", bevel=0.01)
+add_box(col_site, "Porch_SitWall_South_Top", 1.96, -2.08, Z1 + 0.80, 2.42, 0.0, Z1 + 0.86, "Mat_WoodOakTable", bevel=0.015)
 
-# 2. Lan can dọc phía Bắc (X = 6.62..7.00) + TỦ DÉP đặt gọn trên hè sát lan can phía Bắc!
-add_box(col_site, "Porch_SitWall_North_Base", 6.62, -2.35, 0.15, 7.00, 0.0, Z1 + 0.42, "Mat_WallWarmWhite", bevel=0.01)
-add_box(col_site, "Porch_SitWall_North_Top", 6.58, -2.38, Z1 + 0.42, 7.00, 0.0, Z1 + 0.48, "Mat_WoodOakTable", bevel=0.015)
+# 2. Lan can dọc phía Bắc (X = 6.62..7.00, cao Z1+0.86) + TỦ DÉP đặt gọn trên hè sát lan can phía Bắc (thấp hơn lan can 18cm!)
+add_box(col_site, "Porch_SitWall_North_Base", 6.62, -2.05, 0.15, 7.00, 0.0, Z1 + 0.80, "Mat_WallWarmWhite", bevel=0.01)
+add_box(col_site, "Porch_SitWall_North_Top", 6.58, -2.08, Z1 + 0.80, 7.00, 0.0, Z1 + 0.86, "Mat_WoodOakTable", bevel=0.015)
 
-# 👟 TỦ DÉP GỌN ĐẸP SÁT LAN CAN PHÍA BẮC TRÊN HÈ (X = 6.18..6.60, Y = -1.35..-0.18, thấp hơn bệ cửa sổ Bắc)
-add_box(col_site, "Porch_ShoeCabinet_Body", 6.20, -1.32, Z1 + 0.06, 6.60, -0.20, Z1 + 0.68, "Mat_WoodOakCabinet", bevel=0.012)
-add_box(col_site, "Porch_ShoeCabinet_Top", 6.18, -1.34, Z1 + 0.68, 6.62, -0.18, Z1 + 0.72, "Mat_WoodOakTable", bevel=0.008)
+# 👟 TỦ DÉP GỌN ĐẸP SÁT LAN CAN PHÍA BẮC TRÊN HÈ (X = 6.18..6.60, Y = -1.35..-0.18, cao 68cm — thấp hơn cả lan can 86cm lẫn bệ cửa sổ Bắc 72cm!)
+add_box(col_site, "Porch_ShoeCabinet_Body", 6.20, -1.32, Z1 + 0.06, 6.60, -0.20, Z1 + 0.64, "Mat_WoodOakCabinet", bevel=0.012)
+add_box(col_site, "Porch_ShoeCabinet_Top", 6.18, -1.34, Z1 + 0.64, 6.62, -0.18, Z1 + 0.68, "Mat_WoodOakTable", bevel=0.008)
 for sh_d in range(2):
     sy_d1 = -1.28 + sh_d * 0.54
-    add_box(col_site, f"Porch_ShoeCabinet_Door_{sh_d}", 6.18, sy_d1, Z1 + 0.10, 6.21, sy_d1 + 0.50, Z1 + 0.64, "Mat_WallFacadeWarm", bevel=0.006)
-    add_box(col_site, f"Porch_ShoeCabinet_Handle_{sh_d}", 6.15, sy_d1 + 0.22, Z1 + 0.48, 6.18, sy_d1 + 0.28, Z1 + 0.58, "Mat_BrassGold", bevel=0.003)
+    add_box(col_site, f"Porch_ShoeCabinet_Door_{sh_d}", 6.18, sy_d1, Z1 + 0.10, 6.21, sy_d1 + 0.50, Z1 + 0.60, "Mat_WallFacadeWarm", bevel=0.006)
+    add_box(col_site, f"Porch_ShoeCabinet_Handle_{sh_d}", 6.15, sy_d1 + 0.22, Z1 + 0.44, 6.18, sy_d1 + 0.28, Z1 + 0.54, "Mat_BrassGold", bevel=0.003)
 for sl_i in range(4):
     add_cyl(col_site, f"Porch_ShoeCabinet_Leg_{sl_i}", 6.24 if sl_i % 2 == 0 else 6.56, -1.26 if sl_i < 2 else -0.26, Z1, Z1 + 0.06, 0.018, 0.018, "Mat_MetalMatteBlack", segs=8)
 # Vài đôi dép/giày xếp ngay ngắn bên cạnh tủ dép
@@ -676,16 +757,14 @@ for wi, (wx, wy) in enumerate([(4.22, -13.6), (6.08, -13.6), (4.22, -11.1), (6.0
     add_cyl(col_site, f"Family_SUV_Rim_{wi}", wx + (-0.04 if wx < 5.0 else 0.04), wy, 0.28, 0.72, 0.20, 0.20, "Mat_MetalStainless",
             rot=(0, math.pi / 2, 0), segs=14)
 
-# 🌳 Bonsai & Cây cảnh hướng phía Nam trong sân (dọc lối vào đường luồng) + Đèn nấm lối đi
-for bi, by in enumerate([-16.2, -12.5, -8.8, -5.0, -1.6]):
-    add_box(col_site, f"Bonsai_Planter_{bi}", 0.55, by - 0.38, 0.15, 1.45, by + 0.38, 0.58, "Mat_DarkGreyStone", bevel=0.02)
-    add_box(col_site, f"Bonsai_Soil_{bi}", 0.62, by - 0.32, 0.55, 1.38, by + 0.32, 0.60, "Mat_SoilDark")
-    add_cyl(col_site, f"Bonsai_Trunk_{bi}", 1.0, by, 0.58, 1.15, 0.09, 0.06, "Mat_TreeTrunk", segs=10)
-    add_sphere(col_site, f"Bonsai_Canopy1_{bi}", 1.0, by, 1.38, 0.42, "Mat_FoliageGreen", 1.2, 1.1, 0.72)
-    add_sphere(col_site, f"Bonsai_Canopy2_{bi}", 1.25, by + 0.22, 1.18, 0.28, "Mat_FoliageBright", 1.1, 1.0, 0.75)
-    add_sphere(col_site, f"Bonsai_Canopy3_{bi}", 0.76, by - 0.20, 1.22, 0.26, "Mat_FoliageGreen", 1.0, 1.1, 0.72)
-    add_cyl(col_lights, f"Garden_Bollard_{bi}", 1.75, by, 0.15, 0.65, 0.06, 0.06, "Mat_MetalMatteBlack", segs=10)
-    add_cyl(col_lights, f"Garden_BollardGlow_{bi}", 1.75, by, 0.52, 0.62, 0.065, 0.065, "Mat_WarmSconce", segs=10)
+# 🌳 Bonsai & Cây cảnh trưng bày gọn ÁP SÁT TƯỜNG RÀO NAM (X=0.02..0.58, chừa trống 1.42m lối vào đường luồng; trải đều sân trước 19.5m!)
+for bi, by in enumerate([-17.6, -13.6, -8.0, -4.6, -1.6]):
+    add_box(col_site, f"Bonsai_Planter_{bi}", 0.02, by - 0.36, 0.15, 0.58, by + 0.36, 0.56, "Mat_DarkGreyStone", bevel=0.02)
+    add_box(col_site, f"Bonsai_Soil_{bi}", 0.07, by - 0.30, 0.53, 0.53, by + 0.30, 0.58, "Mat_SoilDark")
+    add_cyl(col_site, f"Bonsai_Trunk_{bi}", 0.30, by, 0.56, 1.08, 0.075, 0.05, "Mat_TreeTrunk", segs=10)
+    add_sphere(col_site, f"Bonsai_Canopy1_{bi}", 0.32, by, 1.28, 0.30, "Mat_FoliageGreen", 1.0, 1.15, 0.72)
+    add_sphere(col_site, f"Bonsai_Canopy2_{bi}", 0.42, by + 0.22, 1.10, 0.22, "Mat_FoliageBright", 0.95, 1.05, 0.74)
+    add_sphere(col_site, f"Bonsai_Canopy3_{bi}", 0.26, by - 0.20, 1.14, 0.21, "Mat_FoliageGreen", 0.95, 1.1, 0.72)
 
 # Đường luồng 2m PHÍA NAM (X = 0.0..2.0, Y = 0..16 — tránh gió bấc, nằm ngay bên hướng Nam lan can cái hè)
 add_box(col_site, "Corridor_2m_Grass", 0.0, 0.0, 0.0, 2.0, 16.0, 0.14, "Mat_GrassGreen")
@@ -721,14 +800,23 @@ add_box(col_fl1_arch, "Floor1_Slab", 2.0, 0.0, 0.15, 7.0, 16.0, Z1, "Mat_FloorTi
 
 # Tường bao Tầng 1:
 # - Tường Bắc (X=6.78..7.0) cắt thấp 0.38m để xem nội thất
-# - Tường Nam giáp đường luồng 2m ngoài (X=2.0..2.22) có ĐÚNG 2 CỬA SỔ:
-#   + Cửa sổ 1 (Y=4.80..6.25): Nằm giữa khu Sofa và Phòng Ba Mẹ, lệch về phía Sofa nhiều hơn (~1.0m phía Sofa, ~0.45m phía cửa Phòng Ba Mẹ)!
-#   + Cửa sổ 2 (Y=12.60..14.50): Ngay phía sau bàn ăn ở bếp để ngồi ăn có thể thấy xe ai về qua đường luồng!
+# - Tường Nam giáp đường luồng 2m ngoài (X=2.0..2.22):
+#   + Mục 1: ĐỔI CỬA SỔ GIỮA SOFA & PHÒNG BA MẸ THÀNH CỬA PHỤ ĐI RA ĐƯỜNG LUỒNG (Y=4.80..6.25, Z=Z1..Z1+2.35) — đi ra đi vào thoải mái, kèm 2 bậc đá xuống đường luồng!
+#   + Cửa sổ bếp (Y=12.60..14.50): Ngay phía sau bàn ăn ở bếp để ngồi ăn có thể thấy xe ai về qua đường luồng!
 add_box(col_fl1_arch, "Fl1_Wall_Right_Cutaway", 6.78, 0.0, Z1, 7.0, 16.0, Z1 + 0.38, "Mat_WallWarmWhite")
 add_box(col_fl1_arch, "Fl1_Wall_Left_Seg1", 2.0, 0.0, Z1, 2.22, 4.80, H1, "Mat_WallWarmWhite")
-add_box(col_fl1_arch, "Fl1_Wall_Left_Win1Bot", 2.0, 4.80, Z1, 2.22, 6.25, Z1 + 0.90, "Mat_WallWarmWhite")
-add_box(col_fl1_arch, "Fl1_Wall_Left_Win1Top", 2.0, 4.80, Z1 + 2.35, 2.22, 6.25, H1, "Mat_WallWarmWhite")
-add_window_frame(col_fl1_arch, "Fl1_Corridor_SouthWin_SofaParents", 2.05, 4.80, Z1 + 0.90, 2.17, 6.25, Z1 + 2.35)
+add_box(col_fl1_arch, "Fl1_Wall_Left_SideDoorTop", 2.0, 4.80, Z1 + 2.35, 2.22, 6.25, H1, "Mat_WallWarmWhite")
+# Cửa phụ 2 cánh nhôm kính đi ra đường luồng (Y=4.80..6.25, Z=Z1..Z1+2.35) — mở đi ra đi vào trực tiếp giữa Sofa & Phòng Ba Mẹ!
+add_window_frame(col_fl1_arch, "Fl1_Corridor_SouthSideDoor_SofaParents", 2.05, 4.80, Z1, 2.17, 6.25, Z1 + 2.35)
+add_box(col_fl1_arch, "Fl1_SouthSideDoor_KickPanel", 2.04, 4.84, Z1 + 0.02, 2.18, 6.21, Z1 + 0.28, "Mat_MetalMatteBlack")
+add_box(col_fl1_arch, "Fl1_SouthSideDoor_Transom", 2.04, 4.82, Z1 + 1.94, 2.18, 6.23, Z1 + 1.98, "Mat_MetalMatteBlack")
+for sdh_i, sdhy in enumerate([5.44, 5.61]):
+    add_box(col_fl1_arch, f"Fl1_SouthSideDoor_HandleOut_{sdh_i}", 2.00, sdhy - 0.018, Z1 + 0.88, 2.05, sdhy + 0.018, Z1 + 1.24, "Mat_BrassGold", bevel=0.004)
+    add_box(col_fl1_arch, f"Fl1_SouthSideDoor_HandleIn_{sdh_i}", 2.17, sdhy - 0.018, Z1 + 0.88, 2.22, sdhy + 0.018, Z1 + 1.24, "Mat_BrassGold", bevel=0.004)
+# 2 bậc đá gọn ngoài cửa phụ bước xuống đường luồng 2m phía Nam (X=1.56..2.00, không chạm đá bước dặm X=0.45..1.55)
+add_box(col_site, "Fl1_SouthSideDoor_Step1", 1.56, 4.80, 0.14, 1.78, 6.25, 0.25, "Mat_StepStone", bevel=0.008)
+add_box(col_site, "Fl1_SouthSideDoor_Step2", 1.78, 4.80, 0.14, 2.00, 6.25, 0.35, "Mat_StepStone", bevel=0.008)
+add_box(col_lights, "Fl1_SouthSideDoor_StepLED", 1.55, 4.86, 0.22, 1.57, 6.19, 0.24, "Mat_WarmLED")
 add_box(col_fl1_arch, "Fl1_Wall_Left_Seg2", 2.0, 6.25, Z1, 2.22, 12.60, H1, "Mat_WallWarmWhite")
 add_box(col_fl1_arch, "Fl1_Wall_Left_Win2Bot", 2.0, 12.60, Z1, 2.22, 14.50, Z1 + 0.90, "Mat_WallWarmWhite")
 add_box(col_fl1_arch, "Fl1_Wall_Left_Win2Top", 2.0, 12.60, Z1 + 2.35, 2.22, 14.50, H1, "Mat_WallWarmWhite")
@@ -756,9 +844,8 @@ add_box(col_fl1_arch, "Fl1_Wall_Rear_WinBathBot", 4.95, 15.78, Z1, 6.35, 16.0, Z
 add_box(col_fl1_arch, "Fl1_Wall_Rear_WinBathTop", 4.95, 15.78, Z1 + 2.35, 6.35, 16.0, H1, "Mat_WallWarmWhite")
 add_window_frame(col_fl1_arch, "Fl1_Kitchen_RearWin_Bath", 4.95, 15.82, Z1 + 0.95, 6.35, 15.94, Z1 + 2.35)
 add_box(col_fl1_arch, "Fl1_Wall_Rear_EdgeR", 6.35, 15.78, Z1, 7.0, 16.0, H1, "Mat_WallWarmWhite")
-# Chỉ 1 bậc thang cửa sau (nền sân sau nâng lên Z_REAR=0.34m sát cao độ bếp Z1=0.54m nên chỉ cần 1 bậc cực êm!)
-add_box(col_fl1_arch, "Rear_DoorStep_1", 3.52, 16.00, 0.34, 4.78, 16.38, 0.44, "Mat_StepStone", bevel=0.008)
-add_box(col_lights, "Rear_DoorStep_LED", 3.60, 16.37, 0.39, 4.70, 16.39, 0.42, "Mat_WarmLED")
+# Sàn Hiên sau & Chòi bếp nâng BẰNG ĐÚNG cốt sàn nhà & cái hè (Z_REAR = Z1 = 0.45m) -> không cần bậc thang cửa sau!
+add_box(col_fl1_arch, "Rear_DoorThreshold", 3.55, 15.94, Z1 - 0.02, 4.75, 16.04, Z1 + 0.005, "Mat_DarkGreyStone")
 
 # Lam gỗ mặt tiền trang trí đặt gọn tại mảng tường đặc góc Bắc (khớp cao độ mái mới H2=6.95m!)
 for li in range(3):
@@ -1270,426 +1357,345 @@ add_box(col_lights, "Dining_LBench_WallSconce", 2.76, 15.72, Z1 + 1.48, 2.96, 15
 #      + THÊM TẤM ĐỤC LỖ PEGBOARD & CÂY MÓC TREO ÁO MƯA + MŨ BẢO HIỂM bên trên ngay chỗ xuống xe máy!
 #    - Cây phơi đồ sân sau theo HÀNG NGANG DÀI 7.0m: bắt đầu từ TƯỜNG PHÍA BẮC (X=7.0) sang tới TƯỜNG PHÍA NAM (X=0.0), bên dưới giữ nguyên đất trồng rau không bê tông!
 # ---------------------------------------------------------------------------
-Z_REAR = 0.34
-# Nền lát gạch/đá chỉ làm gọn trong phần Hiên sau & rãnh thoát nước sau nhà tắm (Y=16.0..21.35)
-add_box(col_site, "RearYard_Slab", 0.0, 16.0, 0.0, 7.0, 21.35, Z_REAR, "Mat_AntiSlipPavers")
-# Toàn bộ khu phía sau Y=21.35..24.00 (dưới cây phơi ngang & Vườn rau) là ĐẤT TỰ NHIÊN trồng rau, KHÔNG xây bê tông!
-add_box(col_site, "RearYard_NaturalSoil", 0.0, 21.35, 0.0, 7.0, 24.0, Z_REAR - 0.04, "Mat_SoilDark")
-# 4 viên đá bước dặm rời dọc sát tường Nam Chòi bếp (X=2.74..3.18) dẫn thẳng từ hiên sau vào cửa chính Chòi bếp (Y=21.62..22.46) & vườn rau phía Nam!
-for sti, sty in enumerate([21.65, 22.15, 22.75, 23.35]):
-    add_box(col_site, f"RearYard_StepStone_{sti}", 2.74, sty - 0.18, Z_REAR - 0.04, 3.18, sty + 0.18, Z_REAR + 0.01, "Mat_StepStone", bevel=0.015)
-# 1 bậc chuyển tiếp êm từ đường luồng Nam (0.14m) lên nền sân sau (0.34m)
-add_box(col_site, "Corridor_ToRear_Step", 0.05, 15.66, 0.14, 1.98, 16.00, 0.24, "Mat_StepStone", bevel=0.008)
+# Mục 1: Nâng Hiên sau & Chòi bếp BẰNG ĐÚNG cốt sàn nhà và hiên trước (Z_REAR = Z1 = 0.45m)!
+# Mục 2: Lùi nhà áp sát ranh sau (Y=22.50m) -> Chừa Sân trước rộng tối đa 19.50m, Nhà + Hiên sau gọn 20.0m, Chòi bếp & Vườn rau vừa đủ 2.50m (Y=20.0..22.50m)!
+Z_REAR = Z1
+Z_SOIL = 0.24  # Nền đất vườn rau tự nhiên thấp hơn hiên/chòi bếp 21cm để nước mưa & rửa chén thoát thẳng xuống rau!
+# Rút gọn toàn bộ Nhà (16m) + Hiên sau & Nhà vệ sinh (4m) nằm gọn ĐÚNG TRONG 20.0m (Y = 0.0..20.0)!
+add_box(col_site, "RearYard_Slab", 0.0, 16.0, 0.0, 7.0, 20.00, Z_REAR, "Mat_AntiSlipPavers")
+# Khu vườn rau vừa đủ phía Nam (X=0.0..3.30, Y=20.00..22.50) là ĐẤT TỰ NHIÊN trồng rau, KHÔNG xây bê tông!
+add_box(col_site, "RearYard_NaturalSoil", 0.0, 20.00, 0.0, 3.30, 22.50, Z_SOIL, "Mat_SoilDark")
+# Bậc chuyển tiếp & 4 viên đá bước dặm rời dọc sát tường Nam Chòi bếp (X=2.74..3.18) dẫn từ hiên 0.45m xuống vườn rau 0.24m
+add_box(col_site, "RearYard_GardenCurb", 0.00, 19.96, Z_SOIL, 3.30, 20.04, Z_REAR, "Mat_DarkGreyStone")
+add_box(col_site, "RearYard_GardenStep", 2.72, 20.04, Z_SOIL, 3.20, 20.32, 0.34, "Mat_StepStone", bevel=0.008)
+for sti, sty in enumerate([20.62, 21.12, 21.62, 22.12]):
+    add_box(col_site, f"RearYard_StepStone_{sti}", 2.74, sty - 0.16, Z_SOIL, 3.18, sty + 0.16, Z_SOIL + 0.05, "Mat_StepStone", bevel=0.015)
+# Dốc bê tông êm nối đường luồng 2m (0.14m) lên Hiên sau (Z_REAR=0.45m) ngay trước cửa lưới B40 để dắt/chạy xe máy mượt mà!
+add_ramp_y(col_site, "Corridor_ToRear_Ramp", 0.20, 1.98, 15.05, 16.00, 0.14, Z_REAR, "Mat_ConcreteRamp")
 
-# 🧺 HỘC BÊ TÔNG 2 NGĂN ĐẶT MÁY GIẶT NGOÀI HIÊN SAU — GẦN SÁT CỬA SỔ BẾP & PHÒNG TẮM (X=6.18..6.95, Y=16.04..17.24, MỞ HƯỚNG NAM -X!)
-# Đặt gọn áp tường Bắc giữa tường hậu Bếp (Y=16.0) và tường Đông Phòng tắm (Y=17.28) — giữ trọn độ thoáng cửa sổ Bếp (X=4.95..6.18) & chừa lối đứng thao tác 1.40m phía Nam!
-# Bệ bê tông chống ẩm chân hộc (cao +6cm: Z_REAR -> Z_REAR+0.06)
-add_box(col_site, "WasherBay_ConcretePlinth", 6.18, 16.04, Z_REAR, 6.95, 17.24, Z_REAR + 0.06, "Mat_StepStone", bevel=0.008)
-# 2 vách bê tông hai bên (Đông & Tây) + lưng áp tường Bắc, dày 8cm, cao tới Z_REAR+1.82m
-add_box(col_site, "WasherBay_WallEast", 6.18, 16.04, Z_REAR + 0.06, 6.95, 16.12, Z_REAR + 1.82, "Mat_WallWarmWhite", bevel=0.006)
-add_box(col_site, "WasherBay_WallWest", 6.18, 17.16, Z_REAR + 0.06, 6.95, 17.24, Z_REAR + 1.82, "Mat_WallWarmWhite", bevel=0.006)
-add_box(col_site, "WasherBay_WallBackN", 6.87, 16.04, Z_REAR + 0.06, 6.95, 17.24, Z_REAR + 1.82, "Mat_WallWarmWhite")
-# Tấm sàn bê tông ngăn giữa (Z_REAR+0.98..1.06) chia Ngăn dưới (Máy giặt) & Ngăn trên (Bột giặt lớn, nước giặt xả)
-add_box(col_site, "WasherBay_MidConcreteSlab", 6.16, 16.04, Z_REAR + 0.98, 6.95, 17.24, Z_REAR + 1.06, "Mat_StepStone", bevel=0.008)
-# Tấm nắp bê tông trên cùng (Z_REAR+1.74..1.82) chắn bụi gọn gàng
-add_box(col_site, "WasherBay_TopConcreteSlab", 6.16, 16.04, Z_REAR + 1.74, 6.95, 17.24, Z_REAR + 1.82, "Mat_StepStone", bevel=0.008)
-# LED ấm hắt nhẹ ngăn trên để lấy bột giặt buổi tối
-add_box(col_lights, "WasherBay_UpperLED", 6.24, 16.18, Z_REAR + 1.71, 6.28, 17.10, Z_REAR + 1.74, "Mat_WarmLED")
-# + NGĂN DƯỚI (Z_REAR+0.06..0.98): Máy giặt cửa trước mặt hướng Nam (-X) + van cấp nước + ống xả + giỏ đồ chờ giặt bên cạnh!
-add_box(col_site, "Washer_Dryer", 6.23, 16.48, Z_REAR + 0.06, 6.85, 17.12, Z_REAR + 0.91, "Mat_MetalStainless", bevel=0.02)
-add_cyl(col_site, "Washer_Door", 6.22, 16.80, Z_REAR + 0.29, Z_REAR + 0.69, 0.20, 0.20, "Mat_GlassBronze", rot=(0, math.pi / 2, 0), segs=18)
-add_box(col_site, "Washer_Panel", 6.21, 16.52, Z_REAR + 0.77, 6.24, 17.08, Z_REAR + 0.88, "Mat_PianoBlackGloss", bevel=0.004)
-add_box(col_site, "Washer_LED", 6.20, 16.84, Z_REAR + 0.80, 6.22, 17.00, Z_REAR + 0.85, "Mat_SmartCyanLED")
-add_cyl(col_site, "Washer_SupplyTap", 6.83, 16.36, Z_REAR + 0.68, Z_REAR + 0.76, 0.016, 0.016, "Mat_MetalStainless", rot=(0, math.pi / 2, 0), segs=10)
-add_cyl(col_site, "Washer_DrainStandpipe", 6.82, 17.13, Z_REAR + 0.06, Z_REAR + 0.56, 0.024, 0.024, "Mat_DarkGreyStone", segs=10)
-# Giỏ đồ chờ giặt xếp gọn bên phải máy giặt trong ngăn dưới (Y=16.15..16.43)
-add_box(col_site, "WasherBay_Hamper", 6.32, 16.15, Z_REAR + 0.06, 6.76, 16.43, Z_REAR + 0.52, "Mat_WoodOakTable", bevel=0.02)
-# + NGĂN TRÊN (Z_REAR+1.06..1.74): Túi bột giặt lớn (5-9kg), can nước giặt xả lớn, chai tẩy & giỏ kẹp phơi đồ!
-add_box(col_site, "Washer_BigDetergentBag1", 6.30, 16.16, Z_REAR + 1.06, 6.76, 16.42, Z_REAR + 1.50, "Mat_CeramicTeal", bevel=0.02)
-add_box(col_site, "Washer_BigDetergentBag2", 6.32, 16.46, Z_REAR + 1.06, 6.74, 16.68, Z_REAR + 1.44, "Mat_CushionMustard", bevel=0.02)
-add_cyl(col_site, "Washer_SoftenerJug1", 6.52, 16.82, Z_REAR + 1.06, Z_REAR + 1.44, 0.095, 0.070, "Mat_CushionBlush", segs=14)
-add_cyl(col_site, "Washer_SoftenerJug2", 6.52, 17.02, Z_REAR + 1.06, Z_REAR + 1.42, 0.088, 0.065, "Mat_CushionNavy", segs=14)
-add_box(col_site, "Washer_ClipBasket", 6.26, 16.72, Z_REAR + 1.06, 6.40, 17.10, Z_REAR + 1.24, "Mat_WoodOakTable", bevel=0.012)
+# 🛡️ MỤC 3: CỬA LƯỚI B40 ĐƠN GIẢN TẠI ĐIỂM GIAO ĐƯỜNG LUỒNG & HIÊN SAU (X=0.20..2.00, Y=16.03, cao 1.38m)
+# Đóng lại ngăn chó/vật nuôi chạy ngược lên đường luồng ra phía trước; thiết kế 2 cánh khung sắt mạ + lưới B40 mắt cáo đơn giản, mở gọn khi dắt xe!
+add_box(col_site, "B40Gate_Post_South", 0.20, 16.00, Z_REAR, 0.245, 16.05, Z_REAR + 1.40, "Mat_MetalMatteBlack")
+add_box(col_site, "B40Gate_Post_North", 1.955, 16.00, Z_REAR, 2.00, 16.05, Z_REAR + 1.40, "Mat_MetalMatteBlack")
+for g_tag, gx1, gx2 in [("L", 0.255, 1.09), ("R", 1.11, 1.945)]:
+    gz1, gz2 = Z_REAR + 0.04, Z_REAR + 1.34
+    add_box(col_site, f"B40Gate_{g_tag}_Top", gx1, 16.01, gz2 - 0.03, gx2, 16.04, gz2, "Mat_MetalStainless")
+    add_box(col_site, f"B40Gate_{g_tag}_Bot", gx1, 16.01, gz1, gx2, 16.04, gz1 + 0.03, "Mat_MetalStainless")
+    add_box(col_site, f"B40Gate_{g_tag}_Mid", gx1, 16.015, (gz1 + gz2) / 2.0 - 0.014, gx2, 16.035, (gz1 + gz2) / 2.0 + 0.014, "Mat_MetalStainless")
+    add_box(col_site, f"B40Gate_{g_tag}_StileL", gx1, 16.01, gz1, gx1 + 0.03, 16.04, gz2, "Mat_MetalStainless")
+    add_box(col_site, f"B40Gate_{g_tag}_StileR", gx2 - 0.03, 16.01, gz1, gx2, 16.04, gz2, "Mat_MetalStainless")
+    add_b40_mesh_panel(col_site, f"B40Gate_{g_tag}_Mesh", gx1 + 0.03, gx2 - 0.03, 16.025, gz1 + 0.03, gz2 - 0.03, spacing=0.14)
+# Bản lề 2 bên & chốt gài giữa đơn giản
+for hz in [Z_REAR + 0.26, Z_REAR + 1.12]:
+    add_cyl(col_site, f"B40Gate_HingeL_{hz:.2f}", 0.25, 16.025, hz - 0.03, hz + 0.03, 0.012, 0.012, "Mat_MetalMatteBlack", segs=8)
+    add_cyl(col_site, f"B40Gate_HingeR_{hz:.2f}", 1.95, 16.025, hz - 0.03, hz + 0.03, 0.012, 0.012, "Mat_MetalMatteBlack", segs=8)
+add_box(col_site, "B40Gate_CenterLatch", 1.04, 16.00, Z_REAR + 0.88, 1.16, 16.055, Z_REAR + 0.92, "Mat_BrassGold", bevel=0.004)
+add_box(col_site, "B40Gate_LatchPin", 1.09, 15.995, Z_REAR + 0.86, 1.11, 16.06, Z_REAR + 0.95, "Mat_MetalMatteBlack")
 
-# 🚿🚽 PHÒNG TẮM + NHÀ VỆ SINH RỘNG RÃI XÍCH RA THOẢI MÁI TRONG HIÊN SAU (X = 4.95..6.95, Y = 17.28..21.10 -> 7.64m²!)
-# - Đã chuyển Máy giặt ra hộc bê tông 2 ngăn ngoài hiên sau & BỎ HOÀN TOÀN vách ngăn chỗ tắm cũ -> Khu tắm mở rộng trọn bề ngang 1.76m!
-# - Cửa vào phía Nam (X=4.95, Y=17.78..18.52): Mặt ngoài hướng Nam, mặt trong hướng Bắc — nhìn thẳng vào Gương & Lavabo!
-# - Khu khô (Y=17.40..19.65): Kệ tường xây chữ L phía Đông gương + Lavabo & Gương tròn LED + Bồn cầu & tường ngang để giấy/Vim + Cây treo đồ khô tường Nam
-# - CỬA TẮM KÍNH CƯỜNG LỰC KHUNG ĐEN/INOX (Y=19.65): Ngăn kín giữa Khu tắm ướt & sàn Bồn cầu/Lavabo ngoài!
-# - Khu tắm ướt rộng rãi (X=5.07..6.83, Y=19.65..20.98 -> 1.76m x 1.33m = 2.34m², nền cao hơn khu khô +9cm):
-#   + Vòi tắm nóng lạnh sen cây + 2 khung ô tường xây phía Bắc
-#   + THÊM VÒI NƯỚC THẤP & MẠNH HƠN VÒI HOA SEN (Z_REAR+0.56m) + thau inox giặt đồ / múc tắm thoải mái!
-RB_H = H1  # Mục 17: Chiều cao Phòng tắm bằng đúng chiều cao tất cả các phòng tầng dưới (chạm khít trần mái hiên sau H1=3.30m!)
-# Sàn lát gạch chống trơn toàn phòng
-add_box(col_site, "RearBath_Floor", 4.95, 17.28, Z_REAR, 6.95, 21.10, Z_REAR + 0.04, "Mat_FloorTileCream")
-# Tường bao 4 mặt (tường Nam chừa cửa Y=17.78..18.52)
-add_box(col_site, "RearBath_Wall_East", 4.95, 17.28, Z_REAR, 6.95, 17.40, RB_H, "Mat_WallWarmWhite")
-add_box(col_site, "RearBath_Wall_West", 4.95, 20.98, Z_REAR, 6.95, 21.10, RB_H, "Mat_WallWarmWhite")
-add_box(col_site, "RearBath_Wall_North", 6.83, 17.28, Z_REAR, 6.95, 21.10, RB_H, "Mat_WallWarmWhite")
-add_box(col_site, "RearBath_Wall_South1", 4.95, 17.28, Z_REAR, 5.07, 17.78, RB_H, "Mat_WallWarmWhite")
-add_box(col_site, "RearBath_Wall_SouthTop", 4.95, 17.78, Z_REAR + 2.14, 5.07, 18.52, RB_H, "Mat_WallWarmWhite")
-add_box(col_site, "RearBath_Wall_South2", 4.95, 18.52, Z_REAR, 5.07, 21.10, RB_H, "Mat_WallWarmWhite")
-# Khung gỗ tối & cánh cửa chính nhà tắm gắn kín gọn trong khung (mặt ngoài hướng Nam, mặt trong hướng Bắc!)
-add_box(col_site, "RearBath_DoorFrame1", 4.93, 17.76, Z_REAR, 5.09, 17.81, Z_REAR + 2.16, "Mat_WoodOakDark")
-add_box(col_site, "RearBath_DoorFrame2", 4.93, 18.49, Z_REAR, 5.09, 18.54, Z_REAR + 2.16, "Mat_WoodOakDark")
-add_box(col_site, "RearBath_DoorFrameTop", 4.93, 17.76, Z_REAR + 2.12, 5.09, 18.54, Z_REAR + 2.18, "Mat_WoodOakDark")
-add_box(col_site, "RearBath_DoorLeaf", 4.97, 17.81, Z_REAR + 0.04, 5.03, 18.49, Z_REAR + 2.12, "Mat_WoodOakTable", bevel=0.006)
-add_box(col_site, "RearBath_DoorGlassInsert", 4.96, 17.93, Z_REAR + 1.18, 5.04, 18.37, Z_REAR + 1.96, "Mat_GlassBronze")
-add_box(col_site, "RearBath_DoorHandleOut", 4.93, 18.36, Z_REAR + 0.96, 4.97, 18.41, Z_REAR + 1.14, "Mat_BrassGold", bevel=0.004)
-add_box(col_site, "RearBath_DoorHandleIn", 5.03, 18.36, Z_REAR + 0.96, 5.07, 18.41, Z_REAR + 1.14, "Mat_BrassGold", bevel=0.004)
+# 🧺 HỘC BÊ TÔNG 2 NGĂN ĐẶT MÁY GIẶT THU GỌN NGOÀI HIÊN SAU (X=6.18..6.95, Y=16.04..16.88, MỞ HƯỚNG NAM -X!)
+# Thu gọn gọn đẹp (0.84m) để chừa trọn không gian cho Phòng tắm + Hiên sau nằm gọn trong mốc 20.0m!
+add_box(col_site, "WasherBay_ConcretePlinth", 6.18, 16.04, Z_REAR, 6.95, 16.88, Z_REAR + 0.06, "Mat_StepStone", bevel=0.008)
+add_box(col_site, "WasherBay_WallEast", 6.18, 16.04, Z_REAR + 0.06, 6.95, 16.10, Z_REAR + 1.82, "Mat_WallWarmWhite", bevel=0.006)
+add_box(col_site, "WasherBay_WallWest", 6.18, 16.82, Z_REAR + 0.06, 6.95, 16.88, Z_REAR + 1.82, "Mat_WallWarmWhite", bevel=0.006)
+add_box(col_site, "WasherBay_WallBackN", 6.87, 16.04, Z_REAR + 0.06, 6.95, 16.88, Z_REAR + 1.82, "Mat_WallWarmWhite")
+add_box(col_site, "WasherBay_MidConcreteSlab", 6.16, 16.04, Z_REAR + 0.98, 6.95, 16.88, Z_REAR + 1.06, "Mat_StepStone", bevel=0.008)
+add_box(col_site, "WasherBay_TopConcreteSlab", 6.16, 16.04, Z_REAR + 1.74, 6.95, 16.88, Z_REAR + 1.82, "Mat_StepStone", bevel=0.008)
+add_box(col_lights, "WasherBay_UpperLED", 6.24, 16.14, Z_REAR + 1.71, 6.28, 16.78, Z_REAR + 1.74, "Mat_WarmLED")
+# + NGĂN DƯỚI (Z_REAR+0.06..0.98): Máy giặt cửa trước chuẩn 60cm (Y=16.16..16.76) mặt hướng Nam (-X)!
+add_box(col_site, "Washer_Dryer", 6.23, 16.16, Z_REAR + 0.06, 6.85, 16.76, Z_REAR + 0.91, "Mat_MetalStainless", bevel=0.02)
+add_cyl(col_site, "Washer_Door", 6.22, 16.46, Z_REAR + 0.29, Z_REAR + 0.69, 0.20, 0.20, "Mat_GlassBronze", rot=(0, math.pi / 2, 0), segs=18)
+add_box(col_site, "Washer_Panel", 6.21, 16.20, Z_REAR + 0.77, 6.24, 16.72, Z_REAR + 0.88, "Mat_PianoBlackGloss", bevel=0.004)
+add_box(col_site, "Washer_LED", 6.20, 16.50, Z_REAR + 0.80, 6.22, 16.66, Z_REAR + 0.85, "Mat_SmartCyanLED")
+add_cyl(col_site, "Washer_SupplyTap", 6.83, 16.12, Z_REAR + 0.68, Z_REAR + 0.76, 0.016, 0.016, "Mat_MetalStainless", rot=(0, math.pi / 2, 0), segs=10)
+# + NGĂN TRÊN (Z_REAR+1.06..1.74): Túi bột giặt lớn, nước giặt xả & giỏ kẹp đồ gọn gàng!
+add_box(col_site, "Washer_BigDetergentBag1", 6.32, 16.13, Z_REAR + 1.06, 6.76, 16.35, Z_REAR + 1.48, "Mat_CeramicTeal", bevel=0.02)
+add_box(col_site, "Washer_BigDetergentBag2", 6.34, 16.38, Z_REAR + 1.06, 6.74, 16.56, Z_REAR + 1.42, "Mat_CushionMustard", bevel=0.02)
+add_cyl(col_site, "Washer_SoftenerJug1", 6.54, 16.66, Z_REAR + 1.06, Z_REAR + 1.42, 0.085, 0.065, "Mat_CushionBlush", segs=14)
+add_box(col_site, "Washer_ClipBasket", 6.24, 16.58, Z_REAR + 1.06, 6.38, 16.80, Z_REAR + 1.24, "Mat_WoodOakTable", bevel=0.012)
 
-# 1. CHỖ RỬA TAY LAVABO & GƯƠNG LED TRÊN TƯỜNG BẮC (X=6.28..6.83, Y=18.00..18.80)
-add_box(col_site, "RearBath_VanityCab", 6.32, 18.02, Z_REAR + 0.16, 6.82, 18.78, Z_REAR + 0.78, "Mat_WoodOakCabinet", bevel=0.01)
-add_box(col_site, "RearBath_VanityTop", 6.28, 18.00, Z_REAR + 0.78, 6.83, 18.80, Z_REAR + 0.84, "Mat_WhiteMarble", bevel=0.008)
-add_cyl(col_site, "RearBath_Basin", 6.54, 18.40, Z_REAR + 0.84, Z_REAR + 0.96, 0.17, 0.21, "Mat_CeramicWhite", segs=20)
-add_cyl(col_site, "RearBath_Faucet", 6.72, 18.40, Z_REAR + 0.84, Z_REAR + 1.06, 0.016, 0.014, "Mat_MetalMatteBlack", segs=10)
-add_box(col_site, "RearBath_FaucetSpout", 6.58, 18.385, Z_REAR + 1.03, 6.72, 18.415, Z_REAR + 1.06, "Mat_MetalMatteBlack")
-# Gương soi tròn lớn viền đèn LED ấm
-add_cyl(col_site, "RearBath_Mirror", 6.80, 18.40, Z_REAR + 1.44, Z_REAR + 1.48, 0.34, 0.34, "Mat_Mirror", rot=(0, math.pi / 2, 0), segs=24)
-add_cyl(col_lights, "RearBath_MirrorLED", 6.82, 18.40, Z_REAR + 1.44, Z_REAR + 1.47, 0.36, 0.36, "Mat_WarmLED", rot=(0, math.pi / 2, 0), segs=24)
-# Kệ hốc phía trên gương (Y=18.01..18.79, Z=Z_REAR+1.90..2.32)
-add_box(col_site, "RearBath_TopNicheFrameB", 6.64, 18.01, Z_REAR + 1.90, 6.83, 18.79, Z_REAR + 1.95, "Mat_WallWarmWhite", bevel=0.004)
-add_box(col_site, "RearBath_TopNicheFrameT", 6.64, 18.01, Z_REAR + 2.26, 6.83, 18.79, Z_REAR + 2.32, "Mat_WallWarmWhite", bevel=0.004)
-add_box(col_site, "RearBath_TopNicheOak", 6.65, 18.03, Z_REAR + 1.95, 6.82, 18.77, Z_REAR + 1.97, "Mat_WoodOakTable")
-add_box(col_lights, "RearBath_TopNicheLED", 6.67, 18.06, Z_REAR + 2.24, 6.71, 18.73, Z_REAR + 2.26, "Mat_WarmLED")
+# 🚿🚽 PHÒNG TẮM + NHÀ VỆ SINH GỌN TRONG MỐC 20.0M (X = 4.95..6.95, Y = 16.92..20.00 -> 3.08m, MỞ CỬA HƯỚNG NAM NHÌN RA XE MÁY & CHUNG TƯỜNG CHÒI BẾP TẠI Y=19.88..20.00!)
+# - Cửa chính mở HƯỚNG NAM (X=4.95..5.07, Y=17.32..18.10) mở cửa là thấy ngay xe máy; tường Đông xây đặc kín hoàn toàn!
+# - Chỗ tắm (Y=18.36..19.88 -> 1.52m x 1.76m = 2.68 m²) RỘNG HƠN khu bồn cầu & lavabo (Y=17.04..18.36 -> 1.32m x 1.76m = 2.32 m²)!
+# - Bỏ vòi nước ngoài sát tường tắm & bỏ toàn bộ đường ống nước ngoài nhà tắm!
+RB_H = H1
+add_box(col_site, "RearBath_Floor", 4.95, 16.92, Z_REAR, 6.95, 19.88, Z_REAR + 0.04, "Mat_FloorTileCream")
+# Tường Đông kín hoàn toàn (Y=16.92..17.04); Tường Nam (X=4.95..5.07) mở cửa chính hướng Nam (Y=17.32..18.10); dùng chung tường Tây với Chòi bếp (Y=19.88..20.00)
+add_box(col_site, "RearBath_Wall_East", 4.95, 16.92, Z_REAR, 6.95, 17.04, RB_H, "Mat_WallWarmWhite")
+add_box(col_site, "RearBath_Wall_North", 6.83, 16.92, Z_REAR, 6.95, 19.88, RB_H, "Mat_WallWarmWhite")
+add_box(col_site, "RearBath_Wall_SouthE", 4.95, 16.92, Z_REAR, 5.07, 17.32, RB_H, "Mat_WallWarmWhite")
+add_box(col_site, "RearBath_Wall_SouthDoorTop", 4.95, 17.32, Z_REAR + 2.14, 5.07, 18.10, RB_H, "Mat_WallWarmWhite")
+add_box(col_site, "RearBath_Wall_SouthW", 4.95, 18.10, Z_REAR, 5.07, 19.88, RB_H, "Mat_WallWarmWhite")
+# Khung & cánh cửa chính nhà tắm hướng Nam (X=4.95..5.07, Y=17.32..18.10 — mở cửa thấy ngay xe máy!)
+add_box(col_site, "RearBath_DoorFrameL", 4.93, 17.30, Z_REAR, 5.09, 17.35, Z_REAR + 2.16, "Mat_WoodOakDark")
+add_box(col_site, "RearBath_DoorFrameR", 4.93, 18.07, Z_REAR, 5.09, 18.12, Z_REAR + 2.16, "Mat_WoodOakDark")
+add_box(col_site, "RearBath_DoorFrameTop", 4.93, 17.30, Z_REAR + 2.12, 5.09, 18.12, Z_REAR + 2.18, "Mat_WoodOakDark")
+add_box(col_site, "RearBath_DoorLeaf", 4.98, 17.35, Z_REAR + 0.04, 5.04, 18.07, Z_REAR + 2.12, "Mat_WoodOakTable", bevel=0.006)
+add_box(col_site, "RearBath_DoorGlassInsert", 4.97, 17.47, Z_REAR + 1.18, 5.05, 17.95, Z_REAR + 1.96, "Mat_GlassBronze")
+add_box(col_site, "RearBath_DoorHandleOut", 4.94, 17.94, Z_REAR + 0.96, 4.98, 17.99, Z_REAR + 1.14, "Mat_BrassGold", bevel=0.004)
+add_box(col_site, "RearBath_DoorHandleIn", 5.04, 17.94, Z_REAR + 0.96, 5.08, 17.99, Z_REAR + 1.14, "Mat_BrassGold", bevel=0.004)
 
-# 2. PHÍA ĐÔNG GƯƠNG — KỆ TƯỜNG XÂY CHỮ L DÀI TỚI TƯỜNG NAM (NGĂN TRÊN CHỮ L ĐỰNG ĐỒ LINH TINH, BÊN DƯỚI ĐỂ THÙNG & CÂY LAU NHÀ!)
-add_box(col_site, "RearBath_EastWall_DivW", 6.35, 17.93, Z_REAR + 0.04, 6.83, 18.00, Z_REAR + 2.32, "Mat_WallWarmWhite", bevel=0.006)
-add_box(col_site, "RearBath_EastWall_MidShelf", 6.35, 17.40, Z_REAR + 1.08, 6.83, 17.93, Z_REAR + 1.16, "Mat_WallWarmWhite", bevel=0.006)
-add_box(col_site, "RearBath_EastWall_MidShelf_S", 5.07, 17.40, Z_REAR + 1.08, 6.35, 17.73, Z_REAR + 1.16, "Mat_WallWarmWhite", bevel=0.006)
-add_box(col_site, "RearBath_EastWall_TopCap", 6.35, 17.40, Z_REAR + 2.24, 6.83, 18.00, Z_REAR + 2.32, "Mat_WallWarmWhite", bevel=0.006)
-add_box(col_site, "RearBath_EastWall_TopCap_S", 5.07, 17.40, Z_REAR + 2.24, 6.35, 17.73, Z_REAR + 2.32, "Mat_WallWarmWhite", bevel=0.006)
-add_box(col_site, "RearBath_EastUpperOak", 6.35, 17.41, Z_REAR + 1.16, 6.82, 17.92, Z_REAR + 1.185, "Mat_WoodOakTable")
-add_box(col_site, "RearBath_EastUpperOak_S", 5.08, 17.41, Z_REAR + 1.16, 6.35, 17.72, Z_REAR + 1.185, "Mat_WoodOakTable")
-add_box(col_lights, "RearBath_EastUpperLED", 6.39, 17.45, Z_REAR + 2.21, 6.43, 17.88, Z_REAR + 2.24, "Mat_WarmLED")
-add_box(col_lights, "RearBath_EastUpperLED_S", 5.14, 17.67, Z_REAR + 2.21, 6.35, 17.71, Z_REAR + 2.24, "Mat_WarmLED")
-add_box(col_site, "RearBath_EastMiscBasket", 6.44, 17.45, Z_REAR + 1.185, 6.76, 17.71, Z_REAR + 1.42, "Mat_WoodOakTable", bevel=0.015)
-add_box(col_site, "RearBath_EastMiscTowel1", 6.46, 17.74, Z_REAR + 1.185, 6.74, 17.90, Z_REAR + 1.255, "Mat_BeddingWhite", bevel=0.015)
-add_box(col_site, "RearBath_EastMiscTowel2", 6.47, 17.75, Z_REAR + 1.255, 6.73, 17.89, Z_REAR + 1.32, "Mat_CushionSage", bevel=0.015)
-add_box(col_site, "RearBath_EastSouthBasket", 5.92, 17.44, Z_REAR + 1.185, 6.28, 17.68, Z_REAR + 1.40, "Mat_WoodOakTable", bevel=0.015)
-add_box(col_site, "RearBath_EastSouthTowel1", 5.56, 17.45, Z_REAR + 1.185, 5.84, 17.67, Z_REAR + 1.26, "Mat_BeddingCream", bevel=0.015)
-add_box(col_site, "RearBath_EastSouthTowel2", 5.57, 17.46, Z_REAR + 1.26, 5.83, 17.66, Z_REAR + 1.33, "Mat_CushionBlush", bevel=0.015)
-add_box(col_site, "RearBath_EastSouthTissueBox", 5.20, 17.46, Z_REAR + 1.185, 5.44, 17.65, Z_REAR + 1.30, "Mat_CeramicWhite", bevel=0.01)
-bottle_specs = [
-    (6.48, 17.76, Z_REAR + 1.32, 0.19, "Mat_CeramicTeal"),
-    (6.58, 17.84, Z_REAR + 1.32, 0.16, "Mat_CeramicWhite"),
-    (6.66, 17.55, Z_REAR + 1.42, 0.18, "Mat_CushionMustard"),
-    (5.16, 17.57, Z_REAR + 1.185, 0.21, "Mat_CeramicTeal"),
-    (5.50, 17.57, Z_REAR + 1.185, 0.18, "Mat_CushionMustard"),
-    (6.73, 18.18, Z_REAR + 1.97, 0.18, "Mat_CeramicWhite"),
-    (6.73, 18.40, Z_REAR + 1.97, 0.15, "Mat_CeramicTeal"),
-    (6.73, 18.60, Z_REAR + 1.97, 0.17, "Mat_CushionSage"),
-]
-for bi, (bx, by, bz, bh, bmat) in enumerate(bottle_specs):
-    add_cyl(col_site, f"RearBath_Skincare_{bi}", bx, by, bz, bz + bh, 0.030, 0.024, bmat, segs=12)
-# Ngăn dưới để thùng & cây lau nhà
-add_box(col_site, "RearBath_MopBucket", 6.42, 17.47, Z_REAR + 0.04, 6.76, 17.85, Z_REAR + 0.34, "Mat_CeramicTeal", bevel=0.025)
-add_box(col_site, "RearBath_MopWringer", 6.45, 17.49, Z_REAR + 0.30, 6.73, 17.65, Z_REAR + 0.38, "Mat_MetalStainless", bevel=0.01)
-add_box(col_site, "RearBath_MopWater", 6.45, 17.65, Z_REAR + 0.24, 6.73, 17.83, Z_REAR + 0.28, "Mat_WaterClear")
-add_cyl(col_site, "RearBath_MopHead", 6.59, 17.57, Z_REAR + 0.34, Z_REAR + 0.42, 0.080, 0.060, "Mat_BeddingWhite", segs=14)
-add_cyl(col_site, "RearBath_MopPole", 6.59, 17.57, Z_REAR + 0.42, Z_REAR + 1.04, 0.014, 0.014, "Mat_MetalStainless", segs=10)
-add_cyl(col_site, "RearBath_FloorCleaner", 6.58, 17.88, Z_REAR + 0.04, Z_REAR + 0.30, 0.038, 0.028, "Mat_CushionMustard", segs=12)
-
-# 3. PHÍA TÂY GƯƠNG — BỒN CẦU (LƯNG ÁP TƯỜNG BẮC, MẶT HƯỚNG NAM) + BỨC TƯỜNG NGANG NHÔ RA ĐỂ GIẤY & CHAI VIM (Y=18.80..19.60)
-add_box(col_site, "RearBath_ToiletTank", 6.56, 18.99, Z_REAR + 0.40, 6.81, 19.41, Z_REAR + 0.84, "Mat_CeramicWhite", bevel=0.03)
-add_cyl(col_site, "RearBath_ToiletBowl", 6.38, 19.20, Z_REAR + 0.04, Z_REAR + 0.44, 0.17, 0.20, "Mat_CeramicWhite", segs=16)
-add_box(col_site, "RearBath_ToiletSeat", 6.18, 19.01, Z_REAR + 0.44, 6.56, 19.39, Z_REAR + 0.48, "Mat_BeddingWhite", bevel=0.02)
-add_box(col_site, "RearBath_ToiletWallLedge", 6.64, 18.86, Z_REAR + 1.18, 6.83, 19.56, Z_REAR + 1.25, "Mat_WallWarmWhite", bevel=0.006)
-add_box(col_site, "RearBath_ToiletLedgeTop", 6.65, 18.87, Z_REAR + 1.25, 6.82, 19.55, Z_REAR + 1.27, "Mat_WoodOakTable")
-add_cyl(col_site, "RearBath_ToiletPaper_0", 6.73, 18.98, Z_REAR + 1.27, Z_REAR + 1.39, 0.055, 0.055, "Mat_BeddingWhite", segs=14)
-add_cyl(col_site, "RearBath_ToiletPaper_1", 6.73, 19.12, Z_REAR + 1.27, Z_REAR + 1.39, 0.055, 0.055, "Mat_BeddingWhite", segs=14)
-add_cyl(col_site, "RearBath_VimBottle", 6.73, 19.36, Z_REAR + 1.27, Z_REAR + 1.50, 0.044, 0.032, "Mat_CushionNavy", segs=14)
-add_cyl(col_site, "RearBath_VimCap", 6.73, 19.36, Z_REAR + 1.50, Z_REAR + 1.56, 0.018, 0.012, "Mat_CushionMustard", segs=10)
-add_cyl(col_site, "RearBath_AirSpray", 6.73, 19.49, Z_REAR + 1.27, Z_REAR + 1.44, 0.028, 0.025, "Mat_CushionSage", segs=12)
-
-# 4. ĐỐI DIỆN GƯƠNG & BỒN CẦU (TƯỜNG PHÍA NAM X=5.07, Y=18.56..19.58) — CÂY TREO ĐỒ KHÔ GỌN TRONG KHU KHÔ (DỪNG TRƯỚC CỬA TẮM Y=19.65!)
-add_box(col_site, "RearBath_DryWallBar", 5.07, 18.56, Z_REAR + 1.56, 5.10, 19.58, Z_REAR + 1.68, "Mat_WoodOakTable", bevel=0.006)
-for bki, bky in enumerate([18.62, 19.07, 19.52]):
-    add_box(col_site, f"RearBath_DryRodBracket_{bki}", 5.09, bky - 0.018, Z_REAR + 1.60, 5.26, bky + 0.018, Z_REAR + 1.64, "Mat_BrassGold")
-add_box(col_site, "RearBath_LongClothesRodBar", 5.23, 18.58, Z_REAR + 1.61, 5.26, 19.56, Z_REAR + 1.64, "Mat_MetalStainless")
-for dci, (dcy, dch, dcmat) in enumerate([
-    (18.72, 0.56, "Mat_CushionNavy"),
-    (19.00, 0.52, "Mat_BeddingCream"),
-    (19.26, 0.58, "Mat_CushionSage"),
-    (19.48, 0.50, "Mat_CushionBlush"),
+# 1. KHU KHÔ GỌN (Y=17.04..18.36 -> 1.32m x 1.76m = 2.32 m²): Lavabo 60cm (Y=17.08..17.68) & Bồn cầu (Y=17.74..18.32)
+add_box(col_site, "RearBath_VanityCab", 6.32, 17.10, Z_REAR + 0.16, 6.82, 17.66, Z_REAR + 0.78, "Mat_WoodOakCabinet", bevel=0.01)
+add_box(col_site, "RearBath_VanityTop", 6.28, 17.08, Z_REAR + 0.78, 6.83, 17.68, Z_REAR + 0.84, "Mat_WhiteMarble", bevel=0.008)
+add_cyl(col_site, "RearBath_Basin", 6.54, 17.38, Z_REAR + 0.84, Z_REAR + 0.96, 0.16, 0.19, "Mat_CeramicWhite", segs=20)
+add_cyl(col_site, "RearBath_Faucet", 6.72, 17.38, Z_REAR + 0.84, Z_REAR + 1.06, 0.016, 0.014, "Mat_MetalMatteBlack", segs=10)
+add_box(col_site, "RearBath_FaucetSpout", 6.58, 17.365, Z_REAR + 1.03, 6.72, 17.395, Z_REAR + 1.06, "Mat_MetalMatteBlack")
+add_cyl(col_site, "RearBath_Mirror", 6.80, 17.38, Z_REAR + 1.44, Z_REAR + 1.48, 0.27, 0.27, "Mat_Mirror", rot=(0, math.pi / 2, 0), segs=24)
+add_cyl(col_lights, "RearBath_MirrorLED", 6.82, 17.38, Z_REAR + 1.44, Z_REAR + 1.47, 0.29, 0.29, "Mat_WarmLED", rot=(0, math.pi / 2, 0), segs=24)
+add_box(col_site, "RearBath_TopNicheFrameB", 6.64, 17.10, Z_REAR + 1.90, 6.83, 17.66, Z_REAR + 1.95, "Mat_WallWarmWhite", bevel=0.004)
+add_box(col_site, "RearBath_TopNicheFrameT", 6.64, 17.10, Z_REAR + 2.26, 6.83, 17.66, Z_REAR + 2.32, "Mat_WallWarmWhite", bevel=0.004)
+add_box(col_site, "RearBath_TopNicheOak", 6.65, 17.12, Z_REAR + 1.95, 6.82, 17.64, Z_REAR + 1.97, "Mat_WoodOakTable")
+add_box(col_lights, "RearBath_TopNicheLED", 6.67, 17.15, Z_REAR + 2.24, 6.71, 17.61, Z_REAR + 2.26, "Mat_WarmLED")
+for bi, (bx, by, bz, bh, bmat) in enumerate([
+    (6.73, 17.22, Z_REAR + 1.97, 0.18, "Mat_CeramicWhite"),
+    (6.73, 17.38, Z_REAR + 1.97, 0.15, "Mat_CeramicTeal"),
+    (6.73, 17.54, Z_REAR + 1.97, 0.17, "Mat_CushionSage"),
 ]):
-    add_cyl(col_site, f"RearBath_HangerHook_{dci}", 5.245, dcy, Z_REAR + 1.56, Z_REAR + 1.63, 0.008, 0.008, "Mat_BrassGold", segs=8)
-    add_box(col_site, f"RearBath_DryClothes_{dci}", 5.21, dcy - 0.10, Z_REAR + 1.56 - dch, 5.27, dcy + 0.10, Z_REAR + 1.56, dcmat, bevel=0.015)
+    add_cyl(col_site, f"RearBath_Skincare_{bi}", bx, by, bz, bz + bh, 0.028, 0.022, bmat, segs=12)
 
-# 5. CỬA TẮM KÍNH CƯỜNG LỰC & KHU TẮM ƯỚT RỘNG RÃI (ĐÃ BỎ VÁCH NGĂN TẮM/MÁY GIẶT: X=5.07..6.83, Y=19.65..20.98 -> 2.34m²!)
-# Nền khu tắm ướt mở trọn bề ngang phòng (1.76m x 1.33m) xây CAO HƠN nền khô Lavabo/Bồn cầu (+9cm) + gờ đá chống trơn!
-add_box(col_site, "RearBath_WetZoneFloor", 5.07, 19.65, Z_REAR + 0.04, 6.83, 20.98, Z_REAR + 0.13, "Mat_StepStone", bevel=0.008)
-add_box(col_site, "RearBath_WetDryCurb", 5.07, 19.61, Z_REAR + 0.04, 6.83, 19.69, Z_REAR + 0.135, "Mat_DarkGreyStone", bevel=0.006)
-# Phễu thoát sàn khu khô (Lavabo + Bồn cầu) đặt sát mép Tây nền khô (X=6.06, Y=19.46) thoát dốc ngầm ra thẳng phía sau!
-add_cyl(col_site, "RearBath_DryFloorDrain", 6.06, 19.46, Z_REAR + 0.038, Z_REAR + 0.046, 0.052, 0.052, "Mat_MetalStainless", segs=14)
-add_box(col_site, "RearBath_DryDrainGrate", 6.02, 19.42, Z_REAR + 0.045, 6.10, 19.50, Z_REAR + 0.048, "Mat_MetalMatteBlack")
+# Bồn cầu trên tường Bắc (Y=17.74..18.32, tim 18.03) + kệ tường ngang để giấy & chai Vim
+add_box(col_site, "RearBath_ToiletTank", 6.56, 17.84, Z_REAR + 0.40, 6.81, 18.22, Z_REAR + 0.84, "Mat_CeramicWhite", bevel=0.03)
+add_cyl(col_site, "RearBath_ToiletBowl", 6.38, 18.03, Z_REAR + 0.04, Z_REAR + 0.44, 0.16, 0.19, "Mat_CeramicWhite", segs=16)
+add_box(col_site, "RearBath_ToiletSeat", 6.18, 17.85, Z_REAR + 0.44, 6.56, 18.21, Z_REAR + 0.48, "Mat_BeddingWhite", bevel=0.02)
+add_box(col_site, "RearBath_ToiletWallLedge", 6.64, 17.76, Z_REAR + 1.18, 6.83, 18.30, Z_REAR + 1.25, "Mat_WallWarmWhite", bevel=0.006)
+add_box(col_site, "RearBath_ToiletLedgeTop", 6.65, 17.77, Z_REAR + 1.25, 6.82, 18.29, Z_REAR + 1.27, "Mat_WoodOakTable")
+add_cyl(col_site, "RearBath_ToiletPaper_0", 6.73, 17.86, Z_REAR + 1.27, Z_REAR + 1.39, 0.052, 0.052, "Mat_BeddingWhite", segs=14)
+add_cyl(col_site, "RearBath_ToiletPaper_1", 6.73, 17.99, Z_REAR + 1.27, Z_REAR + 1.39, 0.052, 0.052, "Mat_BeddingWhite", segs=14)
+add_cyl(col_site, "RearBath_VimBottle", 6.73, 18.17, Z_REAR + 1.27, Z_REAR + 1.50, 0.042, 0.030, "Mat_CushionNavy", segs=14)
+add_cyl(col_site, "RearBath_VimCap", 6.73, 18.17, Z_REAR + 1.50, Z_REAR + 1.56, 0.017, 0.012, "Mat_CushionMustard", segs=10)
 
-# 5.1 CỬA TẮM KÍNH CƯỜNG LỰC KHUNG NHÔM ĐEN NGĂN GIỮA CHỖ TẮM & SÀN BỒN CẦU / LAVABO NGOÀI (Y=19.65, TRỌN BỀ NGANG X=5.07..6.83!)
-# Thanh ray trượt inox trên cùng + nẹp chân chặn nước + khung nhôm đen bản 5cm cực rõ nét!
-add_box(col_site, "RearBath_ShowerDoor_TopRail", 5.07, 19.61, Z_REAR + 2.13, 6.83, 19.71, Z_REAR + 2.19, "Mat_MetalStainless", bevel=0.005)
-add_box(col_site, "RearBath_ShowerDoor_BotTrack", 5.07, 19.62, Z_REAR + 0.13, 6.83, 19.70, Z_REAR + 0.175, "Mat_MetalMatteBlack")
-add_box(col_site, "RearBath_ShowerDoor_WallJambN", 6.78, 19.61, Z_REAR + 0.135, 6.83, 19.70, Z_REAR + 2.14, "Mat_MetalMatteBlack")
-add_box(col_site, "RearBath_ShowerDoor_WallJambS", 5.07, 19.61, Z_REAR + 0.135, 5.12, 19.70, Z_REAR + 2.14, "Mat_MetalMatteBlack")
-# Vách kính cố định nửa Bắc (che chắn trực tiếp Bồn cầu: X=5.95..6.78) kèm 2 thanh đố ngang đen Japandi nổi bật
-add_box(col_site, "RearBath_ShowerFixedGlass", 5.95, 19.63, Z_REAR + 0.17, 6.78, 19.655, Z_REAR + 2.13, "Mat_GlassBronze")
-add_box(col_site, "RearBath_ShowerFixedFrameM", 5.92, 19.61, Z_REAR + 0.135, 5.97, 19.67, Z_REAR + 2.14, "Mat_MetalMatteBlack")
-add_box(col_site, "RearBath_ShowerFixedMullion1", 5.95, 19.62, Z_REAR + 0.84, 6.78, 19.665, Z_REAR + 0.88, "Mat_MetalMatteBlack")
-add_box(col_site, "RearBath_ShowerFixedMullion2", 5.95, 19.62, Z_REAR + 1.50, 6.78, 19.665, Z_REAR + 1.54, "Mat_MetalMatteBlack")
-# Cánh cửa tắm trượt kính cường lực nửa Nam gắn khít trong ray (X=5.11..5.95, Y=19.66..19.70) có khung nhôm đen 4 cạnh + đố ngang + tay nắm đồng 2 mặt!
-add_box(col_site, "RearBath_ShowerDoorLeaf", 5.14, 19.665, Z_REAR + 0.18, 5.93, 19.695, Z_REAR + 2.10, "Mat_GlassBronze")
-add_box(col_site, "RearBath_ShowerDoorFrameL", 5.11, 19.655, Z_REAR + 0.16, 5.16, 19.705, Z_REAR + 2.13, "Mat_MetalMatteBlack")
-add_box(col_site, "RearBath_ShowerDoorFrameR", 5.91, 19.655, Z_REAR + 0.16, 5.96, 19.705, Z_REAR + 2.13, "Mat_MetalMatteBlack")
-add_box(col_site, "RearBath_ShowerDoorFrameB", 5.11, 19.655, Z_REAR + 0.16, 5.96, 19.705, Z_REAR + 0.21, "Mat_MetalMatteBlack")
-add_box(col_site, "RearBath_ShowerDoorFrameT", 5.11, 19.655, Z_REAR + 2.08, 5.96, 19.705, Z_REAR + 2.13, "Mat_MetalMatteBlack")
-add_box(col_site, "RearBath_ShowerDoorMullion1", 5.14, 19.66, Z_REAR + 0.84, 5.93, 19.70, Z_REAR + 0.88, "Mat_MetalMatteBlack")
-add_box(col_site, "RearBath_ShowerDoorMullion2", 5.14, 19.66, Z_REAR + 1.50, 5.93, 19.70, Z_REAR + 1.54, "Mat_MetalMatteBlack")
-# 2 bánh xe trượt inox trên ray & tay nắm cửa tắm màu đồng/inox 2 mặt nổi bật
-add_cyl(col_site, "RearBath_ShowerRoller1", 5.26, 19.675, Z_REAR + 2.13, Z_REAR + 2.19, 0.028, 0.028, "Mat_MetalStainless", rot=(math.pi / 2, 0, 0), segs=12)
-add_cyl(col_site, "RearBath_ShowerRoller2", 5.82, 19.675, Z_REAR + 2.13, Z_REAR + 2.19, 0.028, 0.028, "Mat_MetalStainless", rot=(math.pi / 2, 0, 0), segs=12)
-add_cyl(col_site, "RearBath_ShowerHandleOut", 5.82, 19.61, Z_REAR + 0.92, Z_REAR + 1.38, 0.015, 0.015, "Mat_BrassGold", segs=10)
-add_cyl(col_site, "RearBath_ShowerHandleIn", 5.82, 19.75, Z_REAR + 0.92, Z_REAR + 1.38, 0.015, 0.015, "Mat_BrassGold", segs=10)
-add_box(col_site, "RearBath_ShowerHandleTieT", 5.81, 19.61, Z_REAR + 1.34, 5.83, 19.75, Z_REAR + 1.37, "Mat_BrassGold")
-add_box(col_site, "RearBath_ShowerHandleTieB", 5.81, 19.61, Z_REAR + 0.93, 5.83, 19.75, Z_REAR + 0.96, "Mat_BrassGold")
+# Cây treo đồ khô + kệ trên cao + thùng/cây lau nhà chuyển gọn lên TƯỜNG ĐÔNG kín (Y=17.04, X=5.16..6.12) nhường tường Nam cho cửa chính!
+add_box(col_site, "RearBath_DryWallBar", 5.16, 17.04, Z_REAR + 1.56, 6.12, 17.07, Z_REAR + 1.68, "Mat_WoodOakTable", bevel=0.006)
+for bki, bkx in enumerate([5.22, 5.64, 6.06]):
+    add_box(col_site, f"RearBath_DryRodBracket_{bki}", bkx - 0.018, 17.06, Z_REAR + 1.60, bkx + 0.018, 17.23, Z_REAR + 1.64, "Mat_BrassGold")
+add_box(col_site, "RearBath_LongClothesRodBar", 5.18, 17.20, Z_REAR + 1.61, 6.10, 17.23, Z_REAR + 1.64, "Mat_MetalStainless")
+for dci, (dcx, dch, dcmat) in enumerate([
+    (5.32, 0.52, "Mat_CushionNavy"),
+    (5.62, 0.50, "Mat_BeddingCream"),
+    (5.92, 0.54, "Mat_CushionSage"),
+]):
+    add_cyl(col_site, f"RearBath_HangerHook_{dci}", dcx, 17.215, Z_REAR + 1.56, Z_REAR + 1.63, 0.008, 0.008, "Mat_BrassGold", segs=8)
+    add_box(col_site, f"RearBath_DryClothes_{dci}", dcx - 0.085, 17.18, Z_REAR + 1.56 - dch, dcx + 0.085, 17.24, Z_REAR + 1.56, dcmat, bevel=0.015)
+add_box(col_site, "RearBath_EastUpperShelf", 5.16, 17.04, Z_REAR + 1.98, 6.12, 17.34, Z_REAR + 2.04, "Mat_WoodOakTable", bevel=0.006)
+add_box(col_site, "RearBath_EastBasket", 5.20, 17.07, Z_REAR + 2.04, 5.56, 17.32, Z_REAR + 2.24, "Mat_WoodOakCabinet", bevel=0.012)
+add_box(col_site, "RearBath_EastTowel1", 5.66, 17.08, Z_REAR + 2.04, 6.04, 17.31, Z_REAR + 2.13, "Mat_BeddingWhite", bevel=0.012)
+add_box(col_site, "RearBath_MopBucket", 5.58, 17.06, Z_REAR + 0.04, 5.94, 17.36, Z_REAR + 0.34, "Mat_CeramicTeal", bevel=0.025)
+add_box(col_site, "RearBath_MopWringer", 5.61, 17.08, Z_REAR + 0.30, 5.77, 17.34, Z_REAR + 0.38, "Mat_MetalStainless", bevel=0.01)
+add_cyl(col_site, "RearBath_MopHead", 5.69, 17.20, Z_REAR + 0.34, Z_REAR + 0.42, 0.075, 0.058, "Mat_BeddingWhite", segs=14)
+add_cyl(col_site, "RearBath_MopPole", 5.69, 17.20, Z_REAR + 0.42, Z_REAR + 1.04, 0.014, 0.014, "Mat_MetalStainless", segs=10)
 
-# 5.2 KHU TẮM ƯỚT RỘNG RÃI KHÔNG VÁCH NGĂN (X=5.07..6.83, Y=19.65..20.98) — SEN CÂY NÓNG LẠNH + 2 KHUNG Ô + VÒI NƯỚC THẤP XẢ MẠNH + THAU GIẶT/MÚC TẮM!
-# Phễu thoát sàn dài inox đặt sát mép Tây dốc thẳng ra sau
-add_cyl(col_site, "RearBath_ShowerDrain", 5.95, 20.80, Z_REAR + 0.128, Z_REAR + 0.136, 0.058, 0.058, "Mat_MetalStainless", segs=14)
-add_box(col_site, "RearBath_ShowerDrainSlot", 5.65, 20.78, Z_REAR + 0.132, 6.25, 20.82, Z_REAR + 0.137, "Mat_MetalStainless")
-# Vòi tắm nóng lạnh bắt trên tường phía Bắc (X=6.76, Y=20.52 — bộ trộn + sen cây + sen cầm tay)
-add_box(col_site, "RearBath_MixerBody", 6.72, 20.41, Z_REAR + 1.02, 6.83, 20.63, Z_REAR + 1.09, "Mat_MetalStainless", bevel=0.008)
-add_box(col_site, "RearBath_MixerHotDot", 6.71, 20.43, Z_REAR + 1.04, 6.73, 20.46, Z_REAR + 1.07, "Mat_CushionBlush")
-add_box(col_site, "RearBath_MixerColdDot", 6.71, 20.58, Z_REAR + 1.04, 6.73, 20.61, Z_REAR + 1.07, "Mat_SmartCyanLED")
-add_box(col_site, "RearBath_MixerLever", 6.66, 20.50, Z_REAR + 1.07, 6.74, 20.54, Z_REAR + 1.11, "Mat_MetalStainless")
-add_cyl(col_site, "RearBath_ShowerPipe", 6.76, 20.52, Z_REAR + 1.08, Z_REAR + 2.14, 0.015, 0.015, "Mat_MetalStainless", segs=10)
-add_box(col_site, "RearBath_ShowerArm", 6.42, 20.50, Z_REAR + 2.11, 6.77, 20.54, Z_REAR + 2.15, "Mat_MetalStainless")
-add_cyl(col_site, "RearBath_RainHead", 6.42, 20.52, Z_REAR + 2.06, Z_REAR + 2.11, 0.12, 0.12, "Mat_MetalStainless", segs=18)
-add_cyl(col_site, "RearBath_HandShower", 6.72, 20.68, Z_REAR + 1.38, Z_REAR + 1.54, 0.022, 0.038, "Mat_MetalStainless", segs=12)
-# VÒI NƯỚC THẤP & XẢ MẠNH HƠN VÒI HOA SEN (gắn tường Bắc ở cao độ thấp Z_REAR+0.56m — họng lớn Ø27 xả mạnh ra thau giặt đồ / múc tắm cực đã!)
-add_cyl(col_site, "RearBath_LowStrongTap_Flange", 6.81, 20.52, Z_REAR + 0.56, Z_REAR + 0.59, 0.042, 0.042, "Mat_BrassGold", rot=(0, math.pi / 2, 0), segs=14)
-add_cyl(col_site, "RearBath_LowStrongTap_Pipe", 6.69, 20.52, Z_REAR + 0.55, Z_REAR + 0.59, 0.022, 0.022, "Mat_MetalStainless", rot=(0, math.pi / 2, 0), segs=12)
-add_box(col_site, "RearBath_LowStrongTap_Body", 6.58, 20.495, Z_REAR + 0.54, 6.81, 20.545, Z_REAR + 0.59, "Mat_MetalStainless", bevel=0.005)
-add_cyl(col_site, "RearBath_LowStrongTap_Spout", 6.60, 20.52, Z_REAR + 0.48, Z_REAR + 0.56, 0.020, 0.022, "Mat_MetalStainless", segs=12)
-add_box(col_site, "RearBath_LowStrongTap_Lever", 6.65, 20.505, Z_REAR + 0.59, 6.77, 20.535, Z_REAR + 0.625, "Mat_BrassGold", bevel=0.004)
-# Thau giặt đồ / múc tắm cỡ lớn ngay dưới vòi nước thấp xả mạnh + gáo múc nước + ghế tắm thấp trên sàn tắm rộng rãi!
-add_cyl(col_site, "RearBath_WashTub", 6.40, 20.52, Z_REAR + 0.13, Z_REAR + 0.36, 0.21, 0.26, "Mat_CeramicTeal", segs=22)
-add_cyl(col_site, "RearBath_WashTubWater", 6.40, 20.52, Z_REAR + 0.29, Z_REAR + 0.32, 0.23, 0.23, "Mat_WaterClear", segs=20)
-add_cyl(col_site, "RearBath_WaterDipper", 6.22, 20.42, Z_REAR + 0.32, Z_REAR + 0.40, 0.065, 0.075, "Mat_BeddingWhite", segs=14)
-add_cyl(col_site, "RearBath_BathStool", 5.56, 20.48, Z_REAR + 0.13, Z_REAR + 0.36, 0.15, 0.17, "Mat_WoodOakTable", segs=16)
-# 2 KHUNG Ô XÂY TRÊN TƯỜNG PHÍA BẮC NGAY CẠNH VÒI TẮM (X=6.67..6.83, Y=19.80..20.28) ĐỂ SỮA TẮM, DẦU GỘI!
-add_box(col_site, "RearBath_ShowerFrameL", 6.67, 19.80, Z_REAR + 0.94, 6.83, 19.85, Z_REAR + 1.78, "Mat_WallWarmWhite", bevel=0.004)
-add_box(col_site, "RearBath_ShowerFrameR", 6.67, 20.23, Z_REAR + 0.94, 6.83, 20.28, Z_REAR + 1.78, "Mat_WallWarmWhite", bevel=0.004)
-add_box(col_site, "RearBath_ShowerNicheBot", 6.67, 19.80, Z_REAR + 0.94, 6.83, 20.28, Z_REAR + 0.99, "Mat_WallWarmWhite", bevel=0.004)
-add_box(col_site, "RearBath_ShowerNicheMid", 6.67, 19.80, Z_REAR + 1.33, 6.83, 20.28, Z_REAR + 1.38, "Mat_WallWarmWhite", bevel=0.004)
-add_box(col_site, "RearBath_ShowerNicheTop", 6.67, 19.80, Z_REAR + 1.73, 6.83, 20.28, Z_REAR + 1.78, "Mat_WallWarmWhite", bevel=0.004)
-add_box(col_site, "RearBath_ShowerNicheOak1", 6.68, 19.85, Z_REAR + 0.99, 6.82, 20.23, Z_REAR + 1.01, "Mat_WoodOakTable")
-add_box(col_site, "RearBath_ShowerNicheOak2", 6.68, 19.85, Z_REAR + 1.38, 6.82, 20.23, Z_REAR + 1.40, "Mat_WoodOakTable")
-add_box(col_lights, "RearBath_ShowerNicheLED1", 6.70, 19.87, Z_REAR + 1.31, 6.73, 20.21, Z_REAR + 1.33, "Mat_WarmLED")
-add_box(col_lights, "RearBath_ShowerNicheLED2", 6.70, 19.87, Z_REAR + 1.71, 6.73, 20.21, Z_REAR + 1.73, "Mat_WarmLED")
+# 2. CHỖ TẮM RỘNG HƠN KHU BỒN CẦU/LAVABO (Y=18.36..19.88 -> 1.52m x 1.76m = 2.68 m²) + GỜ CHẮN NƯỚC XÂY CAO CHỐNG TRÀN!
+add_box(col_site, "RearBath_WetZoneFloor", 5.07, 18.36, Z_REAR + 0.04, 6.83, 19.88, Z_REAR + 0.13, "Mat_StepStone", bevel=0.008)
+# Gờ đá chắn nước xây cao rõ nét (+9cm trên mặt sàn tắm / +18cm trên sàn khô) ngăn nước tuyệt đối không tràn ra khu khô!
+add_box(col_site, "RearBath_WetDryCurb", 5.07, 18.30, Z_REAR + 0.04, 6.83, 18.42, Z_REAR + 0.22, "Mat_DarkGreyStone", bevel=0.006)
+add_cyl(col_site, "RearBath_DryFloorDrain", 6.06, 18.20, Z_REAR + 0.038, Z_REAR + 0.046, 0.050, 0.050, "Mat_MetalStainless", segs=14)
+add_box(col_site, "RearBath_DryDrainGrate", 6.02, 18.16, Z_REAR + 0.045, 6.10, 18.24, Z_REAR + 0.048, "Mat_MetalMatteBlack")
+
+# Vách tường xây đặc 1 nửa che kín hoàn toàn Bồn cầu (phía Bắc X=5.92..6.83) + 1 CỬA PHÒNG TẮM DUY NHẤT ở nửa còn lại (phía Nam X=5.07..5.92) tại Y=18.30..18.42!
+add_box(col_site, "RearBath_ShowerHalfWall", 5.92, 18.30, Z_REAR + 0.04, 6.83, 18.42, RB_H, "Mat_WallWarmWhite", bevel=0.005)
+add_box(col_site, "RearBath_ShowerDoorWallTop", 5.07, 18.30, Z_REAR + 2.14, 5.92, 18.42, RB_H, "Mat_WallWarmWhite")
+# 1 cánh cửa phòng tắm duy nhất ở nửa Nam đặt gọn trên đỉnh gờ chắn nước cao (Z_REAR+0.22..2.15)
+add_box(col_site, "RearBath_ShowerDoor_FrameL", 5.07, 18.29, Z_REAR + 0.22, 5.12, 18.43, Z_REAR + 2.15, "Mat_MetalMatteBlack")
+add_box(col_site, "RearBath_ShowerDoor_FrameR", 5.88, 18.29, Z_REAR + 0.22, 5.93, 18.43, Z_REAR + 2.15, "Mat_MetalMatteBlack")
+add_box(col_site, "RearBath_ShowerDoor_FrameT", 5.07, 18.29, Z_REAR + 2.11, 5.93, 18.43, Z_REAR + 2.16, "Mat_MetalMatteBlack")
+add_box(col_site, "RearBath_ShowerDoorLeaf", 5.12, 18.34, Z_REAR + 0.24, 5.88, 18.39, Z_REAR + 2.11, "Mat_GlassFrosted")
+add_box(col_site, "RearBath_ShowerDoorKick", 5.12, 18.33, Z_REAR + 0.22, 5.88, 18.40, Z_REAR + 0.42, "Mat_MetalMatteBlack")
+add_box(col_site, "RearBath_ShowerDoorMullion", 5.12, 18.335, Z_REAR + 1.15, 5.88, 18.395, Z_REAR + 1.19, "Mat_MetalMatteBlack")
+add_cyl(col_site, "RearBath_ShowerHandleOut", 5.78, 18.29, Z_REAR + 0.94, Z_REAR + 1.32, 0.015, 0.015, "Mat_BrassGold", segs=10)
+add_cyl(col_site, "RearBath_ShowerHandleIn", 5.78, 18.44, Z_REAR + 0.94, Z_REAR + 1.32, 0.015, 0.015, "Mat_BrassGold", segs=10)
+
+# Thiết bị khu tắm rộng (Y=18.36..19.88): Sen cây + 2 khung ô + Vòi thấp xả mạnh + Thau giặt/múc tắm
+add_cyl(col_site, "RearBath_ShowerDrain", 5.95, 19.66, Z_REAR + 0.128, Z_REAR + 0.136, 0.056, 0.056, "Mat_MetalStainless", segs=14)
+add_box(col_site, "RearBath_ShowerDrainSlot", 5.65, 19.64, Z_REAR + 0.132, 6.25, 19.68, Z_REAR + 0.137, "Mat_MetalStainless")
+add_box(col_site, "RearBath_MixerBody", 6.72, 19.23, Z_REAR + 1.02, 6.83, 19.45, Z_REAR + 1.09, "Mat_MetalStainless", bevel=0.008)
+add_box(col_site, "RearBath_MixerHotDot", 6.71, 19.25, Z_REAR + 1.04, 6.73, 19.28, Z_REAR + 1.07, "Mat_CushionBlush")
+add_box(col_site, "RearBath_MixerColdDot", 6.71, 19.40, Z_REAR + 1.04, 6.73, 19.43, Z_REAR + 1.07, "Mat_SmartCyanLED")
+add_box(col_site, "RearBath_MixerLever", 6.66, 19.32, Z_REAR + 1.07, 6.74, 19.36, Z_REAR + 1.11, "Mat_MetalStainless")
+add_cyl(col_site, "RearBath_ShowerPipe", 6.76, 19.34, Z_REAR + 1.08, Z_REAR + 2.14, 0.015, 0.015, "Mat_MetalStainless", segs=10)
+add_box(col_site, "RearBath_ShowerArm", 6.42, 19.32, Z_REAR + 2.11, 6.77, 19.36, Z_REAR + 2.15, "Mat_MetalStainless")
+add_cyl(col_site, "RearBath_RainHead", 6.42, 19.34, Z_REAR + 2.06, Z_REAR + 2.11, 0.12, 0.12, "Mat_MetalStainless", segs=18)
+add_cyl(col_site, "RearBath_HandShower", 6.72, 19.50, Z_REAR + 1.38, Z_REAR + 1.54, 0.022, 0.038, "Mat_MetalStainless", segs=12)
+add_cyl(col_site, "RearBath_LowStrongTap_Flange", 6.81, 19.34, Z_REAR + 0.56, Z_REAR + 0.59, 0.042, 0.042, "Mat_BrassGold", rot=(0, math.pi / 2, 0), segs=14)
+add_cyl(col_site, "RearBath_LowStrongTap_Pipe", 6.69, 19.34, Z_REAR + 0.55, Z_REAR + 0.59, 0.022, 0.022, "Mat_MetalStainless", rot=(0, math.pi / 2, 0), segs=12)
+add_box(col_site, "RearBath_LowStrongTap_Body", 6.58, 19.315, Z_REAR + 0.54, 6.81, 19.365, Z_REAR + 0.59, "Mat_MetalStainless", bevel=0.005)
+add_cyl(col_site, "RearBath_LowStrongTap_Spout", 6.60, 19.34, Z_REAR + 0.48, Z_REAR + 0.56, 0.020, 0.022, "Mat_MetalStainless", segs=12)
+add_box(col_site, "RearBath_LowStrongTap_Lever", 6.65, 19.325, Z_REAR + 0.59, 6.77, 19.355, Z_REAR + 0.625, "Mat_BrassGold", bevel=0.004)
+add_cyl(col_site, "RearBath_WashTub", 6.40, 19.34, Z_REAR + 0.13, Z_REAR + 0.36, 0.21, 0.26, "Mat_CeramicTeal", segs=22)
+add_cyl(col_site, "RearBath_WashTubWater", 6.40, 19.34, Z_REAR + 0.29, Z_REAR + 0.32, 0.23, 0.23, "Mat_WaterClear", segs=20)
+add_cyl(col_site, "RearBath_WaterDipper", 6.22, 19.24, Z_REAR + 0.32, Z_REAR + 0.40, 0.065, 0.075, "Mat_BeddingWhite", segs=14)
+add_cyl(col_site, "RearBath_BathStool", 5.56, 19.24, Z_REAR + 0.13, Z_REAR + 0.36, 0.15, 0.17, "Mat_WoodOakTable", segs=16)
+add_box(col_site, "RearBath_ShowerFrameL", 6.67, 18.56, Z_REAR + 0.94, 6.83, 18.61, Z_REAR + 1.78, "Mat_WallWarmWhite", bevel=0.004)
+add_box(col_site, "RearBath_ShowerFrameR", 6.67, 19.01, Z_REAR + 0.94, 6.83, 19.06, Z_REAR + 1.78, "Mat_WallWarmWhite", bevel=0.004)
+add_box(col_site, "RearBath_ShowerNicheBot", 6.67, 18.56, Z_REAR + 0.94, 6.83, 19.06, Z_REAR + 0.99, "Mat_WallWarmWhite", bevel=0.004)
+add_box(col_site, "RearBath_ShowerNicheMid", 6.67, 18.56, Z_REAR + 1.33, 6.83, 19.06, Z_REAR + 1.38, "Mat_WallWarmWhite", bevel=0.004)
+add_box(col_site, "RearBath_ShowerNicheTop", 6.67, 18.56, Z_REAR + 1.73, 6.83, 19.06, Z_REAR + 1.78, "Mat_WallWarmWhite", bevel=0.004)
+add_box(col_site, "RearBath_ShowerNicheOak1", 6.68, 18.61, Z_REAR + 0.99, 6.82, 19.01, Z_REAR + 1.01, "Mat_WoodOakTable")
+add_box(col_site, "RearBath_ShowerNicheOak2", 6.68, 18.61, Z_REAR + 1.38, 6.82, 19.01, Z_REAR + 1.40, "Mat_WoodOakTable")
+add_box(col_lights, "RearBath_ShowerNicheLED1", 6.70, 18.63, Z_REAR + 1.31, 6.73, 18.99, Z_REAR + 1.33, "Mat_WarmLED")
+add_box(col_lights, "RearBath_ShowerNicheLED2", 6.70, 18.63, Z_REAR + 1.71, 6.73, 18.99, Z_REAR + 1.73, "Mat_WarmLED")
 for si, (sy, sz_b, sh_b, smat) in enumerate([
-    (19.92, Z_REAR + 1.01, 0.21, "Mat_CeramicTeal"),
-    (20.04, Z_REAR + 1.01, 0.18, "Mat_CeramicWhite"),
-    (20.16, Z_REAR + 1.01, 0.20, "Mat_CushionMustard"),
-    (19.95, Z_REAR + 1.40, 0.19, "Mat_CushionSage"),
-    (20.13, Z_REAR + 1.40, 0.17, "Mat_CushionBlush"),
+    (18.68, Z_REAR + 1.01, 0.21, "Mat_CeramicTeal"),
+    (18.81, Z_REAR + 1.01, 0.18, "Mat_CeramicWhite"),
+    (18.94, Z_REAR + 1.01, 0.20, "Mat_CushionMustard"),
+    (18.72, Z_REAR + 1.40, 0.19, "Mat_CushionSage"),
+    (18.90, Z_REAR + 1.40, 0.17, "Mat_CushionBlush"),
 ]):
     add_cyl(col_site, f"RearBath_Shampoo_{si}", 6.75, sy, sz_b, sz_b + sh_b, 0.032, 0.025, smat, segs=12)
 
-# 5.3 HỆ THỐNG ỐNG & RÃNH THOÁT NƯỚC DỐC THẢI THẲNG RA PHÍA SAU TỪ KHU TẮM, SÀN KHÔ & MÁY GIẶT!
-# Rãnh thu nước dốc có lưới inox chạy dọc chân tường Tây ngoài nhà tắm (X=4.95..6.95, Y=21.10..21.35)
-add_box(col_site, "RearBath_RearDrainTrough", 4.95, 21.10, Z_REAR - 0.06, 6.95, 21.35, Z_REAR + 0.005, "Mat_DarkGreyStone")
-add_box(col_site, "RearBath_RearDrainGrate", 5.02, 21.14, Z_REAR + 0.003, 6.88, 21.31, Z_REAR + 0.014, "Mat_MetalStainless")
-for op_name, op_x, op_z in [
-    ("RearBath_OutPipe_Shower", 6.20, Z_REAR + 0.06),
-    ("RearBath_OutPipe_DryFloor", 5.85, Z_REAR + 0.025),
-    ("RearBath_OutPipe_Washer", 5.30, Z_REAR + 0.050),
-]:
-    add_cyl(col_site, op_name, op_x, 21.13, op_z - 0.18, op_z + 0.18, 0.030, 0.030, "Mat_DarkGreyStone",
-            rot=(math.pi / 2, 0, 0), segs=12)
-add_cyl(col_site, "RearBath_MainOutfallPipe", 5.02, 21.52, Z_REAR - 0.215, Z_REAR + 0.185, 0.042, 0.042, "Mat_DarkGreyStone",
-        rot=(math.pi / 2, 0, 0), segs=12)
+add_pendant_chandelier(col_lights, "RearBath_CeilingLight", 5.95, 18.46, RB_H - 0.04, drop=0.18, count=1)
 
-add_pendant_chandelier(col_lights, "RearBath_CeilingLight", 5.95, 19.10, RB_H - 0.04, drop=0.18, count=1)
-
-# 🚰🧥 PHÍA NGOÀI TƯỜNG NAM GẦN CỬA NHÀ TẮM (X=4.95, Y=18.68..20.48) — VÒI NƯỚC LAU NHÀ + TẤM ĐỤC LỖ PEGBOARD TREO ÁO MƯA & MŨ BẢO HIỂM!
-# 1. Vòi nước ngoài hướng Nam ngay cạnh cửa nhà tắm (Y=18.88, Z_REAR+0.56m) để mỗi lần lau nhà vặn nước ra tiện lợi + ô hứng thoát nước nhỏ!
-add_box(col_site, "ExtBath_MopTap_SplashPad", 4.58, 18.68, Z_REAR, 4.95, 19.08, Z_REAR + 0.02, "Mat_DarkGreyStone", bevel=0.005)
-add_box(col_site, "ExtBath_MopTap_Grate", 4.66, 18.78, Z_REAR + 0.018, 4.86, 18.98, Z_REAR + 0.026, "Mat_MetalStainless")
-add_cyl(col_site, "ExtBath_MopTap_Flange", 4.93, 18.88, Z_REAR + 0.56, Z_REAR + 0.59, 0.035, 0.035, "Mat_BrassGold", rot=(0, math.pi / 2, 0), segs=12)
-add_box(col_site, "ExtBath_MopTap_Pipe", 4.74, 18.865, Z_REAR + 0.545, 4.95, 18.895, Z_REAR + 0.575, "Mat_MetalStainless")
-add_cyl(col_site, "ExtBath_MopTap_Spout", 4.75, 18.88, Z_REAR + 0.49, Z_REAR + 0.56, 0.016, 0.016, "Mat_MetalStainless", segs=10)
-add_box(col_site, "ExtBath_MopTap_Handle", 4.79, 18.865, Z_REAR + 0.575, 4.89, 18.895, Z_REAR + 0.605, "Mat_SmartRedLED", bevel=0.003)
-# 2. Tấm đục lỗ Pegboard + Thanh móc treo áo mưa & kệ mũ bảo hiểm ngay bên trên tường Nam (X=4.90..4.95, Y=18.70..20.48, Z_REAR+1.26..2.06)
-add_box(col_site, "ExtBath_Pegboard_Frame", 4.90, 18.70, Z_REAR + 1.26, 4.95, 20.48, Z_REAR + 2.06, "Mat_WoodOakDark", bevel=0.008)
-add_box(col_site, "ExtBath_Pegboard_Panel", 4.89, 18.74, Z_REAR + 1.30, 4.92, 20.44, Z_REAR + 2.02, "Mat_WoodOakTable", bevel=0.005)
-# Lưới lỗ đục đặc trưng của tấm Pegboard (hàng lỗ tròn nhỏ đều đặn)
+# 🧥 PHÍA NGOÀI TƯỜNG NAM NHÀ TẮM (X=4.95, Y=18.22..19.72) — CHỈ GIỮ TẤM ĐỤC LỖ PEGBOARD TREO ÁO MƯA & MŨ (ĐÃ BỎ VÒI NƯỚC NGOÀI SÁT TƯỜNG TẮM!)
+add_box(col_site, "ExtBath_Pegboard_Frame", 4.90, 18.22, Z_REAR + 1.26, 4.95, 19.72, Z_REAR + 2.06, "Mat_WoodOakDark", bevel=0.008)
+add_box(col_site, "ExtBath_Pegboard_Panel", 4.89, 18.26, Z_REAR + 1.30, 4.92, 19.68, Z_REAR + 2.02, "Mat_WoodOakTable", bevel=0.005)
 for phr in range(4):
     phz = Z_REAR + 1.40 + phr * 0.16
-    for phc in range(9):
-        phy = 18.86 + phc * 0.18
+    for phc in range(8):
+        phy = 18.36 + phc * 0.175
         add_box(col_site, f"ExtBath_PegHole_{phr}_{phc}", 4.882, phy - 0.014, phz - 0.014, 4.892, phy + 0.014, phz + 0.014, "Mat_MetalMatteBlack")
-# Kệ nhỏ gắn pegboard phía trên để 2 mũ bảo hiểm mỗi khi xuống xe máy (Z_REAR+1.78)
-add_box(col_site, "ExtBath_HelmetShelf", 4.66, 19.40, Z_REAR + 1.76, 4.91, 20.38, Z_REAR + 1.80, "Mat_MetalMatteBlack", bevel=0.004)
-add_sphere(col_site, "ExtBath_Helmet1", 4.78, 19.65, Z_REAR + 1.92, 0.13, "Mat_CeramicWhite", 1.0, 1.12, 0.92)
-add_sphere(col_site, "ExtBath_Helmet2", 4.78, 20.12, Z_REAR + 1.92, 0.13, "Mat_CushionNavy", 1.0, 1.12, 0.92)
-# Khay pegboard đựng chìa khóa/găng tay (Y=18.82..19.22)
-add_box(col_site, "ExtBath_KeyTray", 4.78, 18.82, Z_REAR + 1.72, 4.90, 19.22, Z_REAR + 1.82, "Mat_MetalMatteBlack", bevel=0.004)
-# Thanh móc inox treo áo mưa gắn dọc phần dưới Pegboard (Z_REAR+1.44) + 5 móc + 2 áo mưa treo sẵn
-add_box(col_site, "ExtBath_RainHookBar", 4.82, 18.78, Z_REAR + 1.43, 4.85, 20.38, Z_REAR + 1.46, "Mat_MetalStainless")
-for rhi, rhy in enumerate([18.92, 19.26, 19.60, 19.94, 20.26]):
+add_box(col_site, "ExtBath_HelmetShelf", 4.66, 18.76, Z_REAR + 1.76, 4.91, 19.64, Z_REAR + 1.80, "Mat_MetalMatteBlack", bevel=0.004)
+add_sphere(col_site, "ExtBath_Helmet1", 4.78, 18.98, Z_REAR + 1.92, 0.13, "Mat_CeramicWhite", 1.0, 1.12, 0.92)
+add_sphere(col_site, "ExtBath_Helmet2", 4.78, 19.40, Z_REAR + 1.92, 0.13, "Mat_CushionNavy", 1.0, 1.12, 0.92)
+add_box(col_site, "ExtBath_KeyTray", 4.78, 18.32, Z_REAR + 1.72, 4.90, 18.66, Z_REAR + 1.82, "Mat_MetalMatteBlack", bevel=0.004)
+add_box(col_site, "ExtBath_RainHookBar", 4.82, 18.30, Z_REAR + 1.43, 4.85, 19.64, Z_REAR + 1.46, "Mat_MetalStainless")
+for rhi, rhy in enumerate([18.42, 18.72, 19.02, 19.32, 19.56]):
     add_box(col_site, f"ExtBath_RainHook_{rhi}", 4.78, rhy - 0.012, Z_REAR + 1.40, 4.85, rhy + 0.012, Z_REAR + 1.45, "Mat_BrassGold")
-add_box(col_site, "ExtBath_Raincoat1", 4.76, 19.12, Z_REAR + 0.78, 4.85, 19.44, Z_REAR + 1.42, "Mat_CeramicTeal", bevel=0.02)
-add_box(col_site, "ExtBath_Raincoat2", 4.76, 19.50, Z_REAR + 0.82, 4.85, 19.82, Z_REAR + 1.42, "Mat_CushionMustard", bevel=0.02)
+add_box(col_site, "ExtBath_Raincoat1", 4.76, 18.56, Z_REAR + 0.78, 4.85, 18.88, Z_REAR + 1.42, "Mat_CeramicTeal", bevel=0.02)
+add_box(col_site, "ExtBath_Raincoat2", 4.76, 18.94, Z_REAR + 0.82, 4.85, 19.26, Z_REAR + 1.42, "Mat_CushionMustard", bevel=0.02)
 
-# 👕🥬 VƯỜN RAU TỰ NHIÊN KHÔNG BÊ TÔNG & CÂY PHƠI ĐỒ HÀNG NGANG ĐỔI SANG PHÍA NAM (X=0.00..3.30, Y=21.35..24.00 — ĐÓN NẮNG NAM, PHÍA TÂY CHỖ RỬA CHÉN!)
-# 2 thanh cây phơi ngang dài 3.30m (Y=22.62 & 23.32 — lùi Tây khỏi cửa chòi bếp Y=21.62..22.46 để lối đi vào chòi bếp hoàn toàn thoáng!)
-for li, ly in enumerate([22.62, 23.32]):
+# 👕🥬 VƯỜN RAU TỰ NHIÊN VỪA ĐỦ & CÂY PHƠI ĐỒ HÀNG NGANG PHÍA NAM (X=0.00..3.30, Y=20.00..22.50 — ĐÓN TRỌN NẮNG NAM, GỌN ĐẾN TƯỜNG RÀO SAU 22.50M!)
+for li, ly in enumerate([20.78, 21.58]):
     add_box(col_site, f"DryRack_WallFlangeS_{li}", 0.00, ly - 0.055, Z_REAR + 1.84, 0.04, ly + 0.055, Z_REAR + 1.96, "Mat_MetalStainless", bevel=0.005)
     add_box(col_site, f"DryRack_PostN_{li}", 3.25, ly - 0.028, Z_REAR + 1.15, 3.31, ly + 0.028, Z_REAR + 1.98, "Mat_MetalStainless", bevel=0.004)
     add_box(col_site, f"DryRack_WallFlangeN_{li}", 3.23, ly - 0.055, Z_REAR + 1.84, 3.28, ly + 0.055, Z_REAR + 1.96, "Mat_MetalStainless", bevel=0.005)
     add_box(col_site, f"DryRack_LongBar_{li}", 0.00, ly - 0.018, Z_REAR + 1.88, 3.28, ly + 0.018, Z_REAR + 1.92, "Mat_MetalStainless")
 cloth_mats_rear = ["Mat_BeddingWhite", "Mat_CushionSage", "Mat_CushionNavy", "Mat_CushionBlush", "Mat_CushionMustard", "Mat_WallFacadeWarm"]
-for li, ly in enumerate([22.62, 23.32]):
+for li, ly in enumerate([20.78, 21.58]):
     for ci, cx in enumerate([0.48, 1.04, 1.60, 2.16]):
         add_box(col_site, f"DryRack_Cloth_{li}_{ci}", cx - 0.20, ly - 0.022, Z_REAR + 1.26, cx + 0.20, ly + 0.022, Z_REAR + 1.87,
                 cloth_mats_rear[(li * 4 + ci) % len(cloth_mats_rear)], bevel=0.012)
-# 3 luống ĐẤT TRỒNG RAU XANH tự nhiên phía Nam (X=0.22..2.58, Y=21.52..23.66 — KHÔNG bê tông, đón trọn nắng Nam!)
-for dv_i, dv_y in enumerate([21.52, 22.32, 23.12]):
-    add_box(col_site, f"DryVeg_SoilRidge_{dv_i}", 0.22, dv_y, Z_REAR - 0.04, 2.58, dv_y + 0.54, Z_REAR + 0.08, "Mat_SoilDark", bevel=0.04)
+# 3 luống ĐẤT TRỒNG RAU XANH vừa đủ phía Nam (X=0.22..2.58, Y=20.18..22.24, nền đất Z_SOIL=0.24m!)
+for dv_i, dv_y in enumerate([20.18, 20.94, 21.70]):
+    add_box(col_site, f"DryVeg_SoilRidge_{dv_i}", 0.22, dv_y, Z_SOIL, 2.58, dv_y + 0.54, Z_SOIL + 0.12, "Mat_SoilDark", bevel=0.04)
     for dvc in range(5):
         dvx = 0.46 + dvc * 0.44
-        add_sphere(col_site, f"DryVeg_Leaf_{dv_i}_{dvc}", dvx, dv_y + 0.27, Z_REAR + 0.16, 0.135,
+        add_sphere(col_site, f"DryVeg_Leaf_{dv_i}_{dvc}", dvx, dv_y + 0.27, Z_SOIL + 0.20, 0.135,
                    "Mat_FoliageBright" if (dv_i + dvc) % 2 == 0 else "Mat_FoliageGreen", 1.1, 1.0, 0.65)
-add_cyl(col_site, "Rear_LaundryBasket", 2.96, 21.48, Z_REAR + 0.01, Z_REAR + 0.39, 0.18, 0.22, "Mat_WoodOakTable", segs=16)
+add_cyl(col_site, "Rear_LaundryBasket", 2.96, 20.48, Z_SOIL + 0.05, Z_SOIL + 0.43, 0.18, 0.22, "Mat_WoodOakTable", segs=16)
 
-# ☕ BÀN GHẾ NGỒI CHILL PHÍA SAU (CHỈ 1 GHẾ DÀI + 1 BÀN TRÒN) — PHÍA NAM BẬC THANG CỬA SAU (X=1.94..3.44, Y=16.0..17.85)
-# Ngồi tựa đầu vào tường hậu nhà phía Đông (Y=16.0), lưng về phía Đông (-Y), mặt hướng về phía Tây (+Y) ngắm trọn Vườn rau!
-add_box(col_site, "Rear_Chill_Deck", 1.85, 16.00, Z_REAR, 3.48, 17.90, Z_REAR + 0.02, "Mat_AntiSlipWoodTile")
-add_box(col_site, "Rear_Chill_BenchBase", 1.94, 16.08, Z_REAR + 0.02, 3.44, 16.64, Z_REAR + 0.38, "Mat_WoodOakTable", bevel=0.015)
+# ☕ BÀN GHẾ NGỒI CHILL PHÍA SAU (1 GHẾ DÀI + 1 BÀN TRÒN) — PHÍA NAM BẬC THANG CỬA SAU (X=1.94..3.44, Y=16.0..17.70)
+add_box(col_site, "Rear_Chill_Deck", 1.85, 16.00, Z_REAR, 3.48, 17.72, Z_REAR + 0.02, "Mat_AntiSlipWoodTile")
+add_box(col_site, "Rear_Chill_BenchBase", 1.94, 16.08, Z_REAR + 0.02, 3.44, 16.60, Z_REAR + 0.38, "Mat_WoodOakTable", bevel=0.015)
 add_box(col_site, "Rear_Chill_BenchBack", 1.94, 16.00, Z_REAR + 0.38, 3.44, 16.09, Z_REAR + 0.98, "Mat_WoodLouverFacade", bevel=0.008)
-add_box(col_site, "Rear_Chill_BenchPad", 1.98, 16.10, Z_REAR + 0.38, 3.40, 16.60, Z_REAR + 0.46, "Mat_CushionMustard", bevel=0.02)
+add_box(col_site, "Rear_Chill_BenchPad", 1.98, 16.10, Z_REAR + 0.38, 3.40, 16.56, Z_REAR + 0.46, "Mat_CushionMustard", bevel=0.02)
 for rci, rcx in enumerate([2.24, 2.69, 3.14]):
     add_box(col_site, f"Rear_Chill_Pillow_{rci}", rcx - 0.19, 16.11, Z_REAR + 0.46, rcx + 0.19, 16.26, Z_REAR + 0.74,
             "Mat_CushionSage" if rci % 2 == 0 else "Mat_BeddingCream", bevel=0.035)
-add_cyl(col_site, "Rear_Chill_RoundTableTop", 2.69, 17.28, Z_REAR + 0.46, Z_REAR + 0.51, 0.42, 0.42, "Mat_WhiteMarble", segs=24)
-add_cyl(col_site, "Rear_Chill_RoundTableLeg", 2.69, 17.28, Z_REAR + 0.02, Z_REAR + 0.46, 0.06, 0.12, "Mat_MetalMatteBlack", segs=16)
-add_cyl(col_site, "Rear_Chill_Cup1", 2.57, 17.24, Z_REAR + 0.51, Z_REAR + 0.59, 0.035, 0.04, "Mat_CeramicWhite")
-add_cyl(col_site, "Rear_Chill_Cup2", 2.81, 17.32, Z_REAR + 0.51, Z_REAR + 0.59, 0.035, 0.04, "Mat_CeramicTeal")
-add_potted_plant(col_site, "Rear_Chill_Plant", 1.62, 16.32, Z_REAR, scale=0.82, pot_mat="Mat_TerracottaPot")
+add_cyl(col_site, "Rear_Chill_RoundTableTop", 2.69, 17.16, Z_REAR + 0.46, Z_REAR + 0.51, 0.40, 0.40, "Mat_WhiteMarble", segs=24)
+add_cyl(col_site, "Rear_Chill_RoundTableLeg", 2.69, 17.16, Z_REAR + 0.02, Z_REAR + 0.46, 0.06, 0.12, "Mat_MetalMatteBlack", segs=16)
+add_cyl(col_site, "Rear_Chill_Cup1", 2.57, 17.12, Z_REAR + 0.51, Z_REAR + 0.59, 0.035, 0.04, "Mat_CeramicWhite")
+add_cyl(col_site, "Rear_Chill_Cup2", 2.81, 17.20, Z_REAR + 0.51, Z_REAR + 0.59, 0.035, 0.04, "Mat_CeramicTeal")
+add_potted_plant(col_site, "Rear_Chill_Plant", 1.58, 16.72, Z_REAR, scale=0.82, pot_mat="Mat_TerracottaPot")
 
-# 🛵 XE MÁY DỰNG GẦN NHÀ TẮM & NGAY DƯỚI TẤM PEGBOARD TREO ÁO MƯA/MŨ (X=3.25..4.52, Y=19.55..20.05): ĐẦU HƯỚNG BẮC (+X), BÁNH SAU HƯỚNG NAM (-X)!
-add_box(col_site, "Rear_Scooter_Body", 3.25, 19.58, Z_REAR + 0.27, 4.52, 20.04, Z_REAR + 0.80, "Mat_CeramicWhite", bevel=0.06)
-add_box(col_site, "Rear_Scooter_Seat", 3.36, 19.62, Z_REAR + 0.77, 4.12, 20.00, Z_REAR + 0.89, "Mat_WoodOakDark", bevel=0.04)
-add_box(col_site, "Rear_Scooter_FrontShield", 4.28, 19.60, Z_REAR + 0.60, 4.50, 20.02, Z_REAR + 1.04, "Mat_CeramicWhite", bevel=0.04)
-add_box(col_site, "Rear_Scooter_Handle", 4.38, 19.48, Z_REAR + 1.02, 4.48, 20.14, Z_REAR + 1.10, "Mat_MetalMatteBlack")
-add_box(col_lights, "Rear_Scooter_Headlight", 4.49, 19.73, Z_REAR + 0.86, 4.53, 19.89, Z_REAR + 0.96, "Mat_WarmSconce")
-add_cyl(col_site, "Rear_Scooter_WheelFront_N", 4.40, 19.81, Z_REAR, Z_REAR + 0.43, 0.21, 0.21, "Mat_TireRubber", rot=(math.pi / 2, 0, 0), segs=16)
-add_cyl(col_site, "Rear_Scooter_WheelRear_S", 3.36, 19.81, Z_REAR, Z_REAR + 0.43, 0.21, 0.21, "Mat_TireRubber", rot=(math.pi / 2, 0, 0), segs=16)
+# 🛵 XE MÁY DỰNG NGAY TRƯỚC CỬA NHÀ TẮM HƯỚNG NAM (X=3.05..4.32, Y=18.05..18.55 — mở cửa nhà tắm là thấy xe máy, cách khu rửa chén thoáng rộng 1.57m!)
+add_box(col_site, "Rear_Scooter_Body", 3.05, 18.08, Z_REAR + 0.27, 4.32, 18.54, Z_REAR + 0.80, "Mat_CeramicWhite", bevel=0.06)
+add_box(col_site, "Rear_Scooter_Seat", 3.16, 18.12, Z_REAR + 0.77, 3.92, 18.50, Z_REAR + 0.89, "Mat_WoodOakDark", bevel=0.04)
+add_box(col_site, "Rear_Scooter_FrontShield", 4.08, 18.10, Z_REAR + 0.60, 4.30, 18.52, Z_REAR + 1.04, "Mat_CeramicWhite", bevel=0.04)
+add_box(col_site, "Rear_Scooter_Handle", 4.18, 17.98, Z_REAR + 1.02, 4.28, 18.64, Z_REAR + 1.10, "Mat_MetalMatteBlack")
+add_box(col_lights, "Rear_Scooter_Headlight", 4.29, 18.23, Z_REAR + 0.86, 4.33, 18.39, Z_REAR + 0.96, "Mat_WarmSconce")
+add_cyl(col_site, "Rear_Scooter_WheelFront_N", 4.20, 18.31, Z_REAR, Z_REAR + 0.43, 0.21, 0.21, "Mat_TireRubber", rot=(math.pi / 2, 0, 0), segs=16)
+add_cyl(col_site, "Rear_Scooter_WheelRear_S", 3.16, 18.31, Z_REAR, Z_REAR + 0.43, 0.21, 0.21, "Mat_TireRubber", rot=(math.pi / 2, 0, 0), segs=16)
 
-# 🫧 NƠI RỬA CHÉN NGOÀI TRỜI HIÊN SAU (X=0.00..2.75, Y=19.15..21.05 — VÒI RỬA GẮN SÁT TƯỜNG PHÍA NAM X=0.00, KHÔNG GẮN CHÍNH GIỮA ĐỂ THÔNG THẲNG SANG CHÒI BẾP CỦI PHÍA TÂY!)
-add_box(col_site, "RearWash_Pad", 0.00, 19.15, Z_REAR, 2.75, 21.05, Z_REAR + 0.03, "Mat_StepStone", bevel=0.008)
-# Rãnh thu nước chạy dọc tường Nam & mép Tây, dẫn ống xả thải ra luống rau phía Bắc-Tây (X=2.25) không chảy vào chòi bếp củi!
-add_box(col_site, "RearWash_DrainChannelS", 0.04, 19.50, Z_REAR + 0.01, 0.26, 21.05, Z_REAR + 0.04, "Mat_DarkGreyStone")
-add_box(col_site, "RearWash_DrainGrateS", 0.08, 19.56, Z_REAR + 0.038, 0.22, 20.98, Z_REAR + 0.048, "Mat_MetalStainless")
-add_box(col_site, "RearWash_DrainChannel", 0.04, 20.92, Z_REAR + 0.01, 2.70, 21.06, Z_REAR + 0.045, "Mat_DarkGreyStone")
-add_box(col_site, "RearWash_DrainGrate", 0.12, 20.95, Z_REAR + 0.042, 2.64, 21.03, Z_REAR + 0.052, "Mat_MetalStainless")
-add_cyl(col_site, "RearWash_DrainPipe_0", 2.35, 21.28, Z_REAR + 0.03, Z_REAR + 0.07, 0.032, 0.032, "Mat_DarkGreyStone",
+# 🫧 NƠI RỬA CHÉN HIÊN SAU THU HẸP GỌN TỚI CHỖ NGỒI RỬA CHÉN (X=0.00..1.48, Y=18.10..19.90 — TÁCH XA XE MÁY 1.57M!)
+add_box(col_site, "RearWash_Pad", 0.00, 18.10, Z_REAR, 1.48, 19.90, Z_REAR + 0.03, "Mat_StepStone", bevel=0.008)
+add_box(col_site, "RearWash_DrainChannelS", 0.04, 18.42, Z_REAR + 0.01, 0.26, 19.90, Z_REAR + 0.04, "Mat_DarkGreyStone")
+add_box(col_site, "RearWash_DrainGrateS", 0.08, 18.48, Z_REAR + 0.038, 0.22, 19.84, Z_REAR + 0.048, "Mat_MetalStainless")
+add_box(col_site, "RearWash_DrainChannel", 0.04, 19.77, Z_REAR + 0.01, 1.44, 19.91, Z_REAR + 0.045, "Mat_DarkGreyStone")
+add_box(col_site, "RearWash_DrainGrate", 0.12, 19.80, Z_REAR + 0.042, 1.38, 19.88, Z_REAR + 0.052, "Mat_MetalStainless")
+add_cyl(col_site, "RearWash_DrainPipe_0", 1.20, 20.06, Z_REAR + 0.03, Z_REAR + 0.07, 0.032, 0.032, "Mat_DarkGreyStone",
         rot=(math.pi / 2, 0, 0), segs=10)
-# Ốp gạch chống bắn & 2 vòi nước inox tầm thấp gắn TRỰC TIẾP VÀO TƯỜNG PHÍA NAM (X=0.00, hướng ra Bắc +X — KHÔNG gắn trụ chắn giữa lối đi!)
-add_box(col_site, "RearWash_SouthBacksplash", 0.00, 19.55, Z_REAR + 0.03, 0.06, 20.68, Z_REAR + 0.72, "Mat_BacksplashTile", bevel=0.006)
-add_box(col_site, "RearWash_SouthBacksplashCap", 0.00, 19.54, Z_REAR + 0.72, 0.08, 20.69, Z_REAR + 0.75, "Mat_DarkGreyStone", bevel=0.004)
-for ti, ty in enumerate([19.82, 20.38]):
+add_box(col_site, "RearWash_SouthBacksplash", 0.00, 18.45, Z_REAR + 0.03, 0.06, 19.56, Z_REAR + 0.72, "Mat_BacksplashTile", bevel=0.006)
+add_box(col_site, "RearWash_SouthBacksplashCap", 0.00, 18.44, Z_REAR + 0.72, 0.08, 19.57, Z_REAR + 0.75, "Mat_DarkGreyStone", bevel=0.004)
+for ti, ty in enumerate([18.72, 19.26]):
     add_cyl(col_site, f"RearWash_FaucetFlange_{ti}", 0.06, ty, Z_REAR + 0.43, Z_REAR + 0.46, 0.030, 0.030, "Mat_BrassGold",
             rot=(0, math.pi / 2, 0), segs=12)
     add_box(col_site, f"RearWash_FaucetPipe_{ti}", 0.06, ty - 0.015, Z_REAR + 0.425, 0.22, ty + 0.015, Z_REAR + 0.455, "Mat_MetalStainless")
     add_cyl(col_site, f"RearWash_FaucetSpout_{ti}", 0.21, ty, Z_REAR + 0.36, Z_REAR + 0.44, 0.015, 0.015, "Mat_MetalStainless", segs=10)
     add_box(col_site, f"RearWash_FaucetHandle_{ti}", 0.11, ty - 0.035, Z_REAR + 0.46, 0.16, ty + 0.035, Z_REAR + 0.485, "Mat_MetalMatteBlack")
-# 2 thau inox rửa chén lớn dưới 2 vòi tường Nam + 2 ghế đẩu thấp ngồi quay mặt về phía Nam + rổ úp chén
-add_cyl(col_site, "RearWash_Basin1", 0.48, 19.82, Z_REAR + 0.03, Z_REAR + 0.22, 0.22, 0.27, "Mat_MetalStainless", segs=20)
-add_cyl(col_site, "RearWash_Water1", 0.48, 19.82, Z_REAR + 0.16, Z_REAR + 0.19, 0.24, 0.24, "Mat_WaterClear", segs=18)
-add_cyl(col_site, "RearWash_Basin2", 0.48, 20.38, Z_REAR + 0.03, Z_REAR + 0.22, 0.22, 0.27, "Mat_MetalStainless", segs=20)
-add_cyl(col_site, "RearWash_Water2", 0.48, 20.38, Z_REAR + 0.16, Z_REAR + 0.19, 0.24, 0.24, "Mat_WaterClear", segs=18)
-add_box(col_site, "RearWash_DishRack", 0.22, 19.20, Z_REAR + 0.03, 0.68, 19.52, Z_REAR + 0.24, "Mat_WoodOakTable", bevel=0.01)
-for wsi, wsy in enumerate([19.82, 20.38]):
+add_cyl(col_site, "RearWash_Basin1", 0.48, 18.72, Z_REAR + 0.03, Z_REAR + 0.22, 0.22, 0.27, "Mat_MetalStainless", segs=20)
+add_cyl(col_site, "RearWash_Water1", 0.48, 18.72, Z_REAR + 0.16, Z_REAR + 0.19, 0.24, 0.24, "Mat_WaterClear", segs=18)
+add_cyl(col_site, "RearWash_Basin2", 0.48, 19.26, Z_REAR + 0.03, Z_REAR + 0.22, 0.22, 0.27, "Mat_MetalStainless", segs=20)
+add_cyl(col_site, "RearWash_Water2", 0.48, 19.26, Z_REAR + 0.16, Z_REAR + 0.19, 0.24, 0.24, "Mat_WaterClear", segs=18)
+add_box(col_site, "RearWash_DishRack", 0.22, 18.14, Z_REAR + 0.03, 0.68, 18.44, Z_REAR + 0.24, "Mat_WoodOakTable", bevel=0.01)
+for wsi, wsy in enumerate([18.72, 19.26]):
     add_cyl(col_site, f"RearWash_LowStool_{wsi}", 1.06, wsy, Z_REAR + 0.03, Z_REAR + 0.28, 0.14, 0.16, "Mat_WoodOakTable", segs=14)
 
-# 🔥🪵 MỤC 16, 17, 18, 20 & 21: CHÒI BẾP PHÍA BẮC CÙNG PHÍA NHÀ TẮM (X=3.30..7.00, Y=21.45..24.00 -> 9.44m²), CAO BẰNG ĐÚNG H1=3.30M!
-# - Mục 20: CỬA CHÍNH CHÒI BẾP đặt trên mặt tường tiếp giáp HIÊN SAU (Y=21.45..21.57, X=3.60..4.50) — mở cửa bước thẳng vào HIÊN SAU có mái che, KHÔNG mở ra vườn rau!
-# - Tường phía Nam (X=3.30..3.42, Y=21.57..23.84) xây TƯỜNG LỬNG SUỐT CHIỀU DÀI (cao Z_REAR+1.15m) để khói kiềng ba chân thoát tự nhiên ra ngoài!
-# - Mục 15.1: Ngăn bếp gas áp TƯỜNG HƯỚNG BẮC (X=6.22..6.94, Y=21.59..23.94) — người đứng nấu MẶT HƯỚNG BẮC (+X), LƯNG HƯỚNG NAM (-X)!
-# - Mục 21: BỎ HOÀN TOÀN NGĂN CHỨA CỦI GẦN KIỀNG BA CHÂN (khoang Nam X=3.50..4.34 để trống an toàn chống cháy!), chỉ chất củi ở 2 khoang phía Bắc (X=4.46..6.18) có vách bê tông chắn lửa!
-add_box(col_site, "WoodStove_Floor", 3.30, 21.45, 0.0, 7.00, 24.00, Z_REAR + 0.03, "Mat_AntiSlipPavers", bevel=0.008)
-# Bậc thềm đá nối liền khít cửa Chòi bếp thẳng ra sàn Hiên sau (Y=21.35..21.45, không giẫm đất!)
-add_box(col_site, "WoodStove_DoorThreshold", 3.45, 21.35, 0.0, 4.65, 21.46, Z_REAR + 0.03, "Mat_StepStone", bevel=0.005)
-# 1. Tường tiếp giáp Hiên sau (Y=21.45..21.57) chừa CỬA CHÍNH CHÒI BẾP (X=3.60..4.50) bước thẳng vào Hiên sau!
-add_box(col_site, "WoodStove_WallEast_S", 3.30, 21.45, Z_REAR, 3.60, 21.57, H1, "Mat_WallWarmWhite", bevel=0.006)
-add_box(col_site, "WoodStove_WallEast_DoorTop", 3.60, 21.45, Z_REAR + 2.14, 4.50, 21.57, H1, "Mat_WallWarmWhite")
-add_box(col_site, "WoodStove_WallEast_N", 4.50, 21.45, Z_REAR, 7.00, 21.57, H1, "Mat_WallWarmWhite", bevel=0.008)
-# Khung cửa chính chòi bếp mở thẳng vào Hiên sau (X=3.60..4.50, Y=21.45..21.57)
-add_box(col_site, "WoodStove_MainDoor_FrameL", 3.57, 21.44, Z_REAR, 3.63, 21.58, Z_REAR + 2.16, "Mat_WoodOakDark")
-add_box(col_site, "WoodStove_MainDoor_FrameR", 4.47, 21.44, Z_REAR, 4.53, 21.58, Z_REAR + 2.16, "Mat_WoodOakDark")
-add_box(col_site, "WoodStove_MainDoor_FrameT", 3.57, 21.44, Z_REAR + 2.12, 4.53, 21.58, Z_REAR + 2.18, "Mat_WoodOakDark")
-# Tường Bắc & Tây nối trên hàng rào 2.35m lên chạm trần H1=3.30m (bằng chiều cao toàn bộ tầng dưới!)
-add_box(col_site, "WoodStove_WallNorthUpper", 6.94, 21.45, 2.35, 7.00, 24.00, H1, "Mat_WallWarmWhite")
-add_box(col_site, "WoodStove_WallWestUpper", 3.30, 23.94, 2.35, 7.00, 24.00, H1, "Mat_WallWarmWhite")
-# 2. Tường phía Nam chòi bếp (X=3.30..3.42): TƯỜNG LỬNG SUỐT CHIỀU DÀI (Y=21.57..23.84, cao Z_REAR+1.15m) thoáng khói tối đa + cột góc Tây-Nam đỡ mái Hiên sau!
-add_box(col_site, "WoodStove_HalfWall_South", 3.30, 21.57, Z_REAR, 3.42, 24.00, Z_REAR + 1.15, "Mat_WallWarmWhite", bevel=0.006)
-add_box(col_site, "WoodStove_HalfWallCap_South", 3.28, 21.57, Z_REAR + 1.15, 3.44, 24.00, Z_REAR + 1.19, "Mat_DarkGreyStone", bevel=0.005)
-add_box(col_site, "WoodStove_CornerCol_SW", 3.30, 23.84, Z_REAR + 1.19, 3.44, 24.00, H1, "Mat_WallWarmWhite", bevel=0.008)
-add_pendant_chandelier(col_lights, "WoodStove_HutLight", 5.15, 22.72, H1 - 0.02, drop=0.35, count=1)
+# 🔥🪵 CHÒI BẾP NÂNG BẰNG ĐÚNG SÀN NHÀ & HIÊN (Z=Z1=0.45m), ÁP SÁT TƯỜNG RÀO SAU Y=22.50M (X=3.30..7.00, Y=19.88..22.50 -> ~9.7m² & CHUNG TƯỜNG NHÀ TẮM!)
+add_box(col_site, "WoodStove_Floor", 3.30, 19.88, 0.0, 7.00, 22.50, Z_REAR, "Mat_AntiSlipPavers", bevel=0.008)
+# 1. Tường tiếp giáp Hiên sau & Nhà tắm (Y=19.88..20.00 — dùng chung với Nhà tắm từ X=4.95..7.00!) chừa CỬA CHÍNH CHÒI BẾP (X=3.60..4.50) bước thẳng vào Hiên sau!
+add_box(col_site, "WoodStove_WallEast_S", 3.30, 19.88, Z_REAR, 3.60, 20.00, H1, "Mat_WallWarmWhite", bevel=0.006)
+add_box(col_site, "WoodStove_WallEast_DoorTop", 3.60, 19.88, Z_REAR + 2.14, 4.50, 20.00, H1, "Mat_WallWarmWhite")
+add_box(col_site, "WoodStove_WallEast_N", 4.50, 19.88, Z_REAR, 7.00, 20.00, H1, "Mat_WallWarmWhite", bevel=0.008)
+add_box(col_site, "WoodStove_MainDoor_FrameL", 3.57, 19.87, Z_REAR, 3.63, 20.01, Z_REAR + 2.16, "Mat_WoodOakDark")
+add_box(col_site, "WoodStove_MainDoor_FrameR", 4.47, 19.87, Z_REAR, 4.53, 20.01, Z_REAR + 2.16, "Mat_WoodOakDark")
+add_box(col_site, "WoodStove_MainDoor_FrameT", 3.57, 19.87, Z_REAR + 2.12, 4.53, 20.01, Z_REAR + 2.18, "Mat_WoodOakDark")
+# Tường Bắc & Tường Tây áp sát tường rào hậu Y=22.50m (không dư đất trống phía sau!)
+add_box(col_site, "WoodStove_WallNorthUpper", 6.94, 19.88, 2.35, 7.00, 22.50, H1, "Mat_WallWarmWhite")
+add_box(col_site, "WoodStove_WallWest", 3.30, 22.38, Z_REAR, 7.00, 22.50, H1, "Mat_WallWarmWhite")
+# 2. Tường lửng phía Nam chòi bếp (X=3.30..3.42, Y=20.00..22.50) thoát khói + cột góc Tây-Nam
+add_box(col_site, "WoodStove_HalfWall_South", 3.30, 20.00, Z_REAR, 3.42, 22.50, Z_REAR + 1.15, "Mat_WallWarmWhite", bevel=0.006)
+add_box(col_site, "WoodStove_HalfWallCap_South", 3.28, 20.00, Z_REAR + 1.15, 3.44, 22.50, Z_REAR + 1.19, "Mat_DarkGreyStone", bevel=0.005)
+add_box(col_site, "WoodStove_CornerCol_SW", 3.30, 22.34, Z_REAR + 1.19, 3.44, 22.50, H1, "Mat_WallWarmWhite", bevel=0.008)
+add_pendant_chandelier(col_lights, "WoodStove_HutLight", 5.15, 21.15, H1 - 0.02, drop=0.35, count=1)
 
-# 4. 🔥 NGĂN BẾP GAS ÁP TƯỜNG HƯỚNG BẮC (X=6.22..6.94, Y=21.59..23.94 — NGƯỜI NẤU MẶT HƯỚNG BẮC, LƯNG HƯỚNG NAM!)
-#    + KÉO DÀI NGĂN BÊ TÔNG CHỮ L CHẠY SUỐT TƯỜNG TÂY TỚI SÁT TƯỜNG PHÍA NAM CHÒI BẾP (X=3.42..6.22, Y=23.30..23.94) ĐỂ NGĂN DƯỚI CHẤT CỦI!
-add_box(col_site, "HutGas_CounterSlabNorth", 6.22, 21.59, Z_REAR + 0.76, 6.94, 23.94, Z_REAR + 0.84, "Mat_StepStone", bevel=0.008)
-add_box(col_site, "HutGas_CounterLegNE", 6.22, 21.59, Z_REAR + 0.03, 6.94, 21.67, Z_REAR + 0.76, "Mat_WallWarmWhite")
-add_box(col_site, "HutGas_CounterLegNMid", 6.24, 22.52, Z_REAR + 0.03, 6.94, 22.60, Z_REAR + 0.76, "Mat_WallWarmWhite")
-add_box(col_site, "HutGas_CounterLegNW", 6.24, 23.26, Z_REAR + 0.03, 6.94, 23.34, Z_REAR + 0.76, "Mat_WallWarmWhite")
-# Trên bàn Bắc: Bếp gas đôi quay mặt về hướng Nam (-X) + 2 nút vặn phía Nam + nồi thức ăn chín
-add_box(col_site, "HutGas_StoveBody", 6.32, 21.82, Z_REAR + 0.84, 6.78, 22.58, Z_REAR + 0.94, "Mat_MetalStainless", bevel=0.008)
-add_box(col_site, "HutGas_StoveTop", 6.34, 21.84, Z_REAR + 0.94, 6.76, 22.56, Z_REAR + 0.96, "Mat_PianoBlackGloss")
-add_cyl(col_site, "HutGas_Knob1", 6.31, 22.02, Z_REAR + 0.88, Z_REAR + 0.90, 0.022, 0.022, "Mat_MetalMatteBlack", rot=(0, math.pi / 2, 0), segs=12)
-add_cyl(col_site, "HutGas_Knob2", 6.31, 22.38, Z_REAR + 0.88, Z_REAR + 0.90, 0.022, 0.022, "Mat_MetalMatteBlack", rot=(0, math.pi / 2, 0), segs=12)
-add_cyl(col_site, "HutGas_Burner1", 6.55, 22.02, Z_REAR + 0.96, Z_REAR + 0.99, 0.11, 0.11, "Mat_MetalMatteBlack", segs=16)
-add_cyl(col_site, "HutGas_Burner2", 6.55, 22.38, Z_REAR + 0.96, Z_REAR + 0.99, 0.11, 0.11, "Mat_MetalMatteBlack", segs=16)
-add_cyl(col_site, "HutGas_CookPot1", 6.55, 22.02, Z_REAR + 0.99, Z_REAR + 1.15, 0.12, 0.12, "Mat_MetalStainless", segs=18)
-add_cyl(col_site, "HutGas_FoodPot1", 6.55, 22.96, Z_REAR + 0.84, Z_REAR + 1.02, 0.14, 0.14, "Mat_MetalStainless", segs=18)
-add_cyl(col_site, "HutGas_FoodPot2", 6.55, 23.48, Z_REAR + 0.84, Z_REAR + 0.98, 0.11, 0.11, "Mat_CeramicTeal", segs=16)
-# Dưới ngăn Bắc: Bình gas 12kg xanh dương dưới bếp gas (X=6.56, Y=22.10) + Thùng gạo lớn (X=6.32..6.78, Y=22.68..23.16)!
-add_cyl(col_site, "HutGas_CylinderBody", 6.56, 22.10, Z_REAR + 0.03, Z_REAR + 0.56, 0.155, 0.155, "Mat_CeramicTeal", segs=18)
-add_cyl(col_site, "HutGas_CylinderCollar", 6.56, 22.10, Z_REAR + 0.56, Z_REAR + 0.65, 0.095, 0.095, "Mat_CeramicTeal", segs=16)
-add_cyl(col_site, "HutGas_CylinderValve", 6.56, 22.10, Z_REAR + 0.60, Z_REAR + 0.68, 0.028, 0.028, "Mat_BrassGold", segs=12)
-add_box(col_site, "HutGas_RiceBinBody", 6.32, 22.68, Z_REAR + 0.03, 6.78, 23.16, Z_REAR + 0.56, "Mat_CeramicWhite", bevel=0.025)
-add_box(col_site, "HutGas_RiceBinLid", 6.31, 22.67, Z_REAR + 0.56, 6.79, 23.17, Z_REAR + 0.61, "Mat_WoodOakTable", bevel=0.015)
+# Ngăn bếp gas tường Bắc (X=6.22..6.94, Y=20.02..22.33 — người nấu mặt hướng Bắc, lưng hướng Nam!)
+add_box(col_site, "HutGas_CounterSlabNorth", 6.22, 20.02, Z_REAR + 0.76, 6.94, 22.33, Z_REAR + 0.84, "Mat_StepStone", bevel=0.008)
+add_box(col_site, "HutGas_CounterLegNE", 6.22, 20.02, Z_REAR + 0.03, 6.94, 20.10, Z_REAR + 0.76, "Mat_WallWarmWhite")
+add_box(col_site, "HutGas_CounterLegNMid", 6.24, 20.95, Z_REAR + 0.03, 6.94, 21.03, Z_REAR + 0.76, "Mat_WallWarmWhite")
+add_box(col_site, "HutGas_CounterLegNW", 6.24, 21.69, Z_REAR + 0.03, 6.94, 21.77, Z_REAR + 0.76, "Mat_WallWarmWhite")
+add_box(col_site, "HutGas_StoveBody", 6.32, 20.25, Z_REAR + 0.84, 6.78, 21.01, Z_REAR + 0.94, "Mat_MetalStainless", bevel=0.008)
+add_box(col_site, "HutGas_StoveTop", 6.34, 20.27, Z_REAR + 0.94, 6.76, 20.99, Z_REAR + 0.96, "Mat_PianoBlackGloss")
+add_cyl(col_site, "HutGas_Knob1", 6.31, 20.45, Z_REAR + 0.88, Z_REAR + 0.90, 0.022, 0.022, "Mat_MetalMatteBlack", rot=(0, math.pi / 2, 0), segs=12)
+add_cyl(col_site, "HutGas_Knob2", 6.31, 20.81, Z_REAR + 0.88, Z_REAR + 0.90, 0.022, 0.022, "Mat_MetalMatteBlack", rot=(0, math.pi / 2, 0), segs=12)
+add_cyl(col_site, "HutGas_Burner1", 6.55, 20.45, Z_REAR + 0.96, Z_REAR + 0.99, 0.11, 0.11, "Mat_MetalMatteBlack", segs=16)
+add_cyl(col_site, "HutGas_Burner2", 6.55, 20.81, Z_REAR + 0.96, Z_REAR + 0.99, 0.11, 0.11, "Mat_MetalMatteBlack", segs=16)
+add_cyl(col_site, "HutGas_CookPot1", 6.55, 20.45, Z_REAR + 0.99, Z_REAR + 1.15, 0.12, 0.12, "Mat_MetalStainless", segs=18)
+add_cyl(col_site, "HutGas_FoodPot1", 6.55, 21.39, Z_REAR + 0.84, Z_REAR + 1.02, 0.14, 0.14, "Mat_MetalStainless", segs=18)
+add_cyl(col_site, "HutGas_FoodPot2", 6.55, 21.91, Z_REAR + 0.84, Z_REAR + 0.98, 0.11, 0.11, "Mat_CeramicTeal", segs=16)
+add_cyl(col_site, "HutGas_CylinderBody", 6.56, 20.53, Z_REAR + 0.03, Z_REAR + 0.56, 0.155, 0.155, "Mat_CeramicTeal", segs=18)
+add_cyl(col_site, "HutGas_CylinderCollar", 6.56, 20.53, Z_REAR + 0.56, Z_REAR + 0.65, 0.095, 0.095, "Mat_CeramicTeal", segs=16)
+add_cyl(col_site, "HutGas_CylinderValve", 6.56, 20.53, Z_REAR + 0.60, Z_REAR + 0.68, 0.028, 0.028, "Mat_BrassGold", segs=12)
+add_box(col_site, "HutGas_RiceBinBody", 6.32, 21.11, Z_REAR + 0.03, 6.78, 21.59, Z_REAR + 0.56, "Mat_CeramicWhite", bevel=0.025)
+add_box(col_site, "HutGas_RiceBinLid", 6.31, 21.10, Z_REAR + 0.56, 6.79, 21.60, Z_REAR + 0.61, "Mat_WoodOakTable", bevel=0.015)
 
-# Nhánh Tây kéo dài (X=4.34..6.22, Y=23.30..23.94) — MỤC 21: BỎ HOÀN TOÀN NGĂN ĐỰNG CỦI GẦN KIỀNG BA CHÂN (X=3.42..4.34 để trống hoàn toàn an toàn phòng cháy!)
-# Chỉ xây 2 khoang chứa củi phía Bắc (X=4.46..5.22 & 5.38..6.18) có vách tường bê tông chắn lửa ở X=4.34..4.42!
-add_box(col_site, "HutGas_CounterSlabWest", 4.34, 23.30, Z_REAR + 0.76, 6.22, 23.94, Z_REAR + 0.84, "Mat_StepStone", bevel=0.008)
-add_box(col_site, "HutGas_CounterLegW1", 4.34, 23.30, Z_REAR + 0.03, 4.44, 23.94, Z_REAR + 0.76, "Mat_WallWarmWhite")
-add_box(col_site, "HutGas_CounterLegW2", 5.26, 23.32, Z_REAR + 0.03, 5.34, 23.94, Z_REAR + 0.76, "Mat_WallWarmWhite")
-add_cyl(col_site, "HutGas_FoodPot3", 5.72, 23.62, Z_REAR + 0.84, Z_REAR + 1.00, 0.13, 0.13, "Mat_MetalStainless", segs=18)
-add_box(col_site, "HutGas_PrepBoard", 4.56, 23.44, Z_REAR + 0.84, 5.08, 23.80, Z_REAR + 0.87, "Mat_WoodOakTable", bevel=0.006)
+# Nhánh Tây (X=4.34..6.22, Y=21.70..22.33) — 2 khoang chứa củi phía Bắc chắn lửa, bỏ ngăn củi gần kiềng!
+add_box(col_site, "HutGas_CounterSlabWest", 4.34, 21.70, Z_REAR + 0.76, 6.22, 22.33, Z_REAR + 0.84, "Mat_StepStone", bevel=0.008)
+add_box(col_site, "HutGas_CounterLegW1", 4.34, 21.70, Z_REAR + 0.03, 4.44, 22.33, Z_REAR + 0.76, "Mat_WallWarmWhite")
+add_box(col_site, "HutGas_CounterLegW2", 5.26, 21.72, Z_REAR + 0.03, 5.34, 22.33, Z_REAR + 0.76, "Mat_WallWarmWhite")
+add_cyl(col_site, "HutGas_FoodPot3", 5.72, 22.02, Z_REAR + 0.84, Z_REAR + 1.00, 0.13, 0.13, "Mat_MetalStainless", segs=18)
+add_box(col_site, "HutGas_PrepBoard", 4.56, 21.84, Z_REAR + 0.84, 5.08, 22.20, Z_REAR + 0.87, "Mat_WoodOakTable", bevel=0.006)
 for b_idx, (bx1, bx2) in enumerate([(4.48, 5.22), (5.38, 6.18)]):
-    add_box(col_site, f"HutWoodBay_Base_{b_idx}", bx1, 23.34, Z_REAR + 0.03, bx2, 23.92, Z_REAR + 0.07, "Mat_MetalMatteBlack")
+    add_box(col_site, f"HutWoodBay_Base_{b_idx}", bx1, 21.74, Z_REAR + 0.03, bx2, 22.31, Z_REAR + 0.07, "Mat_MetalMatteBlack")
     for flr in range(4):
         flz = Z_REAR + 0.08 + flr * 0.105
         for flc in range(5):
             flx = bx1 + 0.08 + flc * ((bx2 - bx1 - 0.16) / 4.0)
-            add_box(col_site, f"HutWoodBay_Log_{b_idx}_{flr}_{flc}", flx - 0.06, 23.37, flz, flx + 0.06, 23.90, flz + 0.085, "Mat_TreeTrunk", bevel=0.015)
+            add_box(col_site, f"HutWoodBay_Log_{b_idx}_{flr}_{flc}", flx - 0.06, 21.77, flz, flx + 0.06, 22.29, flz + 0.085, "Mat_TreeTrunk", bevel=0.015)
 
-# 5. 🪵 BỨC TƯỜNG PHÍA NAM CHÒI BẾP (X=3.44..4.28, Y=22.48..23.26): KÊ KIỀNG BA CHÂN TRỰC TIẾP TRÊN SÀN BÊ TÔNG SÁT TƯỜNG LỬNG NAM THOÁNG KHÓI!
-add_box(col_site, "WoodStove_HearthPad", 3.44, 22.48, Z_REAR + 0.03, 4.28, 23.26, Z_REAR + 0.08, "Mat_DarkGreyStone", bevel=0.008)
-add_cyl(col_site, "WoodStove_TripodRing", 3.86, 22.87, Z_REAR + 0.24, Z_REAR + 0.28, 0.19, 0.19, "Mat_MetalMatteBlack", segs=18)
+# Kiềng ba chân sát tường lửng Nam (X=3.44..4.28, Y=20.91..21.69)
+add_box(col_site, "WoodStove_HearthPad", 3.44, 20.91, Z_REAR + 0.03, 4.28, 21.69, Z_REAR + 0.08, "Mat_DarkGreyStone", bevel=0.008)
+add_cyl(col_site, "WoodStove_TripodRing", 3.86, 21.30, Z_REAR + 0.24, Z_REAR + 0.28, 0.19, 0.19, "Mat_MetalMatteBlack", segs=18)
 for tli in range(3):
     tang = tli * (2.0 * math.pi / 3.0) + math.pi / 6.0
     tlx = 3.86 + 0.18 * math.cos(tang)
-    tly = 22.87 + 0.18 * math.sin(tang)
+    tly = 21.30 + 0.18 * math.sin(tang)
     add_cyl(col_site, f"WoodStove_TripodLeg_{tli}", tlx, tly, Z_REAR + 0.08, Z_REAR + 0.28, 0.016, 0.018, "Mat_MetalMatteBlack", segs=10)
-add_cyl(col_site, "WoodStove_LogBurn1", 3.86, 22.79, Z_REAR + 0.11, Z_REAR + 0.15, 0.028, 0.028, "Mat_TreeTrunk", rot=(0, math.pi / 2, 0.35), segs=10)
-add_cyl(col_site, "WoodStove_LogBurn2", 3.86, 22.91, Z_REAR + 0.11, Z_REAR + 0.15, 0.026, 0.026, "Mat_TreeTrunk", rot=(0, math.pi / 2, -0.45), segs=10)
-add_sphere(col_lights, "WoodStove_EmberGlow", 3.86, 22.87, Z_REAR + 0.15, 0.085, "Mat_SmartRedLED", 1.2, 1.2, 0.7)
-add_cyl(col_site, "WoodStove_BigPot", 3.86, 22.87, Z_REAR + 0.28, Z_REAR + 0.60, 0.22, 0.23, "Mat_MetalStainless", segs=22)
-add_cyl(col_site, "WoodStove_BigPotLid", 3.86, 22.87, Z_REAR + 0.60, Z_REAR + 0.64, 0.23, 0.15, "Mat_MetalStainless", segs=22)
-add_cyl(col_site, "WoodStove_BigPotKnob", 3.86, 22.87, Z_REAR + 0.64, Z_REAR + 0.68, 0.025, 0.025, "Mat_MetalMatteBlack", segs=10)
-add_cyl(col_site, "WoodStove_LowStool", 4.54, 22.87, Z_REAR + 0.03, Z_REAR + 0.27, 0.14, 0.16, "Mat_WoodOakTable", segs=14)
+add_cyl(col_site, "WoodStove_LogBurn1", 3.86, 21.22, Z_REAR + 0.11, Z_REAR + 0.15, 0.028, 0.028, "Mat_TreeTrunk", rot=(0, math.pi / 2, 0.35), segs=10)
+add_cyl(col_site, "WoodStove_LogBurn2", 3.86, 21.34, Z_REAR + 0.11, Z_REAR + 0.15, 0.026, 0.026, "Mat_TreeTrunk", rot=(0, math.pi / 2, -0.45), segs=10)
+add_sphere(col_lights, "WoodStove_EmberGlow", 3.86, 21.30, Z_REAR + 0.15, 0.085, "Mat_SmartRedLED", 1.2, 1.2, 0.7)
+add_cyl(col_site, "WoodStove_BigPot", 3.86, 21.30, Z_REAR + 0.28, Z_REAR + 0.60, 0.22, 0.23, "Mat_MetalStainless", segs=22)
+add_cyl(col_site, "WoodStove_BigPotLid", 3.86, 21.30, Z_REAR + 0.60, Z_REAR + 0.64, 0.23, 0.15, "Mat_MetalStainless", segs=22)
+add_cyl(col_site, "WoodStove_BigPotKnob", 3.86, 21.30, Z_REAR + 0.64, Z_REAR + 0.68, 0.025, 0.025, "Mat_MetalMatteBlack", segs=10)
+add_cyl(col_site, "WoodStove_LowStool", 4.54, 21.30, Z_REAR + 0.03, Z_REAR + 0.27, 0.14, 0.16, "Mat_WoodOakTable", segs=14)
 
 # ---------------------------------------------------------------------------
 # 7. TẦNG 2 KHỐI NHÀ CHÍNH 5M PHÍA BẮC (X=2.0..7.0, KHÔNG XÂY TƯỜNG TRÊN ĐƯỜNG LUỒNG 2M NAM — MỤC 19!)
@@ -1707,19 +1713,25 @@ H2 = 6.95
 add_box(col_fl2_arch, "Floor2_Slab_Front", 2.0, -3.0, Z2 - 0.15, 7.0, 8.95, Z2, "Mat_AntiSlipWoodTile")
 add_box(col_fl2_arch, "Floor2_Slab_HallSide", 2.0, 8.95, Z2 - 0.15, 3.05, 11.20, Z2, "Mat_AntiSlipWoodTile")
 add_box(col_fl2_arch, "Floor2_Slab_MidHouse", 2.0, 11.20, Z2 - 0.15, 7.0, 16.00, Z2, "Mat_AntiSlipWoodTile")
-add_box(col_fl2_arch, "Floor2_Slab_RearBalcony5x5", 2.0, 16.00, Z2 - 0.15, 7.0, 21.00, Z2, "Mat_AntiSlipWoodTile")
-# Mái che Hiên sau phần Nam (khu rửa chén) & Mái che Chòi bếp (cùng cao độ trần H1=3.30m, KHÔNG làm ban công đi lại!)
-add_box(col_fl2_arch, "RearPorch_SouthRainRoof", 0.0, 16.00, H1, 2.0, 21.35, H1 + 0.10, "Mat_RoofCharcoal")
-add_box(col_fl2_arch, "RearPorch_TrenchStripRoof", 2.0, 21.00, H1, 3.30, 21.35, H1 + 0.10, "Mat_RoofCharcoal")
-add_box(col_fl2_arch, "RearPorch_HutRainRoof", 3.30, 21.00, H1, 7.0, 24.00, H1 + 0.10, "Mat_RoofCharcoal")
-add_box(col_lights, "RearPorch_EdgeLED_S", 0.20, 21.27, H1 - 0.04, 3.25, 21.31, H1, "Mat_WarmLED")
-add_box(col_lights, "RearPorch_EdgeLED_Hut", 3.34, 21.35, H1 - 0.04, 3.38, 23.85, H1, "Mat_WarmLED")
+add_box(col_fl2_arch, "Floor2_Slab_RearBalcony5x4", 2.0, 16.00, Z2 - 0.15, 7.0, 20.00, Z2, "Mat_AntiSlipWoodTile")
+# Mái che Hiên sau phần Nam (Y=16.0..20.0, thẳng mốc 20m!) & Mái tôn Chòi bếp đua ra hướng Nam 75cm (X=2.55..7.00, Y=19.92..22.55) dốc nhẹ về phía Nam để chống mưa tạt & nước mưa chảy xuống rau!
+add_box(col_fl2_arch, "RearPorch_SouthRainRoof", 0.0, 16.00, H1, 2.0, 20.00, H1 + 0.10, "Mat_RoofCharcoal")
+hut_roof_pitch = -math.atan2(0.22, 4.45)  # Dốc nhẹ về hướng Nam (-X): Bắc X=7.0 cao 3.43m -> mép Nam X=2.55 thấp 3.21m chảy thẳng xuống luống rau!
+add_box(col_fl2_arch, "RearPorch_HutRainRoof", 2.55, 19.92, H1 + 0.00, 7.00, 22.55, H1 + 0.06, "Mat_RoofCharcoal", rot=(0, hut_roof_pitch, 0))
+for hri in range(7):
+    hry = 20.10 + hri * 0.38
+    add_box(col_fl2_arch, f"RearPorch_HutRoofRib_{hri}", 2.55, hry - 0.022, H1 + 0.055, 7.00, hry + 0.022, H1 + 0.082, "Mat_MetalMatteBlack", rot=(0, hut_roof_pitch, 0))
+for hbi, hby in enumerate([20.20, 21.28, 22.36]):
+    add_box(col_fl2_arch, f"RearPorch_HutOverhangRafter_{hbi}", 2.58, hby - 0.03, H1 - 0.13, 3.42, hby + 0.03, H1 - 0.07, "Mat_MetalMatteBlack", rot=(0, hut_roof_pitch, 0))
+add_box(col_fl2_arch, "RearPorch_HutEaveFasciaS", 2.52, 19.92, H1 - 0.14, 2.58, 22.55, H1 - 0.05, "Mat_MetalMatteBlack")
+add_box(col_lights, "RearPorch_EdgeLED_S", 0.20, 19.92, H1 - 0.04, 2.52, 19.96, H1, "Mat_WarmLED")
+add_box(col_lights, "RearPorch_EdgeLED_Hut", 3.34, 20.02, H1 - 0.04, 3.38, 22.38, H1, "Mat_WarmLED")
 
-# Cột kết cấu đỡ góc Nam Hiên sau (Y=16.0 & Y=21.25) & dầm biên Ban công trước (X=2.0..7.0) + dầm biên Nam Hiên sau (Y=16.0..21.35)
-for ci, cy in enumerate([16.00, 21.25]):
+# Cột kết cấu đỡ góc Nam Hiên sau (Y=16.0 & Y=19.90) & dầm biên (gọn đúng mốc 20.0m!)
+for ci, cy in enumerate([16.00, 19.90]):
     add_box(col_fl2_arch, f"RearPorch_SouthCol_{ci}", 0.00, cy - 0.10, 0.15, 0.20, cy + 0.10, Z2 - 0.15, "Mat_WallWarmWhite", bevel=0.01)
-add_box(col_fl2_arch, "Fl2_RearPorch_Col_NW", 6.78, 20.88, Z_REAR, 7.00, 21.12, Z2 - 0.15, "Mat_WallWarmWhite", bevel=0.01)
-add_box(col_fl2_arch, "RearPorch_SouthEdgeBeam", 0.00, 16.00, Z2 - 0.30, 0.20, 21.35, Z2 - 0.14, "Mat_RoofCharcoal")
+add_box(col_fl2_arch, "Fl2_RearPorch_Col_NW", 6.78, 19.78, Z_REAR, 7.00, 20.00, Z2 - 0.15, "Mat_WallWarmWhite", bevel=0.01)
+add_box(col_fl2_arch, "RearPorch_SouthEdgeBeam", 0.00, 16.00, Z2 - 0.30, 0.20, 20.00, Z2 - 0.14, "Mat_RoofCharcoal")
 add_box(col_fl2_arch, "BalconyFront_EdgeBeam", 1.98, -3.02, Z2 - 0.28, 7.0, -2.86, Z2 - 0.14, "Mat_RoofCharcoal")
 add_box(col_fl2_arch, "BalconyFront_SideBeamS", 1.98, -3.02, Z2 - 0.28, 2.16, 0.02, Z2 - 0.14, "Mat_RoofCharcoal")
 
@@ -1742,27 +1754,59 @@ for lbi in range(14):
 # Tường bao Tầng 2 (khối nhà chính 5m X=2.0..7.0; tường phải phía Bắc cắt thấp 0.38m để xem xuyên nội thất)
 add_box(col_fl2_arch, "Fl2_Wall_Right_Cutaway", 6.78, 0.0, Z2, 7.0, 16.0, Z2 + 0.38, "Mat_WallWarmWhite")
 
-# Tường ngoài PHÍA NAM Tầng 2 (X=2.0..2.14, Y=0..16 — đặt thẳng trục tường Nam Tầng 1, mở 3 cửa sổ lớn đón gió & nắng Nam nhìn xuống mái kính đường luồng!)
-add_box(col_fl2_arch, "Fl2_SouthWall_Seg1", 2.0, 0.0, Z2, 2.14, 1.40, H2, "Mat_WallWarmWhite")
-add_box(col_fl2_arch, "Fl2_SouthWall_Win1Bot", 2.0, 1.40, Z2, 2.14, 3.60, Z2 + 0.95, "Mat_WallWarmWhite")
-add_box(col_fl2_arch, "Fl2_SouthWall_Win1Top", 2.0, 1.40, Z2 + 2.55, 2.14, 3.60, H2, "Mat_WallWarmWhite")
-add_window_frame(col_fl2_arch, "Fl2_SouthWin_Master", 2.02, 1.40, Z2 + 0.95, 2.12, 3.60, Z2 + 2.55)
-add_box(col_fl2_arch, "Fl2_SouthWall_Seg2", 2.0, 3.60, Z2, 2.14, 7.40, H2, "Mat_WallWarmWhite")
-add_box(col_fl2_arch, "Fl2_SouthWall_Win2Bot", 2.0, 7.40, Z2, 2.14, 10.60, Z2 + 0.95, "Mat_WallWarmWhite")
-add_box(col_fl2_arch, "Fl2_SouthWall_Win2Top", 2.0, 7.40, Z2 + 2.65, 2.14, 10.60, H2, "Mat_WallWarmWhite")
-add_window_frame(col_fl2_arch, "Fl2_SouthWin_Atrium", 2.02, 7.40, Z2 + 0.95, 2.12, 10.60, Z2 + 2.65)
-add_box(col_fl2_arch, "Fl2_SouthWall_Seg3", 2.0, 10.60, Z2, 2.14, 12.00, H2, "Mat_WallWarmWhite")
-add_box(col_fl2_arch, "Fl2_SouthWall_Win3Bot", 2.0, 12.00, Z2, 2.14, 14.80, Z2 + 0.95, "Mat_WallWarmWhite")
-add_box(col_fl2_arch, "Fl2_SouthWall_Win3Top", 2.0, 12.00, Z2 + 2.55, 2.14, 14.80, H2, "Mat_WallWarmWhite")
-add_window_frame(col_fl2_arch, "Fl2_SouthWin_Hall", 2.02, 12.00, Z2 + 0.95, 2.12, 14.80, Z2 + 2.55)
-add_box(col_fl2_arch, "Fl2_SouthWall_End", 2.0, 14.80, Z2, 2.14, 16.0, H2, "Mat_WallWarmWhite")
+# Tường ngoài PHÍA NAM Tầng 2 (X=2.0..2.14, Y=0..16): Bít kín đoạn giữa cầu thang, CHỈ GIỮ 2 CỬA SỔ HAI BÊN KÍCH THƯỚC VỪA ĐÚNG NHƯ CỬA SỔ ĐƯỜNG LUỒNG TẦNG 1 (1.90m x 1.40m)!
+add_box(col_fl2_arch, "Fl2_SouthWall_Seg1", 2.0, 0.0, Z2, 2.14, 1.55, H2, "Mat_WallWarmWhite")
+add_box(col_fl2_arch, "Fl2_SouthWall_Win1Bot", 2.0, 1.55, Z2, 2.14, 3.45, Z2 + 0.95, "Mat_WallWarmWhite")
+add_box(col_fl2_arch, "Fl2_SouthWall_Win1Top", 2.0, 1.55, Z2 + 2.35, 2.14, 3.45, H2, "Mat_WallWarmWhite")
+add_window_frame(col_fl2_arch, "Fl2_SouthWin_Master", 2.02, 1.55, Z2 + 0.95, 2.12, 3.45, Z2 + 2.35)
+add_box(col_fl2_arch, "Fl2_SouthWall_MidSolid", 2.0, 3.45, Z2, 2.14, 12.60, H2, "Mat_WallWarmWhite")
+add_box(col_fl2_arch, "Fl2_SouthWall_Win3Bot", 2.0, 12.60, Z2, 2.14, 14.50, Z2 + 0.95, "Mat_WallWarmWhite")
+add_box(col_fl2_arch, "Fl2_SouthWall_Win3Top", 2.0, 12.60, Z2 + 2.35, 2.14, 14.50, H2, "Mat_WallWarmWhite")
+add_window_frame(col_fl2_arch, "Fl2_SouthWin_Hall", 2.02, 12.60, Z2 + 0.95, 2.12, 14.50, Z2 + 2.35)
+add_box(col_fl2_arch, "Fl2_SouthWall_End", 2.0, 14.50, Z2, 2.14, 16.0, H2, "Mat_WallWarmWhite")
 
-# Vách ngăn hành lang nội bộ 1m Tầng 2 TRONG 5M (X=2.14..3.12, Y=11.20..15.78 — MỤC 22!) dẫn từ sảnh cầu thang tới Phòng Sếu, Phòng Chị Hai & cửa ra Ban công sau!
+# Vách ngăn hành lang nội bộ 1m Tầng 2 THÔNG SUỐT TỪ BAN CÔNG TRƯỚC (Y=0.22) TỚI BAN CÔNG SAU (Y=15.78) — CẢ 3 PHÒNG NGỦ THẲNG 1 HÀNG (X=3.22..6.78)!
+# Đoạn dọc Phòng Master Chị Ba (Y=0.22..7.02):
+# - Cửa chính đường luồng đặt CHÍNH GIỮA GIƯỜNG NGỦ (Y=3.25..4.05, tâm 3.65m trùng khít tâm giường Y=2.72..4.58m)!
+# - Góc tường Nam phía Đông (Y=0.22..3.25) xây đặc để kê KỆ SÁCH 5 tầng; đoạn NVS phía Tây (Y=4.05..7.02) xây đặc kín hoàn toàn!
+add_box(col_fl2_arch, "Fl2_IntHall_MasterEastWall", 3.12, 0.22, Z2, 3.22, 3.25, H2, "Mat_WallWarmWhite")
+add_box(col_fl2_arch, "Fl2_IntHall_MasterDoorTop", 3.12, 3.25, Z2 + 2.25, 3.22, 4.05, H2, "Mat_WallWarmWhite")
+add_box(col_fl2_arch, "Fl2_IntHall_MasterSolidWall", 3.12, 4.05, Z2, 3.22, 7.02, H2, "Mat_WallWarmWhite")
+# Khung & cánh cửa gỗ Phòng Chị Ba mở ra đường luồng 1m ngay chính giữa giường ngủ (Y=3.25..4.05)
+add_box(col_fl2_arch, "Fl2_Master_DoorFrameL", 3.10, 3.23, Z2, 3.24, 3.28, Z2 + 2.26, "Mat_WoodOakDark")
+add_box(col_fl2_arch, "Fl2_Master_DoorFrameR", 3.10, 4.02, Z2, 3.24, 4.07, Z2 + 2.26, "Mat_WoodOakDark")
+add_box(col_fl2_arch, "Fl2_Master_DoorFrameT", 3.10, 3.23, Z2 + 2.22, 3.24, 4.07, Z2 + 2.28, "Mat_WoodOakDark")
+add_box(col_fl2_arch, "Fl2_Master_DoorLeaf", 3.14, 3.28, Z2 + 0.02, 3.20, 4.02, Z2 + 2.22, "Mat_WoodOakTable", bevel=0.006)
+add_box(col_fl2_arch, "Fl2_Master_DoorHandle", 3.10, 3.91, Z2 + 0.96, 3.14, 3.96, Z2 + 1.12, "Mat_BrassGold")
+add_box(col_fl2_furn, "Fl2_IntHall_FrontRunnerRug", 2.34, 0.45, Z2, 2.92, 6.80, Z2 + 0.02, "Mat_RugWarm", bevel=0.006)
+add_pendant_chandelier(col_lights, "Fl2_IntHall_FrontLamp", 2.63, 3.50, H2 - 0.02, drop=0.38, count=1)
+
+# Đoạn dọc Phòng Sếu & Phòng Chị Hai (Y=11.20..15.78) + Cửa sổ bàn làm việc hướng Nam!
 add_box(col_fl2_arch, "Fl2_IntHall_Seu1", 3.12, 11.20, Z2, 3.22, 11.35, H2, "Mat_WallWarmWhite")
 add_box(col_fl2_arch, "Fl2_IntHall_SeuDoorTop", 3.12, 11.35, Z2 + 2.25, 3.22, 12.15, H2, "Mat_WallWarmWhite")
-add_box(col_fl2_arch, "Fl2_IntHall_Mid", 3.12, 12.15, Z2, 3.22, 13.65, H2, "Mat_WallWarmWhite")
+add_box(col_fl2_arch, "Fl2_IntHall_SeuWinPierE", 3.12, 12.15, Z2, 3.22, 12.28, H2, "Mat_WallWarmWhite")
+add_box(col_fl2_arch, "Fl2_IntHall_SeuWinBot", 3.12, 12.28, Z2, 3.22, 13.30, Z2 + 0.96, "Mat_WallWarmWhite")
+add_box(col_fl2_arch, "Fl2_IntHall_SeuWinTop", 3.12, 12.28, Z2 + 2.25, 3.22, 13.30, H2, "Mat_WallWarmWhite")
+add_box(col_fl2_arch, "Fl2_IntHall_MidW", 3.12, 13.30, Z2, 3.22, 13.65, H2, "Mat_WallWarmWhite")
+# Cửa sổ Japandi tường Nam chỗ bàn làm việc Phòng Sếu (X=3.12..3.22, Y=12.28..13.30) — mở ra nhìn thẳng qua hành lang xuống đường luồng Nam!
+add_box(col_fl2_arch, "Fl2_Seu_SouthWin_Sill", 3.10, 12.25, Z2 + 0.945, 3.29, 13.33, Z2 + 0.985, "Mat_WoodOakTable", bevel=0.006)
+add_box(col_fl2_arch, "Fl2_Seu_SouthWin_TopOak", 3.10, 12.26, Z2 + 2.215, 3.24, 13.32, Z2 + 2.255, "Mat_WoodOakTable", bevel=0.005)
+add_box(col_fl2_arch, "Fl2_Seu_SouthWin_LOak", 3.10, 12.27, Z2 + 0.985, 3.24, 12.31, Z2 + 2.215, "Mat_WoodOakTable", bevel=0.004)
+add_box(col_fl2_arch, "Fl2_Seu_SouthWin_ROak", 3.10, 13.27, Z2 + 0.985, 3.24, 13.31, Z2 + 2.215, "Mat_WoodOakTable", bevel=0.004)
+add_window_frame(col_fl2_arch, "Fl2_Seu_SouthWin_Desk", 3.15, 12.31, Z2 + 0.985, 3.19, 13.27, Z2 + 2.215)
+add_box(col_fl2_arch, "Fl2_Seu_SouthWin_Shade", 3.20, 12.32, Z2 + 2.11, 3.235, 13.26, Z2 + 2.205, "Mat_CurtainLinen", bevel=0.005)
 add_box(col_fl2_arch, "Fl2_IntHall_SisDoorTop", 3.12, 13.65, Z2 + 2.25, 3.22, 14.45, H2, "Mat_WallWarmWhite")
-add_box(col_fl2_arch, "Fl2_IntHall_End", 3.12, 14.45, Z2, 3.22, 15.78, H2, "Mat_WallWarmWhite")
+add_box(col_fl2_arch, "Fl2_IntHall_SisWinPierE", 3.12, 14.45, Z2, 3.22, 14.58, H2, "Mat_WallWarmWhite")
+add_box(col_fl2_arch, "Fl2_IntHall_SisWinBot", 3.12, 14.58, Z2, 3.22, 15.60, Z2 + 0.96, "Mat_WallWarmWhite")
+add_box(col_fl2_arch, "Fl2_IntHall_SisWinTop", 3.12, 14.58, Z2 + 2.25, 3.22, 15.60, H2, "Mat_WallWarmWhite")
+add_box(col_fl2_arch, "Fl2_IntHall_End", 3.12, 15.60, Z2, 3.22, 15.78, H2, "Mat_WallWarmWhite")
+# Cửa sổ Japandi tường Nam chỗ bàn làm việc Phòng Chị Hai (X=3.12..3.22, Y=14.58..15.60 — đồng bộ như Phòng Sếu!)
+add_box(col_fl2_arch, "Fl2_Sis2_SouthWin_Sill", 3.10, 14.55, Z2 + 0.945, 3.29, 15.63, Z2 + 0.985, "Mat_WoodOakTable", bevel=0.006)
+add_box(col_fl2_arch, "Fl2_Sis2_SouthWin_TopOak", 3.10, 14.56, Z2 + 2.215, 3.24, 15.62, Z2 + 2.255, "Mat_WoodOakTable", bevel=0.005)
+add_box(col_fl2_arch, "Fl2_Sis2_SouthWin_LOak", 3.10, 14.57, Z2 + 0.985, 3.24, 14.61, Z2 + 2.215, "Mat_WoodOakTable", bevel=0.004)
+add_box(col_fl2_arch, "Fl2_Sis2_SouthWin_ROak", 3.10, 15.57, Z2 + 0.985, 3.24, 15.61, Z2 + 2.215, "Mat_WoodOakTable", bevel=0.004)
+add_window_frame(col_fl2_arch, "Fl2_Sis2_SouthWin_Desk", 3.15, 14.61, Z2 + 0.985, 3.19, 15.57, Z2 + 2.215)
+add_box(col_fl2_arch, "Fl2_Sis2_SouthWin_Shade", 3.20, 14.62, Z2 + 2.11, 3.235, 15.56, Z2 + 2.205, "Mat_CurtainLinen", bevel=0.005)
 # Khung cửa gỗ & cánh cửa các phòng mở vào đường luồng 1m trong 5m Tầng 2 + thảm & đèn hành lang nội bộ!
 for rtag, ry1, ry2 in [("Seu", 11.35, 12.15), ("Sis2", 13.65, 14.45)]:
     add_box(col_fl2_arch, f"Fl2_{rtag}_DoorFrameL", 3.10, ry1 - 0.02, Z2, 3.24, ry1 + 0.03, Z2 + 2.26, "Mat_WoodOakDark")
@@ -1773,207 +1817,422 @@ for rtag, ry1, ry2 in [("Seu", 11.35, 12.15), ("Sis2", 13.65, 14.45)]:
 add_box(col_fl2_furn, "Fl2_IntHall_RunnerRug", 2.34, 11.35, Z2, 2.92, 15.55, Z2 + 0.02, "Mat_RugWarm", bevel=0.006)
 add_pendant_chandelier(col_lights, "Fl2_IntHall_Lamp", 2.63, 13.45, H2 - 0.02, drop=0.38, count=1)
 
-# Tường mặt tiền Tầng 2 (X=2.0..7.0) chừa cửa kính lớn Phòng Master mở ra Ban công trước 5m x 3m
-add_box(col_fl2_arch, "Fl2_Wall_Front_L", 2.0, 0.0, Z2, 2.75, 0.22, H2, "Mat_WallWarmWhite")
-add_box(col_fl2_arch, "Fl2_Wall_Front_R", 6.25, 0.0, Z2, 7.0, 0.22, H2, "Mat_WallWarmWhite")
-add_box(col_fl2_arch, "Fl2_Wall_Front_Top", 2.75, 0.0, Z2 + 2.65, 6.25, 0.22, H2, "Mat_WallWarmWhite")
-add_window_frame(col_fl2_arch, "Master_FrontGlassDoor", 2.75, 0.06, Z2, 6.25, 0.18, Z2 + 2.65)
+# Tường mặt tiền Tầng 2 (X=2.0..7.0): Cửa kính cuối đường luồng 1m (X=2.18..3.08) + CỬA SỔ HƯỚNG ĐÔNG ngay trên bàn học (X=3.92..5.45) + Mảng tường đặc Đông phía Bắc (X=5.45..7.0) kê lưng bàn trang điểm & gương tròn!
+add_box(col_fl2_arch, "Fl2_Wall_Front_L", 2.0, 0.0, Z2, 2.18, 0.22, H2, "Mat_WallWarmWhite")
+add_box(col_fl2_arch, "Fl2_Wall_Front_HallDoorTop", 2.18, 0.0, Z2 + 2.55, 3.08, 0.22, H2, "Mat_WallWarmWhite")
+add_window_frame(col_fl2_arch, "Fl2_IntHall_FrontDoor", 2.18, 0.06, Z2, 3.08, 0.18, Z2 + 2.55)
+add_box(col_fl2_arch, "Fl2_Wall_Front_Mid", 3.08, 0.0, Z2, 3.92, 0.22, H2, "Mat_WallWarmWhite")
+add_box(col_fl2_arch, "Fl2_Wall_Front_WinBot", 3.92, 0.0, Z2, 5.45, 0.22, Z2 + 0.96, "Mat_WallWarmWhite")
+add_box(col_fl2_arch, "Fl2_Wall_Front_WinTop", 3.92, 0.0, Z2 + 2.25, 5.45, 0.22, H2, "Mat_WallWarmWhite")
+add_box(col_fl2_arch, "Fl2_Wall_Front_R", 5.45, 0.0, Z2, 7.0, 0.22, H2, "Mat_WallWarmWhite")
+add_box(col_fl2_arch, "Master_EastWin_OakSill", 3.88, 0.02, Z2 + 0.94, 5.49, 0.28, Z2 + 0.98, "Mat_WoodOakTable", bevel=0.006)
+add_window_frame(col_fl2_arch, "Master_EastWin_Balcony", 3.92, 0.06, Z2 + 0.98, 5.45, 0.18, Z2 + 2.25)
+add_box(col_fl2_arch, "Master_EastWin_Shade", 3.96, 0.20, Z2 + 2.14, 5.41, 0.25, Z2 + 2.24, "Mat_CurtainLinen", bevel=0.005)
 
-# Tường sau Tầng 2 (X=2.0..7.0) chừa cửa kính cuối hành lang nội bộ + cửa kính Phòng Chị Hai mở ra Ban công sau chữ L!
+# Tường sau Tầng 2 (X=2.0..7.0): Cửa kính cuối hành lang nội bộ (X=2.18..3.08) + Cửa sổ hướng Tây VỪA ĐỦ (1.20m x 1.13m, X=4.60..5.80) Phòng Chị Hai nhìn ra Ban công sau!
 add_box(col_fl2_arch, "Fl2_Wall_Rear_L", 2.0, 15.78, Z2, 2.18, 16.0, H2, "Mat_WallWarmWhite")
-add_box(col_fl2_arch, "Fl2_Wall_Rear_Mid", 3.08, 15.78, Z2, 3.50, 16.0, H2, "Mat_WallWarmWhite")
-add_box(col_fl2_arch, "Fl2_Wall_Rear_R", 5.85, 15.78, Z2, 7.0, 16.0, H2, "Mat_WallWarmWhite")
-add_box(col_fl2_arch, "Fl2_Wall_Rear_Top", 2.18, 15.78, Z2 + 2.55, 5.85, 16.0, H2, "Mat_WallWarmWhite")
+add_box(col_fl2_arch, "Fl2_Wall_Rear_HallDoorTop", 2.18, 15.78, Z2 + 2.55, 3.08, 16.0, H2, "Mat_WallWarmWhite")
 add_window_frame(col_fl2_arch, "Fl2_IntHall_RearDoor", 2.18, 15.80, Z2, 3.08, 15.94, Z2 + 2.55)
-add_window_frame(col_fl2_arch, "Sister2_RearDoor", 3.50, 15.80, Z2, 5.85, 15.94, Z2 + 2.55)
+add_box(col_fl2_arch, "Fl2_Wall_Rear_Mid", 3.08, 15.78, Z2, 4.60, 16.0, H2, "Mat_WallWarmWhite")
+add_box(col_fl2_arch, "Fl2_Wall_Rear_SisWinBot", 4.60, 15.78, Z2, 5.80, 16.0, Z2 + 1.12, "Mat_WallWarmWhite")
+add_box(col_fl2_arch, "Fl2_Wall_Rear_SisWinTop", 4.60, 15.78, Z2 + 2.25, 5.80, 16.0, H2, "Mat_WallWarmWhite")
+add_box(col_fl2_arch, "Fl2_Wall_Rear_R", 5.80, 15.78, Z2, 7.0, 16.0, H2, "Mat_WallWarmWhite")
+# Cửa sổ hướng Tây Phòng Chị Hai ra Ban công sau (X=4.60..5.80, Z=Z2+1.12..2.25 — vừa đủ gọn đẹp, không quá to!)
+add_box(col_fl2_arch, "Sister2_RearWin_OakSill", 4.56, 15.72, Z2 + 1.10, 5.84, 15.90, Z2 + 1.14, "Mat_WoodOakTable", bevel=0.006)
+add_window_frame(col_fl2_arch, "Sister2_RearWin_Balcony", 4.60, 15.83, Z2 + 1.14, 5.80, 15.95, Z2 + 2.25)
+add_box(col_fl2_arch, "Sister2_RearWin_Shade", 4.64, 15.75, Z2 + 2.14, 5.76, 15.80, Z2 + 2.24, "Mat_CurtainLinen", bevel=0.005)
 
-# Ban công trước 5m x 3.0m = 15m² (X=2.0..7.0, Y=-3.0..0.0 ngay trước Phòng Master, nối liền mạch với mái kính sân trước!)
-add_box(col_fl2_arch, "BalconyFront_Rail", 2.0, -3.00, Z2, 7.0, -2.94, Z2 + 1.12, "Mat_BalconyGlassBronze")
-add_box(col_fl2_arch, "BalconyFront_TopBar", 2.0, -3.02, Z2 + 1.10, 7.0, -2.92, Z2 + 1.16, "Mat_MetalMatteBlack")
-add_box(col_fl2_arch, "BalconyFront_Rail_L", 2.0, -3.00, Z2, 2.06, 0.0, Z2 + 1.12, "Mat_BalconyGlassBronze")
-add_box(col_fl2_arch, "BalconyFront_TopBar_L", 1.98, -3.02, Z2 + 1.10, 2.08, 0.0, Z2 + 1.16, "Mat_MetalMatteBlack")
-add_box(col_fl2_arch, "BalconyFront_Rail_R", 6.95, -3.00, Z2, 7.0, 0.0, Z2 + 1.12, "Mat_BalconyGlassBronze")
-add_box(col_fl2_arch, "BalconyFront_TopBar_R", 6.93, -3.02, Z2 + 1.10, 7.02, 0.0, Z2 + 1.16, "Mat_MetalMatteBlack")
+# Ban công trước hướng Đông 5m x 3.0m = 15m² (X=2.0..7.0, Y=-3.0..0.0):
+# Mục 5: XÂY TƯỜNG CHẮN ĐẶC BAO QUANH 3 MẶT (cao 1.08m + mũ đá 0.06m = 1.14m, thay lan can kính trong!)
+# Khi đứng trên ban công tập thể dục / tắm nắng / tắm trăng, người dưới sân chỉ thấy thân trên, tường che kín 100% thân dưới (mặc váy không bị lộ)!
+add_box(col_fl2_arch, "BalconyFront_PrivacyWall_East", 2.00, -3.00, Z2, 7.00, -2.86, Z2 + 1.08, "Mat_WallWarmWhite", bevel=0.008)
+add_box(col_fl2_arch, "BalconyFront_WallCap_East", 1.98, -3.02, Z2 + 1.08, 7.02, -2.84, Z2 + 1.14, "Mat_DarkGreyStone", bevel=0.008)
+add_box(col_fl2_arch, "BalconyFront_PrivacyWall_South", 2.00, -3.00, Z2, 2.14, 0.00, Z2 + 1.08, "Mat_WallWarmWhite", bevel=0.008)
+add_box(col_fl2_arch, "BalconyFront_WallCap_South", 1.98, -3.02, Z2 + 1.08, 2.16, 0.00, Z2 + 1.14, "Mat_DarkGreyStone", bevel=0.008)
+add_box(col_fl2_arch, "BalconyFront_PrivacyWall_North", 6.86, -3.00, Z2, 7.00, 0.00, Z2 + 1.08, "Mat_WallWarmWhite", bevel=0.008)
+add_box(col_fl2_arch, "BalconyFront_WallCap_North", 6.84, -3.02, Z2 + 1.08, 7.02, 0.00, Z2 + 1.14, "Mat_DarkGreyStone", bevel=0.008)
+# Dải lam gỗ trang trí mặt ngoài tường chắn Đông + LED hắt gầm ban công & LED âm dưới mũ tường phía trong
+for bwi in range(9):
+    bwx = 2.35 + bwi * 0.54
+    add_box(col_fl2_arch, f"BalconyFront_ExtWoodAccent_{bwi}", bwx, -3.03, Z2 + 0.16, bwx + 0.12, -2.99, Z2 + 0.96, "Mat_WoodLouverFacade", bevel=0.004)
+add_box(col_lights, "BalconyFront_InnerLED", 2.20, -2.86, Z2 + 1.04, 6.80, -2.83, Z2 + 1.07, "Mat_WarmLED")
 add_box(col_lights, "BalconyFront_UnderLED", 2.1, -2.98, Z2 - 0.18, 6.9, -2.92, Z2 - 0.14, "Mat_WarmLED")
 # Đèn gắn tường mặt tiền chiếu sáng ban công đêm
 add_box(col_lights, "BalconyFront_Sconce1", 6.44, -0.08, Z2 + 1.85, 6.58, 0.02, Z2 + 2.15, "Mat_WarmSconce")
-add_box(col_lights, "BalconyFront_Sconce2", 2.24, -0.08, Z2 + 1.85, 2.38, 0.02, Z2 + 2.15, "Mat_WarmSconce")
+add_box(col_lights, "BalconyFront_Sconce2", 3.24, -0.08, Z2 + 1.85, 3.38, 0.02, Z2 + 2.15, "Mat_WarmSconce")
 
-# Bộ bàn trà & ghế thư giãn ngắm sao ngay trước cửa kính Phòng Master (phía Bắc)
-add_box(col_fl2_furn, "BalconyFront_Rug", 3.85, -2.35, Z2, 6.10, -0.75, Z2 + 0.02, "Mat_RugWarm", bevel=0.006)
-add_dining_chair(col_fl2_furn, "BalconyFront_Chair1", 5.65, -1.55, Z2, 0.45, "Mat_CushionMustard", "Mat_WoodOakTable")
-add_dining_chair(col_fl2_furn, "BalconyFront_Chair2", 4.30, -1.55, Z2, -0.45, "Mat_CushionMustard", "Mat_WoodOakTable")
-add_cyl(col_fl2_furn, "BalconyFront_Table", 4.98, -1.62, Z2 + 0.46, Z2 + 0.51, 0.36, 0.36, "Mat_WhiteMarble", segs=22)
-add_cyl(col_fl2_furn, "BalconyFront_TableLeg", 4.98, -1.62, Z2, Z2 + 0.46, 0.05, 0.09, "Mat_MetalMatteBlack")
-add_cyl(col_fl2_furn, "BalconyFront_Cup1", 5.10, -1.56, Z2 + 0.51, Z2 + 0.59, 0.035, 0.04, "Mat_CeramicWhite")
-add_cyl(col_fl2_furn, "BalconyFront_Cup2", 4.88, -1.68, Z2 + 0.51, Z2 + 0.59, 0.035, 0.04, "Mat_CeramicTeal")
+# Không gian TẬP THỂ DỤC, TẮM NẮNG & TẮM TRĂNG rộng thoáng trên Ban công hướng Đông (kín đáo sau tường chắn 1.14m!):
+# 1. Khu tập thể dục / Yoga ngoài trời rộng rãi (X=4.25..6.35, Y=-2.35..-0.75) gồm thảm tập đôi + gối thiền + cặp tạ tay nhỏ
+add_box(col_fl2_furn, "BalconyFront_WorkoutDeck", 4.15, -2.45, Z2, 6.45, -0.65, Z2 + 0.03, "Mat_WoodOakTable", bevel=0.006)
+add_box(col_fl2_furn, "BalconyFront_ExerciseMat1", 4.35, -2.20, Z2 + 0.03, 6.15, -1.52, Z2 + 0.06, "Mat_CushionSage", bevel=0.01)
+add_box(col_fl2_furn, "BalconyFront_ExerciseMat2", 4.35, -1.42, Z2 + 0.03, 6.15, -0.78, Z2 + 0.06, "Mat_CushionMustard", bevel=0.01)
+add_cyl(col_fl2_furn, "BalconyFront_MoonCushion", 5.25, -1.86, Z2 + 0.06, Z2 + 0.17, 0.21, 0.19, "Mat_CushionTerracotta", segs=18)
+for dbi, dby in enumerate([-0.92, -1.08]):
+    add_cyl(col_fl2_furn, f"BalconyFront_DumbbellBar_{dbi}", 6.26, dby, Z2 + 0.08, Z2 + 0.11, 0.016, 0.016, "Mat_MetalStainless", rot=(0, math.pi / 2, 0), segs=10)
+    add_cyl(col_fl2_furn, f"BalconyFront_DumbbellWL_{dbi}", 6.20, dby, Z2 + 0.06, Z2 + 0.12, 0.045, 0.045, "Mat_MetalMatteBlack", rot=(0, math.pi / 2, 0), segs=12)
+    add_cyl(col_fl2_furn, f"BalconyFront_DumbbellWR_{dbi}", 6.32, dby, Z2 + 0.06, Z2 + 0.12, 0.045, 0.045, "Mat_MetalMatteBlack", rot=(0, math.pi / 2, 0), segs=12)
 
-# Ghế băng tắm nắng / chill nhạc phía Nam ban công trước (X = 2.25..3.65, Y = -2.30..-1.48)
-add_box(col_fl2_furn, "BalconyFront_DaybedBase", 2.25, -2.30, Z2 + 0.08, 3.65, -1.48, Z2 + 0.42, "Mat_WoodOakTable", bevel=0.02)
-add_box(col_fl2_furn, "BalconyFront_DaybedPad", 2.30, -2.26, Z2 + 0.42, 3.60, -1.52, Z2 + 0.52, "Mat_BeddingCream", bevel=0.025)
-add_box(col_fl2_furn, "BalconyFront_DaybedPillow1", 3.22, -2.18, Z2 + 0.52, 3.54, -1.62, Z2 + 0.78, "Mat_CushionTerracotta", bevel=0.04)
-add_box(col_fl2_furn, "BalconyFront_DaybedPillow2", 2.36, -2.18, Z2 + 0.52, 2.68, -1.62, Z2 + 0.78, "Mat_CushionNavy", bevel=0.04)
+# 2. Ghế tắm nắng / tắm trăng (Sun Lounger / Daybed) phía Nam ban công (X=2.24..3.56, Y=-2.68..-1.66 — chừa lối rộng 1.66m trước cửa đường luồng!)
+add_box(col_fl2_furn, "BalconyFront_DaybedBase", 2.24, -2.68, Z2 + 0.08, 3.56, -1.66, Z2 + 0.38, "Mat_WoodOakTable", bevel=0.02)
+add_box(col_fl2_furn, "BalconyFront_DaybedPad", 2.28, -2.64, Z2 + 0.38, 3.52, -1.70, Z2 + 0.48, "Mat_BeddingCream", bevel=0.025)
+add_box(col_fl2_furn, "BalconyFront_DaybedPillow1", 2.34, -2.56, Z2 + 0.48, 2.66, -1.80, Z2 + 0.74, "Mat_CushionTerracotta", bevel=0.04)
+add_box(col_fl2_furn, "BalconyFront_DaybedPillow2", 3.16, -2.56, Z2 + 0.48, 3.46, -1.80, Z2 + 0.72, "Mat_CushionNavy", bevel=0.04)
+# Bàn trà tròn mini ngắm trăng bên cạnh ghế tắm nắng
+add_cyl(col_fl2_furn, "BalconyFront_Table", 3.84, -2.28, Z2 + 0.42, Z2 + 0.47, 0.28, 0.28, "Mat_WhiteMarble", segs=22)
+add_cyl(col_fl2_furn, "BalconyFront_TableLeg", 3.84, -2.28, Z2, Z2 + 0.42, 0.04, 0.08, "Mat_MetalMatteBlack")
+add_cyl(col_fl2_furn, "BalconyFront_Cup1", 3.92, -2.22, Z2 + 0.47, Z2 + 0.55, 0.032, 0.038, "Mat_CeramicWhite")
+add_cyl(col_fl2_furn, "BalconyFront_Cup2", 3.76, -2.34, Z2 + 0.47, Z2 + 0.55, 0.032, 0.038, "Mat_CeramicTeal")
 
-# Bồn cây cảnh & chậu hoa dọc lan can ban công trước
-add_box(col_fl2_furn, "BalconyFront_PlanterBox", 3.80, -2.86, Z2, 6.00, -2.52, Z2 + 0.38, "Mat_DarkGreyStone", bevel=0.015)
-for fi in range(5):
-    fx = 4.08 + fi * 0.42
-    add_sphere(col_fl2_furn, f"BalconyFront_Bush_{fi}", fx, -2.69, Z2 + 0.48, 0.18,
-               "Mat_FoliageBright" if fi % 2 == 0 else "Mat_FoliageGreen", 1.1, 0.9, 0.75)
-    add_sphere(col_fl2_furn, f"BalconyFront_Flower_{fi}", fx, -2.69, Z2 + 0.60, 0.07,
-               "Mat_FlowerPink" if fi % 2 == 0 else "Mat_FlowerYellow")
-add_potted_plant(col_fl2_furn, "BalconyFront_Plant1", 6.52, -2.45, Z2, scale=0.95, pot_mat="Mat_CeramicWhite")
-add_potted_plant(col_fl2_furn, "BalconyFront_Plant2", 6.52, -0.75, Z2, scale=0.80, pot_mat="Mat_TerracottaPot")
-add_potted_plant(col_fl2_furn, "BalconyFront_Plant3", 2.45, -2.62, Z2, scale=0.85, pot_mat="Mat_CeramicWhite")
+# Chậu cây xanh gọn 2 góc ban công giữ trọn độ thoáng khu tập thể dục
+add_potted_plant(col_fl2_furn, "BalconyFront_Plant1", 6.56, -2.52, Z2, scale=0.88, pot_mat="Mat_CeramicWhite")
+add_potted_plant(col_fl2_furn, "BalconyFront_Plant2", 6.56, -0.52, Z2, scale=0.78, pot_mat="Mat_TerracottaPot")
 
-# --- A. PHÒNG NGỦ MASTER CHỊ BA (Y = 0.22..7.0, X = 2.14..6.78) ---
-add_box(col_fl2_furn, "Master_AreaRug", 3.95, 1.40, Z2, 6.55, 4.05, Z2 + 0.025, "Mat_RugWarm", bevel=0.008)
-add_detailed_bed(col_fl2_furn, "Master_Bed", 4.28, 1.85, Z2 + 0.02, 6.22, 4.05, head_side='Y_MAX', duvet_mat="Mat_CushionNavy")
-add_nightstand(col_fl2_furn, "Master_Nightstand_R", 6.50, 3.82, Z2 + 0.02)
-add_nightstand(col_fl2_furn, "Master_Nightstand_L", 4.00, 3.82, Z2 + 0.02)
-add_framed_art(col_fl2_furn, "Master_HeadArt", 5.25, 4.12, Z2 + 1.85, 1.30, 0.78, wall_axis='Y', canvas_mat="Mat_ArtCanvasWarm")
-add_curtain_pair(col_fl2_furn, "Master_FrontCurtain", 2.72, 6.28, 0.28, Z2 + 0.04, H2 - 0.15)
-add_pendant_chandelier(col_lights, "Master_Chandelier", 4.75, 2.30, H2 - 0.02, drop=0.72, count=3)
+# --- A. PHÒNG NGỦ CHỊ BA (Y = 0.22..6.92, X = 3.22..6.78 — THẲNG 1 HÀNG CÙNG PHÒNG SẾU & CHỊ HAI):
+#     - 1 Cửa đường luồng đầu Đông (Y=0.48..1.28), BỎ cửa sổ đường luồng!
+#     - Cửa chính ra ban công đổi thành CỬA SỔ hướng Đông (X=4.10..5.85), kê BÀN LÀM VIỆC ngay dưới cửa sổ (bỏ đàn Piano)!
+#     - Tường hướng Bắc (X=6.26..6.78, Y=0.36..4.58): TỦ QUẦN ÁO DÀI 4.22m bên ngoài phòng tắm!
+#     - Giường ngủ bằng đúng Phòng Sếu & Chị Hai (1.24m x 1.86m, X=4.46..5.70, Y=2.72..4.58) + BÀN NHỎ ĐẦU GIƯỜNG để sách & điện thoại (X=4.08..4.44)!
+#     - Phía sau (Y=4.75..6.92, X=3.22..6.78 -> 7.73 m²): BỎ tường ngăn tủ đồ với nhà tắm để gộp trọn thành PHÒNG TẮM + LAVABO + BỒN CẦU rộng rãi! ---
+add_box(col_fl2_furn, "Master_AreaRug", 4.10, 2.55, Z2, 5.95, 4.55, Z2 + 0.022, "Mat_RugWarm", bevel=0.008)
+# 1. Giường ngủ kích thước bằng giường Phòng Sếu & Chị Hai (1.24m x 1.86m, đầu hướng Tây Y=4.58 -> chân hướng Đông Y=2.72)
+add_detailed_bed(col_fl2_furn, "Master_Bed", 4.46, 2.72, Z2 + 0.02, 5.70, 4.58, head_side='Y_MAX', duvet_mat="Mat_CushionNavy")
+# Bàn nhỏ đầu giường bên cạnh giường ngủ để sách & điện thoại trước khi ngủ (X=4.08..4.44, Y=4.18..4.56)
+add_box(col_fl2_furn, "Master_BedsideTbl_Body", 4.08, 4.18, Z2 + 0.02, 4.44, 4.56, Z2 + 0.48, "Mat_WoodOakCabinet", bevel=0.012)
+add_box(col_fl2_furn, "Master_BedsideTbl_Drawer", 4.10, 4.16, Z2 + 0.28, 4.42, 4.19, Z2 + 0.44, "Mat_WallFacadeWarm", bevel=0.005)
+add_box(col_fl2_furn, "Master_BedsideTbl_Handle", 4.22, 4.14, Z2 + 0.35, 4.30, 4.16, Z2 + 0.37, "Mat_BrassGold")
+add_table_lamp(col_fl2_furn, "Master_BedsideLamp", 4.26, 4.42, Z2 + 0.48, scale=0.68)
+add_box(col_fl2_furn, "Master_BedsideBook1", 4.12, 4.21, Z2 + 0.48, 4.28, 4.36, Z2 + 0.51, "Mat_BookRed", bevel=0.003)
+add_box(col_fl2_furn, "Master_BedsideBook2", 4.13, 4.22, Z2 + 0.51, 4.27, 4.35, Z2 + 0.535, "Mat_BookBlue", bevel=0.003)
+add_box(col_fl2_furn, "Master_BedsidePhone", 4.32, 4.21, Z2 + 0.48, 4.40, 4.35, Z2 + 0.492, "Mat_PianoBlackGloss", bevel=0.002)
+add_box(col_fl2_furn, "Master_BedsidePhoneScreen", 4.328, 4.22, Z2 + 0.492, 4.392, 4.34, Z2 + 0.495, "Mat_LaptopScreen")
+add_framed_art(col_fl2_furn, "Master_HeadArt", 5.08, 4.62, Z2 + 1.82, 1.05, 0.68, wall_axis='Y', canvas_mat="Mat_ArtCanvasWarm")
+add_pendant_chandelier(col_lights, "Master_Chandelier", 4.95, 2.35, H2 - 0.02, drop=0.68, count=3)
 
-# 🎹 ĐÀN PIANO UPRIGHT CHI TIẾT ÁP TƯỜNG TRÁI (GIÁP HÀNH LANG NAM, X=2.18..2.74) + GHẾ ĐÀN + GIÁ NHẠC + PEDAL ĐỒNG
-add_box(col_fl2_furn, "Master_Piano_Body", 2.18, 0.85, Z2 + 0.04, 2.74, 2.38, Z2 + 1.24, "Mat_PianoBlackGloss", bevel=0.018)
-add_box(col_fl2_furn, "Master_Piano_Keybed", 2.70, 0.88, Z2 + 0.66, 3.00, 2.35, Z2 + 0.75, "Mat_PianoBlackGloss", bevel=0.01)
-add_box(col_fl2_furn, "Master_Piano_WhiteKeys", 2.74, 0.94, Z2 + 0.75, 2.98, 2.29, Z2 + 0.79, "Mat_CeramicWhite")
-for bk in range(18):
-    if bk % 7 not in (2, 6):
-        by_k = 0.99 + bk * 0.070
-        add_box(col_fl2_furn, f"Master_Piano_BlackKey_{bk}", 2.75, by_k, Z2 + 0.79, 2.90, by_k + 0.028, Z2 + 0.818, "Mat_MetalMatteBlack")
-add_box(col_fl2_furn, "Master_Piano_SheetMusic", 2.74, 1.40, Z2 + 0.88, 2.78, 1.85, Z2 + 1.14, "Mat_BeddingWhite")
-for pd in range(3):
-    add_box(col_fl2_furn, f"Master_Piano_Pedal_{pd}", 2.74, 1.52 + pd * 0.09, Z2 + 0.05, 2.84, 1.56 + pd * 0.09, Z2 + 0.09, "Mat_BrassGold")
-add_box(col_fl2_furn, "Master_Piano_BenchTop", 3.14, 1.25, Z2 + 0.44, 3.54, 1.98, Z2 + 0.52, "Mat_PianoBlackGloss", bevel=0.018)
-for i, (lx, ly) in enumerate([(3.19, 1.30), (3.49, 1.30), (3.19, 1.93), (3.49, 1.93)]):
-    add_cyl(col_fl2_furn, f"Master_Piano_BenchLeg_{i}", lx, ly, Z2, Z2 + 0.45, 0.022, 0.022, "Mat_PianoBlackGloss", segs=8)
-add_framed_art(col_fl2_furn, "Master_PianoArt", 2.17, 1.62, Z2 + 1.92, 0.92, 0.68, wall_axis='X', canvas_mat="Mat_ArtCanvasBlue")
+# 2. 💻 BÀN HỌC / BÀN LÀM VIỆC NGAY DƯỚI CỬA SỔ HƯỚNG ĐÔNG (X=3.92..5.32, Y=0.26..0.88)
+add_box(col_fl2_furn, "Master_Desk_Top", 3.92, 0.26, Z2 + 0.72, 5.32, 0.88, Z2 + 0.77, "Mat_WoodOakTable", bevel=0.01)
+for mdli, mdlx in enumerate([3.98, 5.26]):
+    add_box(col_fl2_furn, f"Master_Desk_Leg_{mdli}", mdlx - 0.03, 0.30, Z2, mdlx + 0.03, 0.84, Z2 + 0.72, "Mat_MetalMatteBlack")
+add_box(col_fl2_furn, "Master_Desk_Drawer", 4.86, 0.30, Z2 + 0.14, 5.24, 0.82, Z2 + 0.72, "Mat_WoodOakCabinet", bevel=0.008)
+add_box(col_fl2_furn, "Master_Desk_LaptopBase", 4.38, 0.48, Z2 + 0.77, 4.76, 0.72, Z2 + 0.79, "Mat_MetalStainless")
+add_box(col_fl2_furn, "Master_Desk_LaptopScreen", 4.38, 0.45, Z2 + 0.79, 4.76, 0.48, Z2 + 1.05, "Mat_LaptopScreen")
+add_table_lamp(col_fl2_furn, "Master_Desk_Lamp", 4.10, 0.46, Z2 + 0.77, scale=0.72)
+add_books_row(col_fl2_furn, "Master_Desk_Books", 4.92, 0.36, Z2 + 0.77, count=4, axis='X')
+# Ghế làm việc quay mặt về hướng Đông nhìn thẳng ra cửa sổ ban công (X=4.36..4.80, Y=0.96..1.38)
+add_dining_chair(col_fl2_furn, "Master_Desk_Chair", 4.58, 1.16, Z2, angle_rad=math.pi, seat_mat="Mat_CushionNavy")
 
-# 🧘 Góc Yoga & Thiền Master (đặt đón nắng sáng ngay trước cửa kính ban công, hoàn toàn không chắn lối đi!)
-add_box(col_fl2_furn, "Master_YogaMat", 4.50, 0.58, Z2, 6.00, 1.38, Z2 + 0.025, "Mat_CushionMustard", bevel=0.008)
-add_cyl(col_fl2_furn, "Master_MeditationCushion", 5.25, 0.98, Z2 + 0.025, Z2 + 0.14, 0.22, 0.20, "Mat_CushionTerracotta", segs=18)
-add_potted_plant(col_fl2_furn, "Master_YogaPlant", 6.44, 0.72, Z2, scale=1.0, pot_mat="Mat_CeramicWhite")
+# 2B. 🪞 BÀN TRANG ĐIỂM PHÍA BẮC BÀN HỌC (X=5.44..6.66, Y=0.26..0.78 — HƯỚNG MẶT VỀ PHÍA TÂY, XOAY LƯNG BÀN VỀ PHÍA ĐÔNG!)
+add_box(col_fl2_furn, "Master_VanityTbl_Top", 5.44, 0.26, Z2 + 0.72, 6.66, 0.78, Z2 + 0.76, "Mat_WhiteMarble", bevel=0.008)
+add_box(col_fl2_furn, "Master_VanityTbl_DrawerBox", 5.46, 0.28, Z2 + 0.58, 6.64, 0.76, Z2 + 0.72, "Mat_WoodOakCabinet", bevel=0.008)
+for vdi, vdx in enumerate([5.76, 6.34]):
+    add_box(col_fl2_furn, f"Master_VanityTbl_DrawerFace_{vdi}", vdx - 0.27, 0.755, Z2 + 0.60, vdx + 0.27, 0.785, Z2 + 0.70, "Mat_WallFacadeWarm", bevel=0.005)
+    add_box(col_fl2_furn, f"Master_VanityTbl_Handle_{vdi}", vdx - 0.05, 0.785, Z2 + 0.64, vdx + 0.05, 0.805, Z2 + 0.665, "Mat_BrassGold")
+for vli, (vlx, vly) in enumerate([(5.50, 0.32), (6.60, 0.32), (5.50, 0.72), (6.60, 0.72)]):
+    add_cyl(col_fl2_furn, f"Master_VanityTbl_Leg_{vli}", vlx, vly, Z2, Z2 + 0.58, 0.018, 0.022, "Mat_BrassGold", segs=10)
+# Gương trang điểm tròn có viền đèn LED ấm áp tường Đông, MẶT GƯƠNG HƯỚNG VỀ PHÍA TÂY (+Y)!
+add_cyl(col_fl2_furn, "Master_VanityMirror_Glass", 6.05, 0.28, Z2 + 1.24, Z2 + 1.28, 0.32, 0.32, "Mat_Mirror", rot=(math.pi / 2, 0, 0), segs=24)
+add_cyl(col_lights, "Master_VanityMirror_LED", 6.05, 0.26, Z2 + 1.24, Z2 + 1.27, 0.34, 0.34, "Mat_WarmLED", rot=(math.pi / 2, 0, 0), segs=24)
+# Mỹ phẩm, chai nước hoa & hộp trang sức gọn đẹp trên mặt bàn trang điểm
+for csi, (csx, csh, csm) in enumerate([(5.62, 0.14, "Mat_CushionBlush"), (5.74, 0.11, "Mat_CeramicWhite"), (6.36, 0.15, "Mat_CeramicTeal"), (6.50, 0.10, "Mat_CushionMustard")]):
+    add_cyl(col_fl2_furn, f"Master_VanityCosmetic_{csi}", csx, 0.44, Z2 + 0.76, Z2 + 0.76 + csh, 0.024, 0.020, csm, segs=12)
+add_box(col_fl2_furn, "Master_VanityJewelryBox", 5.88, 0.36, Z2 + 0.76, 6.22, 0.58, Z2 + 0.84, "Mat_CushionBlush", bevel=0.008)
+# Ghế đôn bàn trang điểm nệm êm đặt phía Tây bàn (Y=0.90..1.26)
+add_cyl(col_fl2_furn, "Master_VanityStool_Base", 6.05, 1.06, Z2, Z2 + 0.42, 0.16, 0.18, "Mat_BrassGold", segs=18)
+add_cyl(col_fl2_furn, "Master_VanityStool_Pad", 6.05, 1.06, Z2 + 0.42, Z2 + 0.50, 0.19, 0.19, "Mat_CushionBlush", segs=18)
 
-# Vách ngăn sau giường Master — CÓ CỬA RỘNG (X=2.80..3.75) đi thẳng vào Walk-in Closet!
-add_box(col_fl2_arch, "Master_Ensuite_Wall_L", 2.14, 4.15, Z2, 2.80, 4.25, H2, "Mat_WallWarmWhite")
-add_box(col_fl2_arch, "Master_Ensuite_Wall_Top", 2.80, 4.15, Z2 + 2.30, 3.75, 4.25, H2, "Mat_WallWarmWhite")
-add_box(col_fl2_arch, "Master_Ensuite_Wall_R", 3.75, 4.15, Z2, 6.78, 4.25, H2, "Mat_WallWarmWhite")
-# Khung vòm gỗ sang trọng lối vào Walk-in Closet
-add_box(col_fl2_arch, "Master_ClosetPortal_L", 2.77, 4.13, Z2, 2.83, 4.27, Z2 + 2.32, "Mat_WoodOakDark")
-add_box(col_fl2_arch, "Master_ClosetPortal_R", 3.72, 4.13, Z2, 3.78, 4.27, Z2 + 2.32, "Mat_WoodOakDark")
-add_box(col_fl2_arch, "Master_ClosetPortal_Top", 2.77, 4.13, Z2 + 2.28, 3.78, 4.27, Z2 + 2.34, "Mat_WoodOakDark")
+# 2C. 📚 KỆ SÁCH GÓC TƯỜNG HƯỚNG NAM (X=3.24..3.60, Y=0.40..2.20 — đặt gọn góc Nam nhờ dời cửa đường luồng ra chính giữa giường!)
+add_box(col_fl2_furn, "Master_Bookshelf_Back", 3.22, 0.40, Z2, 3.25, 2.20, Z2 + 2.15, "Mat_WoodOakCabinet")
+add_box(col_fl2_furn, "Master_Bookshelf_SideE", 3.24, 0.40, Z2, 3.60, 0.44, Z2 + 2.15, "Mat_WoodOakTable", bevel=0.005)
+add_box(col_fl2_furn, "Master_Bookshelf_SideW", 3.24, 2.16, Z2, 3.60, 2.20, Z2 + 2.15, "Mat_WoodOakTable", bevel=0.005)
+add_box(col_fl2_furn, "Master_Bookshelf_DivMid", 3.24, 1.28, Z2 + 0.04, 3.59, 1.32, Z2 + 2.12, "Mat_WoodOakTable", bevel=0.004)
+for bsi, bsz in enumerate([0.04, 0.46, 0.88, 1.30, 1.72, 2.11]):
+    add_box(col_fl2_furn, f"Master_Bookshelf_Shelf_{bsi}", 3.24, 0.42, Z2 + bsz, 3.60, 2.18, Z2 + bsz + 0.035, "Mat_WoodOakTable", bevel=0.004)
+add_box(col_lights, "Master_Bookshelf_TopLED", 3.52, 0.46, Z2 + 2.08, 3.56, 2.14, Z2 + 2.11, "Mat_WarmLED")
+# Sách & đồ trang trí bày gọn trên các tầng kệ sách góc Nam
+for bki, (bky, bkz, bkn) in enumerate([(0.52, 0.50, 7), (1.38, 0.50, 6), (0.56, 0.92, 6), (1.40, 0.92, 7), (0.54, 1.34, 7), (1.42, 1.34, 6), (0.58, 1.76, 5)]):
+    add_books_row(col_fl2_furn, f"Master_Bookshelf_Row_{bki}", 3.30, bky, Z2 + bkz, count=bkn, axis='Y')
+add_potted_plant(col_fl2_furn, "Master_Bookshelf_Plant", 3.42, 1.88, Z2 + 1.755, scale=0.35, pot_mat="Mat_CeramicWhite")
 
-# Vách ngăn WC Riêng & Walk-in Closet — CÓ CỬA VÀO WC (Y=4.36..5.22) kèm cửa trượt gỗ kính mờ!
-add_box(col_fl2_arch, "Master_WC_Div_Front", 4.65, 4.25, Z2, 4.75, 4.36, H2, "Mat_WallWarmWhite")
-add_box(col_fl2_arch, "Master_WC_Div_Top", 4.65, 4.36, Z2 + 2.25, 4.75, 5.22, H2, "Mat_WallWarmWhite")
-add_box(col_fl2_arch, "Master_WC_Div_Solid", 4.65, 5.22, Z2, 4.75, 6.95, H2, "Mat_WallWarmWhite")
-# Vách hậu Master mở cửa vào từ Sảnh Cầu thang (X=2.95..3.85, Y=6.92..7.02)
-add_box(col_fl2_arch, "Master_BackWall_L", 2.14, 6.92, Z2, 2.95, 7.02, H2, "Mat_WallWarmWhite")
-add_box(col_fl2_arch, "Master_BackWall_DoorTop", 2.95, 6.92, Z2 + 2.25, 3.85, 7.02, H2, "Mat_WallWarmWhite")
-add_box(col_fl2_arch, "Master_BackWall_R", 3.85, 6.92, Z2, 6.78, 7.02, H2, "Mat_WallWarmWhite")
+# 3. 🧥 TỦ QUẦN ÁO DÀI SUỐT TƯỜNG HƯỚNG BẮC BÊN NGOÀI PHÒNG NGỦ (X=6.28..6.78, Y=1.48..4.58 — dài 3.10m, ngay sau ghế bàn trang điểm!)
+add_box(col_fl2_furn, "Master_NorthWardrobe_Body", 6.28, 1.48, Z2, 6.78, 4.58, Z2 + 2.55, "Mat_WoodOakCabinet", bevel=0.01)
+for mwd in range(5):
+    mwy1 = 1.48 + mwd * (3.10 / 5.0) + 0.015
+    mwy2 = 1.48 + (mwd + 1) * (3.10 / 5.0) - 0.015
+    add_box(col_fl2_furn, f"Master_NorthWardrobe_Door_{mwd}", 6.255, mwy1, Z2 + 0.04, 6.285, mwy2, Z2 + 2.51, "Mat_WallFacadeWarm", bevel=0.005)
+    add_box(col_fl2_furn, f"Master_NorthWardrobe_Handle_{mwd}", 6.23, (mwy1 + mwy2) / 2.0 - 0.012, Z2 + 1.10, 6.255, (mwy1 + mwy2) / 2.0 + 0.012, Z2 + 1.38, "Mat_BrassGold")
+add_box(col_lights, "Master_NorthWardrobe_LED", 6.24, 1.54, Z2 + 2.51, 6.27, 4.52, Z2 + 2.55, "Mat_WarmLED")
 
-# Khung cửa & Cánh cửa trượt vào Phòng tắm Master (mở hờ sang phía Y=5.0..5.86 để thấy rõ lối vào thoáng)
-add_box(col_fl2_arch, "Master_WCDoor_Frame1", 4.63, 4.33, Z2, 4.77, 4.39, Z2 + 2.27, "Mat_WoodOakDark")
-add_box(col_fl2_arch, "Master_WCDoor_Frame2", 4.63, 5.19, Z2, 4.77, 5.25, Z2 + 2.27, "Mat_WoodOakDark")
-add_box(col_fl2_arch, "Master_WCDoor_FrameTop", 4.63, 4.33, Z2 + 2.23, 4.77, 5.25, Z2 + 2.29, "Mat_WoodOakDark")
-add_box(col_fl2_arch, "Master_WCDoor_Rail", 4.59, 4.35, Z2 + 2.26, 4.65, 6.05, Z2 + 2.31, "Mat_MetalMatteBlack")
-add_box(col_fl2_arch, "Master_WCDoor_Leaf", 4.59, 4.98, Z2 + 0.02, 4.64, 5.84, Z2 + 2.24, "Mat_WoodOakTable", bevel=0.008)
-add_box(col_fl2_arch, "Master_WCDoor_GlassInset", 4.58, 5.12, Z2 + 0.65, 4.65, 5.70, Z2 + 2.02, "Mat_GlassBronze")
-add_box(col_fl2_arch, "Master_WCDoor_Handle", 4.55, 5.04, Z2 + 0.92, 4.59, 5.07, Z2 + 1.24, "Mat_BrassGold")
+# 4. Vách ngăn Phòng ngủ & Phòng tắm + Lavabo + Bồn cầu rộng suốt bề ngang (Y=4.65..4.75, X=3.22..6.78 — BỎ tường ngăn tủ đồ với nhà tắm!)
+#    Cửa trượt gỗ kính mờ vào Phòng tắm đặt bên Nam (X=3.28..4.04) đi thẳng từ cửa đường luồng vào cực gọn!
+add_box(col_fl2_arch, "Master_Bath_Wall_S", 3.22, 4.65, Z2, 3.28, 4.75, H2, "Mat_WallWarmWhite")
+add_box(col_fl2_arch, "Master_Bath_Wall_DoorTop", 3.28, 4.65, Z2 + 2.25, 4.04, 4.75, H2, "Mat_WallWarmWhite")
+add_box(col_fl2_arch, "Master_Bath_Wall_N", 4.04, 4.65, Z2, 6.78, 4.75, H2, "Mat_WallWarmWhite")
+add_box(col_fl2_arch, "Master_BackWall_Solid", 3.22, 6.92, Z2, 6.78, 7.02, H2, "Mat_WallWarmWhite")
+# Khung & cánh cửa trượt gỗ kính mờ vào Phòng tắm Chị Ba (Y=4.65..4.75, X=3.28..4.04)
+add_box(col_fl2_arch, "Master_WCDoor_FrameL", 3.26, 4.63, Z2, 3.31, 4.77, Z2 + 2.27, "Mat_WoodOakDark")
+add_box(col_fl2_arch, "Master_WCDoor_FrameR", 4.01, 4.63, Z2, 4.06, 4.77, Z2 + 2.27, "Mat_WoodOakDark")
+add_box(col_fl2_arch, "Master_WCDoor_FrameTop", 3.26, 4.63, Z2 + 2.23, 4.06, 4.77, Z2 + 2.29, "Mat_WoodOakDark")
+add_box(col_fl2_arch, "Master_WCDoor_Leaf", 3.31, 4.68, Z2 + 0.02, 4.01, 4.73, Z2 + 2.23, "Mat_WoodOakTable", bevel=0.008)
+add_box(col_fl2_arch, "Master_WCDoor_GlassInset", 3.44, 4.67, Z2 + 0.68, 3.88, 4.74, Z2 + 2.02, "Mat_GlassBronze")
+add_box(col_fl2_arch, "Master_WCDoor_Handle", 3.92, 4.64, Z2 + 0.94, 3.96, 4.68, Z2 + 1.24, "Mat_BrassGold")
 
-# Phòng tắm riêng Master (X=4.75..6.78, chừa sảnh bước từ cửa Y=4.36..5.22 hoàn toàn thông thoáng!)
-# 1. Lavabo đá cẩm thạch + Gương tròn đèn LED áp vách trước bên phải (X=5.70..6.66, Y=4.28..4.82)
-add_box(col_fl2_furn, "Master_VanityCabinet", 5.70, 4.28, Z2 + 0.16, 6.64, 4.82, Z2 + 0.82, "Mat_WoodOakCabinet", bevel=0.01)
-add_box(col_fl2_furn, "Master_VanityTop", 5.68, 4.26, Z2 + 0.82, 6.66, 4.85, Z2 + 0.86, "Mat_WhiteMarble")
-add_cyl(col_fl2_furn, "Master_SinkBasin", 6.17, 4.55, Z2 + 0.86, Z2 + 0.98, 0.18, 0.22, "Mat_CeramicWhite", segs=18)
-add_cyl(col_fl2_furn, "Master_SinkFaucet", 6.17, 4.36, Z2 + 0.86, Z2 + 1.08, 0.018, 0.014, "Mat_BrassGold", segs=10)
-add_cyl(col_fl2_furn, "Master_Mirror", 6.17, 4.27, Z2 + 1.48, Z2 + 1.52, 0.36, 0.36, "Mat_Mirror", rot=(math.pi / 2, 0, 0), segs=22)
-add_cyl(col_lights, "Master_MirrorLED", 6.17, 4.25, Z2 + 1.48, Z2 + 1.50, 0.39, 0.39, "Mat_WarmLED", rot=(math.pi / 2, 0, 0), segs=22)
+# 5. 🚿🚽 PHÒNG TẮM + LAVABO + BỒN CẦU RỘNG SUỐT BỀ NGANG PHÒNG CHỊ BA (X=3.22..6.78, Y=4.75..6.92 -> 7.73 m²):
+#    - Khu khô Lavabo + Bồn cầu bên Nam (X=3.22..4.82, Y=4.75..6.92 -> 3.47 m²): Lavabo + gương LED + các hộc âm tường để đồ dùng + cây treo đồ khô trên tường!
+#    - Khu tắm ướt bên Bắc RỘNG HƠN HẲN (X=4.82..6.78, Y=4.75..6.92 -> 4.25 m², +22.5%): ngăn bằng cửa trượt kính dọc X=4.82m; bên trong CHỈ CÓ vòi sen tắm + hộp tủ âm tường đựng sữa tắm/dầu gội!
+# a) Khu Lavabo áp tường Nam (X=3.22..3.76, Y=5.12..5.96) + Gương tròn LED + Hộc âm tường 2 tầng có LED phía trên gương
+add_box(col_fl2_furn, "Master_VanityCabinet", 3.24, 5.14, Z2 + 0.16, 3.74, 5.94, Z2 + 0.78, "Mat_WoodOakCabinet", bevel=0.01)
+add_box(col_fl2_furn, "Master_VanityTop", 3.22, 5.12, Z2 + 0.78, 3.78, 5.96, Z2 + 0.84, "Mat_WhiteMarble", bevel=0.008)
+add_cyl(col_fl2_furn, "Master_SinkBasin", 3.52, 5.54, Z2 + 0.84, Z2 + 0.96, 0.16, 0.20, "Mat_CeramicWhite", segs=18)
+add_cyl(col_fl2_furn, "Master_SinkFaucet", 3.34, 5.54, Z2 + 0.84, Z2 + 1.06, 0.016, 0.014, "Mat_MetalMatteBlack", segs=10)
+add_box(col_fl2_furn, "Master_SinkSpout", 3.34, 5.525, Z2 + 1.03, 3.48, 5.555, Z2 + 1.06, "Mat_MetalMatteBlack")
+add_cyl(col_fl2_furn, "Master_Mirror", 3.25, 5.54, Z2 + 1.44, Z2 + 1.48, 0.28, 0.28, "Mat_Mirror", rot=(0, math.pi / 2, 0), segs=22)
+add_cyl(col_lights, "Master_MirrorLED", 3.23, 5.54, Z2 + 1.44, Z2 + 1.47, 0.30, 0.30, "Mat_WarmLED", rot=(0, math.pi / 2, 0), segs=22)
+# Các hộc âm tường 2 tầng có LED trên gương Lavabo để đồ dùng (X=3.22..3.42, Y=5.12..5.96)
+add_box(col_fl2_furn, "Master_WC_TopNicheL", 3.22, 5.12, Z2 + 1.84, 3.42, 5.17, Z2 + 2.44, "Mat_WallWarmWhite", bevel=0.004)
+add_box(col_fl2_furn, "Master_WC_TopNicheR", 3.22, 5.91, Z2 + 1.84, 3.42, 5.96, Z2 + 2.44, "Mat_WallWarmWhite", bevel=0.004)
+add_box(col_fl2_furn, "Master_WC_TopNicheB", 3.22, 5.12, Z2 + 1.84, 3.42, 5.96, Z2 + 1.89, "Mat_WallWarmWhite", bevel=0.004)
+add_box(col_fl2_furn, "Master_WC_TopNicheMid", 3.22, 5.12, Z2 + 2.12, 3.42, 5.96, Z2 + 2.17, "Mat_WallWarmWhite", bevel=0.004)
+add_box(col_fl2_furn, "Master_WC_TopNicheT", 3.22, 5.12, Z2 + 2.40, 3.42, 5.96, Z2 + 2.45, "Mat_WallWarmWhite", bevel=0.004)
+add_box(col_fl2_furn, "Master_WC_TopNicheOak1", 3.23, 5.17, Z2 + 1.89, 3.41, 5.91, Z2 + 1.91, "Mat_WoodOakTable")
+add_box(col_fl2_furn, "Master_WC_TopNicheOak2", 3.23, 5.17, Z2 + 2.17, 3.41, 5.91, Z2 + 2.19, "Mat_WoodOakTable")
+add_box(col_lights, "Master_WC_TopNicheLED1", 3.36, 5.19, Z2 + 2.10, 3.40, 5.89, Z2 + 2.12, "Mat_WarmLED")
+add_box(col_lights, "Master_WC_TopNicheLED2", 3.36, 5.19, Z2 + 2.38, 3.40, 5.89, Z2 + 2.40, "Mat_WarmLED")
+for mbi, (mby, mbz, mbh, mbm) in enumerate([
+    (5.28, Z2 + 1.91, 0.16, "Mat_CeramicWhite"), (5.46, Z2 + 1.91, 0.15, "Mat_CeramicTeal"), (5.66, Z2 + 1.91, 0.16, "Mat_CushionSage"), (5.82, Z2 + 1.91, 0.14, "Mat_CushionBlush"),
+    (5.36, Z2 + 2.19, 0.15, "Mat_BeddingWhite"), (5.64, Z2 + 2.19, 0.16, "Mat_CushionMustard"),
+]):
+    add_cyl(col_fl2_furn, f"Master_WC_Skincare_{mbi}", 3.32, mby, mbz, mbz + mbh, 0.026, 0.022, mbm, segs=12)
 
-# 2. Bồn cầu đặt kín đáo sau mảng tường đặc bên trái (X=4.77..5.38, Y=5.36..5.86) + Vách kính ngăn nước
-add_box(col_fl2_furn, "Master_ToiletTank", 4.77, 5.42, Z2 + 0.40, 5.04, 5.82, Z2 + 0.82, "Mat_CeramicWhite", bevel=0.03)
-add_cyl(col_fl2_furn, "Master_ToiletBowl", 5.24, 5.62, Z2, Z2 + 0.42, 0.18, 0.22, "Mat_CeramicWhite", segs=16)
-add_box(col_fl2_furn, "Master_WC_GlassScreen", 4.76, 5.94, Z2, 5.52, 5.97, Z2 + 2.05, "Mat_GlassClear")
+# Hộc âm tường bên cạnh Lavabo (trên tường Nam Y=6.12..6.78) để thêm đồ dùng & khăn cuộn
+add_box(col_fl2_furn, "Master_WC_SideNicheL", 3.22, 6.12, Z2 + 1.12, 3.42, 6.17, Z2 + 1.96, "Mat_WallWarmWhite", bevel=0.004)
+add_box(col_fl2_furn, "Master_WC_SideNicheR", 3.22, 6.73, Z2 + 1.12, 3.42, 6.78, Z2 + 1.96, "Mat_WallWarmWhite", bevel=0.004)
+add_box(col_fl2_furn, "Master_WC_SideNicheB", 3.22, 6.12, Z2 + 1.12, 3.42, 6.78, Z2 + 1.17, "Mat_WallWarmWhite", bevel=0.004)
+add_box(col_fl2_furn, "Master_WC_SideNicheMid", 3.22, 6.12, Z2 + 1.52, 3.42, 6.78, Z2 + 1.57, "Mat_WallWarmWhite", bevel=0.004)
+add_box(col_fl2_furn, "Master_WC_SideNicheT", 3.22, 6.12, Z2 + 1.91, 3.42, 6.78, Z2 + 1.96, "Mat_WallWarmWhite", bevel=0.004)
+add_box(col_fl2_furn, "Master_WC_SideNicheOak1", 3.23, 6.17, Z2 + 1.17, 3.41, 6.73, Z2 + 1.19, "Mat_WoodOakTable")
+add_box(col_fl2_furn, "Master_WC_SideNicheOak2", 3.23, 6.17, Z2 + 1.57, 3.41, 6.73, Z2 + 1.59, "Mat_WoodOakTable")
+add_box(col_lights, "Master_WC_SideNicheLED", 3.36, 6.19, Z2 + 1.89, 3.40, 6.71, Z2 + 1.91, "Mat_WarmLED")
+add_box(col_fl2_furn, "Master_WC_SideBasket", 3.25, 6.22, Z2 + 1.19, 3.40, 6.52, Z2 + 1.40, "Mat_WoodOakCabinet", bevel=0.012)
+add_box(col_fl2_furn, "Master_WC_SideTowel", 3.26, 6.24, Z2 + 1.59, 3.40, 6.66, Z2 + 1.73, "Mat_BeddingWhite", bevel=0.012)
 
-# 3. Bồn tắm nằm cao cấp đặt ngang sát tường sau (X=5.12..6.66, Y=6.04..6.86) + Thảm chân & Vòi đồng
-add_box(col_fl2_furn, "Master_Bathtub_Outer", 5.12, 6.04, Z2, 6.66, 6.86, Z2 + 0.58, "Mat_CeramicWhite", bevel=0.10)
-add_box(col_fl2_furn, "Master_Bathtub_Water", 5.24, 6.14, Z2 + 0.46, 6.54, 6.76, Z2 + 0.52, "Mat_WaterClear")
-add_cyl(col_fl2_furn, "Master_TubFaucet", 5.04, 6.45, Z2, Z2 + 0.78, 0.025, 0.022, "Mat_BrassGold", segs=10)
-add_box(col_fl2_furn, "Master_BathMat", 5.58, 5.54, Z2, 6.28, 5.94, Z2 + 0.02, "Mat_RugWarm", bevel=0.006)
-add_pendant_chandelier(col_lights, "Master_WC_Lamp", 5.75, 5.40, H2 - 0.02, drop=0.38, count=1)
+# b) Bồn cầu áp tường Tây (X=4.10..4.52, Y=6.32..6.90) + Kệ tường ngang để giấy & đồ
+add_box(col_fl2_furn, "Master_ToiletTank", 4.12, 6.66, Z2 + 0.40, 4.50, 6.90, Z2 + 0.84, "Mat_CeramicWhite", bevel=0.03)
+add_cyl(col_fl2_furn, "Master_ToiletBowl", 4.31, 6.48, Z2, Z2 + 0.42, 0.16, 0.19, "Mat_CeramicWhite", segs=16)
+add_box(col_fl2_furn, "Master_ToiletSeat", 4.14, 6.28, Z2 + 0.42, 4.48, 6.66, Z2 + 0.46, "Mat_BeddingWhite", bevel=0.02)
+add_box(col_fl2_furn, "Master_ToiletWallLedge", 4.02, 6.72, Z2 + 1.18, 4.62, 6.92, Z2 + 1.25, "Mat_WallWarmWhite", bevel=0.006)
+add_box(col_fl2_furn, "Master_ToiletLedgeTop", 4.03, 6.73, Z2 + 1.25, 4.61, 6.91, Z2 + 1.27, "Mat_WoodOakTable")
+add_cyl(col_fl2_furn, "Master_ToiletPaper_0", 4.18, 6.82, Z2 + 1.27, Z2 + 1.39, 0.050, 0.050, "Mat_BeddingWhite", segs=14)
+add_cyl(col_fl2_furn, "Master_ToiletBottle_0", 4.44, 6.82, Z2 + 1.27, Z2 + 1.48, 0.038, 0.028, "Mat_CushionNavy", segs=12)
 
-# Walk-in Closet Master (liên thông Phòng ngủ -> Phòng thay đồ -> Cửa phòng tắm cực chuẩn!)
-add_box(col_fl2_furn, "Master_Closet_Right", 4.08, 5.88, Z2, 4.62, 6.88, Z2 + 2.55, "Mat_WoodOakCabinet", bevel=0.01)
-add_box(col_fl2_furn, "Master_Closet_Left", 2.16, 4.32, Z2, 2.70, 6.88, Z2 + 2.55, "Mat_WoodOakCabinet", bevel=0.01)
-add_box(col_lights, "Master_Closet_LED1", 4.06, 5.92, Z2 + 2.46, 4.10, 6.84, Z2 + 2.50, "Mat_WarmLED")
-add_box(col_lights, "Master_Closet_LED2", 2.69, 4.38, Z2 + 2.46, 2.73, 6.82, Z2 + 2.50, "Mat_WarmLED")
-cloth_mats = ["Mat_CushionBlush", "Mat_CushionNavy", "Mat_BeddingWhite", "Mat_CushionSage", "Mat_CushionMustard", "Mat_CushionTerracotta"]
-for gi in range(8):
-    gy = 4.65 + gi * 0.26
-    add_box(col_fl2_furn, f"Master_Clothes_{gi}", 2.70, gy, Z2 + 1.15, 2.86, gy + 0.12, Z2 + 2.05, cloth_mats[gi % len(cloth_mats)], bevel=0.015)
-add_cyl(col_fl2_furn, "Master_Closet_Ottoman", 3.40, 6.18, Z2, Z2 + 0.44, 0.34, 0.34, "Mat_CushionBlush", segs=18)
+# c) Cây treo đồ khô inox gắn trên tường Đông khu khô (Y=4.75, X=4.10..4.76)
+add_box(col_fl2_furn, "Master_WC_DryWallBar", 4.10, 4.75, Z2 + 1.54, 4.76, 4.78, Z2 + 1.64, "Mat_WoodOakTable", bevel=0.005)
+add_box(col_fl2_furn, "Master_WC_DryRod", 4.12, 4.88, Z2 + 1.58, 4.74, 4.91, Z2 + 1.61, "Mat_MetalStainless")
+for mci, (mcx, mch, mcm) in enumerate([(4.22, 0.52, "Mat_CushionBlush"), (4.43, 0.48, "Mat_BeddingCream"), (4.64, 0.54, "Mat_CushionSage")]):
+    add_box(col_fl2_furn, f"Master_WC_DryCloth_{mci}", mcx - 0.08, 4.86, Z2 + 1.54 - mch, mcx + 0.08, 4.92, Z2 + 1.54, mcm, bevel=0.015)
 
-# --- B. SẢNH CẦU THANG & GIẾNG TRỜI (Y = 7.0..11.2, nối liền hành lang 2m phía Nam) ---
-add_potted_plant(col_fl2_furn, "Fl2_AtriumPlant", 2.55, 8.20, Z2, scale=1.10, pot_mat="Mat_CeramicWhite")
+# d) VÁCH TƯỜNG XÂY ĐẶC 1 NỬA CHE KÍN BỒN CẦU (nửa Tây Y=5.75..6.92) + GỜ CHẮN NƯỚC XÂY CAO CHỐNG TRÀN + 1 CỬA PHÒNG TẮM Ở NỬA ĐÔNG (Y=4.84..5.75)!
+add_box(col_fl2_furn, "Master_WC_WetFloor", 4.82, 4.75, Z2, 6.78, 6.92, Z2 + 0.06, "Mat_StepStone", bevel=0.006)
+# Gờ đá chắn nước xây cao (+10cm trên sàn tắm / +16cm trên sàn khô) giữ nước hoàn toàn trong khu tắm không tràn ra ngoài!
+add_box(col_fl2_furn, "Master_WC_WetCurb", 4.76, 4.75, Z2, 4.88, 6.92, Z2 + 0.16, "Mat_DarkGreyStone", bevel=0.006)
+add_box(col_fl2_arch, "Master_WC_ShowerHalfWall", 4.76, 5.75, Z2, 4.88, 6.92, H2, "Mat_WallWarmWhite", bevel=0.005)
+add_box(col_fl2_arch, "Master_WC_ShowerWallEastPier", 4.76, 4.75, Z2, 4.88, 4.84, H2, "Mat_WallWarmWhite")
+add_box(col_fl2_arch, "Master_WC_ShowerDoorWallTop", 4.76, 4.84, Z2 + 2.14, 4.88, 5.75, H2, "Mat_WallWarmWhite")
+# 1 cánh cửa phòng tắm duy nhất ở nửa Đông đặt trên đỉnh gờ chắn nước cao (Z2+0.16..2.15)
+add_box(col_fl2_furn, "Master_WC_GlassDoorFrameL", 4.75, 4.84, Z2 + 0.16, 4.89, 4.89, Z2 + 2.15, "Mat_MetalMatteBlack")
+add_box(col_fl2_furn, "Master_WC_GlassDoorFrameR", 4.75, 5.70, Z2 + 0.16, 4.89, 5.75, Z2 + 2.15, "Mat_MetalMatteBlack")
+add_box(col_fl2_furn, "Master_WC_GlassDoorFrameT", 4.75, 4.84, Z2 + 2.10, 4.89, 5.75, Z2 + 2.15, "Mat_MetalMatteBlack")
+add_box(col_fl2_furn, "Master_WC_GlassDoorLeaf", 4.80, 4.89, Z2 + 0.18, 4.85, 5.70, Z2 + 2.10, "Mat_GlassFrosted")
+add_box(col_fl2_furn, "Master_WC_GlassDoorKick", 4.79, 4.89, Z2 + 0.16, 4.86, 5.70, Z2 + 0.36, "Mat_MetalMatteBlack")
+add_box(col_fl2_furn, "Master_WC_GlassDoorMullion", 4.795, 4.89, Z2 + 1.12, 4.855, 5.70, Z2 + 1.16, "Mat_MetalMatteBlack")
+add_cyl(col_fl2_furn, "Master_WC_GlassHandleOut", 4.75, 5.60, Z2 + 0.90, Z2 + 1.30, 0.014, 0.014, "Mat_BrassGold", segs=10)
+add_cyl(col_fl2_furn, "Master_WC_GlassHandleIn", 4.90, 5.60, Z2 + 0.90, Z2 + 1.30, 0.014, 0.014, "Mat_BrassGold", segs=10)
 
-# --- C. PHÒNG SẾU — EM ÚT (X = 3.22..6.78, Y = 11.20..13.45, cửa mở ra hành lang nội bộ Nam X=2.14..3.12!) ---
-add_box(col_fl2_arch, "Wall_Fl2_Seu_Front", 3.12, 11.15, Z2, 6.78, 11.25, H2, "Mat_WallWarmWhite")
+# Trong khu tắm Chị Ba CHỈ CÓ: Vòi sen tắm nóng lạnh + Hộp tủ âm tường 2 tầng có LED đựng sữa tắm & dầu gội (gắn chặt tường Tây full-height Y=6.92!)
+add_box(col_fl2_furn, "Master_WC_ShowerDrain", 5.55, 6.68, Z2 + 0.06, 6.25, 6.74, Z2 + 0.068, "Mat_MetalStainless")
+add_box(col_fl2_furn, "Master_WC_MixerBody", 5.76, 6.81, Z2 + 1.00, 5.98, 6.92, Z2 + 1.07, "Mat_MetalStainless", bevel=0.006)
+add_cyl(col_fl2_furn, "Master_WC_ShowerPipe", 5.87, 6.85, Z2 + 1.06, Z2 + 2.12, 0.015, 0.015, "Mat_MetalStainless", segs=10)
+add_box(col_fl2_furn, "Master_WC_ShowerArm", 5.85, 6.52, Z2 + 2.08, 5.89, 6.86, Z2 + 2.12, "Mat_MetalStainless")
+add_cyl(col_fl2_furn, "Master_WC_RainHead", 5.87, 6.52, Z2 + 2.03, Z2 + 2.08, 0.12, 0.12, "Mat_MetalStainless", segs=18)
+# Hộp tủ âm tường 2 tầng có LED trên tường Tây khu tắm (X=5.06..5.56, Y=6.76..6.92) đựng sữa tắm & dầu gội
+add_box(col_fl2_furn, "Master_WC_ShowerNicheL", 5.06, 6.76, Z2 + 0.94, 5.11, 6.92, Z2 + 1.78, "Mat_WallWarmWhite", bevel=0.004)
+add_box(col_fl2_furn, "Master_WC_ShowerNicheR", 5.51, 6.76, Z2 + 0.94, 5.56, 6.92, Z2 + 1.78, "Mat_WallWarmWhite", bevel=0.004)
+add_box(col_fl2_furn, "Master_WC_ShowerNicheBot", 5.06, 6.76, Z2 + 0.94, 5.56, 6.92, Z2 + 0.99, "Mat_WallWarmWhite", bevel=0.004)
+add_box(col_fl2_furn, "Master_WC_ShowerNicheMid", 5.06, 6.76, Z2 + 1.33, 5.56, 6.92, Z2 + 1.38, "Mat_WallWarmWhite", bevel=0.004)
+add_box(col_fl2_furn, "Master_WC_ShowerNicheTop", 5.06, 6.76, Z2 + 1.73, 5.56, 6.92, Z2 + 1.78, "Mat_WallWarmWhite", bevel=0.004)
+add_box(col_fl2_furn, "Master_WC_ShowerNicheOak1", 5.11, 6.77, Z2 + 0.99, 5.51, 6.91, Z2 + 1.01, "Mat_WoodOakTable")
+add_box(col_fl2_furn, "Master_WC_ShowerNicheOak2", 5.11, 6.77, Z2 + 1.38, 5.51, 6.91, Z2 + 1.40, "Mat_WoodOakTable")
+add_box(col_lights, "Master_WC_ShowerNicheLED1", 5.13, 6.79, Z2 + 1.31, 5.49, 6.82, Z2 + 1.33, "Mat_WarmLED")
+add_box(col_lights, "Master_WC_ShowerNicheLED2", 5.13, 6.79, Z2 + 1.71, 5.49, 6.82, Z2 + 1.73, "Mat_WarmLED")
+for msi, (msx, msz, msh, msm) in enumerate([
+    (5.18, Z2 + 1.01, 0.20, "Mat_CeramicTeal"), (5.31, Z2 + 1.01, 0.18, "Mat_CeramicWhite"), (5.44, Z2 + 1.01, 0.19, "Mat_CushionMustard"),
+    (5.22, Z2 + 1.40, 0.18, "Mat_CushionSage"), (5.38, Z2 + 1.40, 0.17, "Mat_CushionBlush"),
+]):
+    add_cyl(col_fl2_furn, f"Master_WC_Shampoo_{msi}", msx, 6.84, msz, msz + msh, 0.030, 0.024, msm, segs=12)
+add_pendant_chandelier(col_lights, "Master_WC_Lamp", 4.95, 5.80, H2 - 0.02, drop=0.38, count=1)
 
-add_box(col_fl2_furn, "Seu_Rug", 3.26, 11.35, Z2, 5.18, 13.25, Z2 + 0.025, "Mat_RugPattern", bevel=0.008)
-add_detailed_bed(col_fl2_furn, "Seu_Bed", 3.24, 11.36, Z2 + 0.02, 5.10, 12.56, head_side='X_MIN', duvet_mat="Mat_CushionSage")
-add_nightstand(col_fl2_furn, "Seu_Nightstand", 3.46, 12.82, Z2 + 0.02)
-add_study_desk_set(col_fl2_furn, "Seu_Desk", 5.28, 12.76, Z2, 6.66, 13.36, chair_side='Y_MIN')
-add_box(col_fl2_furn, "Seu_Shelf", 5.36, 13.22, Z2 + 1.45, 6.62, 13.42, Z2 + 1.50, "Mat_WoodOakTable")
-add_books_row(col_fl2_furn, "Seu_Books", 5.44, 13.24, Z2 + 1.50, count=9, axis='X')
-add_wardrobe(col_fl2_furn, "Seu_Wardrobe", 5.32, 11.28, Z2, 6.68, 11.82, h=2.40, door_face='Y_MAX')
-add_framed_art(col_fl2_furn, "Seu_Art", 3.24, 11.96, Z2 + 1.85, 0.95, 0.65, wall_axis='X', canvas_mat="Mat_ArtCanvasGreen")
+# --- B. SẢNH CẦU THANG & GIẾNG TRỜI (Y = 7.0..11.2, nối liền đường luồng 1m thông suốt từ Đông sang Tây!) ---
+add_potted_plant(col_fl2_furn, "Fl2_AtriumPlant", 2.38, 8.20, Z2, scale=0.88, pot_mat="Mat_CeramicWhite")
+
+# --- C. PHÒNG SẾU — EM ÚT (X = 3.22..6.78, Y = 11.20..13.45):
+#     - Tường hướng Đông (Y=11.15..11.25): MỞ CỬA SỔ LỚN (X=4.48..5.88) nhìn ra thấy Cầu thang!
+#     - Giường ngủ: Đầu hướng Tây (Y=13.42), chân hướng Đông (Y=11.56) — thức dậy nhìn thẳng hướng Đông ra cửa sổ cầu thang!
+#     - Bên cạnh giường ngủ: Bàn nhỏ đầu giường (X=4.16..4.54, Y=13.04..13.42) để sách & điện thoại trước khi ngủ!
+#     - Tường hướng Bắc (X=6.28..6.78): Tủ quần áo dài suốt tường (Y=11.28..13.42)!
+#     - Tường hướng Nam (X=3.24..3.74): Bàn làm việc ngay dưới cửa sổ tường Nam (Y=12.28..13.30) vừa làm vừa mở ra thấy đường luồng! ---
+add_box(col_fl2_arch, "Wall_Fl2_Seu_Front_Bot", 3.12, 11.15, Z2, 6.78, 11.25, Z2 + 0.96, "Mat_WallWarmWhite")
+add_box(col_fl2_arch, "Wall_Fl2_Seu_Front_Top", 3.12, 11.15, Z2 + 2.25, 6.78, 11.25, H2, "Mat_WallWarmWhite")
+add_box(col_fl2_arch, "Wall_Fl2_Seu_Front_S", 3.12, 11.15, Z2 + 0.96, 4.48, 11.25, Z2 + 2.25, "Mat_WallWarmWhite")
+add_box(col_fl2_arch, "Wall_Fl2_Seu_Front_N", 5.88, 11.15, Z2 + 0.96, 6.78, 11.25, Z2 + 2.25, "Mat_WallWarmWhite")
+add_refined_interior_window(col_fl2_arch, col_lights, "Fl2_Seu_EastWin_Stair", 4.48, 11.20, Z2 + 0.96, 5.88, Z2 + 2.25,
+                            sill_side='Y_MAX', panes=3, with_led=False, with_decor=True)
+
+# 1. Thảm & Giường ngủ (đầu giường hướng Tây Y=13.42, cuối giường hướng Đông Y=11.56 -> thức dậy nhìn thẳng hướng Đông!)
+add_box(col_fl2_furn, "Seu_Rug", 4.22, 11.44, Z2, 6.04, 13.36, Z2 + 0.025, "Mat_RugPattern", bevel=0.008)
+add_detailed_bed(col_fl2_furn, "Seu_Bed", 4.58, 11.56, Z2 + 0.02, 5.82, 13.42, head_side='Y_MAX', duvet_mat="Mat_CushionSage")
+# 2. Bàn nhỏ bên cạnh giường ngủ (X=4.16..4.54, Y=13.04..13.42) tiện tay để sách & điện thoại rồi ngủ!
+add_nightstand(col_fl2_furn, "Seu_Nightstand", 4.35, 13.23, Z2 + 0.02)
+add_box(col_fl2_furn, "Seu_BedsideBook1", 4.20, 13.08, Z2 + 0.50, 4.36, 13.24, Z2 + 0.535, "Mat_BookBlue", bevel=0.003)
+add_box(col_fl2_furn, "Seu_BedsideBook2", 4.22, 13.10, Z2 + 0.535, 4.34, 13.22, Z2 + 0.56, "Mat_BookAmber", bevel=0.003)
+add_box(col_fl2_furn, "Seu_BedsidePhone", 4.40, 13.07, Z2 + 0.50, 4.48, 13.21, Z2 + 0.515, "Mat_MetalMatteBlack", bevel=0.003)
+add_box(col_fl2_furn, "Seu_BedsidePhoneScr", 4.41, 13.08, Z2 + 0.514, 4.47, 13.20, Z2 + 0.518, "Mat_SmartCyanLED")
+# 3. Tủ quần áo dài dọc suốt tường hướng Bắc (X=6.28..6.78, Y=11.28..13.42, dài 2.14m, mặt mở hướng Nam!)
+add_wardrobe(col_fl2_furn, "Seu_Wardrobe", 6.28, 11.28, Z2, 6.78, 13.42, h=2.45, door_face='X_MIN')
+# 4. Bàn làm việc áp tường hướng Nam ngay dưới cửa sổ tường Nam (X=3.24..3.74, Y=12.22..13.32)
+add_study_desk_set(col_fl2_furn, "Seu_Desk", 3.24, 12.22, Z2, 3.74, 13.32, chair_side='X_MAX')
+# Kệ sách treo tường Tây cạnh bàn làm việc & tranh treo đầu giường
+add_box(col_fl2_furn, "Seu_Shelf", 3.30, 13.24, Z2 + 1.48, 4.42, 13.43, Z2 + 1.53, "Mat_WoodOakTable")
+add_books_row(col_fl2_furn, "Seu_Books", 3.38, 13.25, Z2 + 1.53, count=8, axis='X')
+add_framed_art(col_fl2_furn, "Seu_Art", 5.20, 13.42, Z2 + 1.85, 0.95, 0.65, wall_axis='Y', canvas_mat="Mat_ArtCanvasGreen")
 add_pendant_chandelier(col_lights, "Seu_Lamp", 4.95, 12.35, H2 - 0.02, drop=0.45, count=1)
 
-# --- D. PHÒNG CHỊ HAI (X = 3.22..6.78, Y = 13.50..15.78, có cửa kính mở thẳng ra Ban công sau chữ L!) ---
+# --- D. PHÒNG CHỊ HAI SÁT BAN CÔNG SAU (X = 3.22..6.78, Y = 13.50..15.78 — BỐ CỤC ĐỒNG BỘ NHƯ PHÒNG SẾU!):
+#     - Cửa sổ hướng Tây phía Ban công sau vừa đủ gọn đẹp (X=4.60..5.80, Z=Z2+1.12..2.25 — thay cho cửa sổ Đông cầu thang của Phòng Sếu!)
+#     - Giường ngủ đầu hướng Tây (Y=15.76, dưới bệ cửa sổ ban công), cuối giường hướng Đông (Y=13.90) -> thức dậy nhìn hướng Đông!
+#     - Bàn nhỏ bên cạnh giường ngủ (X=4.16..4.54, Y=15.38..15.76) để sách & điện thoại trước khi ngủ!
+#     - Tủ quần áo dài chạy suốt tường hướng Bắc (X=6.28..6.78, Y=13.60..15.74)!
+#     - Bàn làm việc áp tường hướng Nam ngay dưới cửa sổ tường Nam (X=3.24..3.74, Y=14.56..15.66) nhìn thấy đường luồng! ---
 add_box(col_fl2_arch, "Wall_Fl2_Sister2", 3.12, 13.45, Z2, 6.78, 13.55, H2, "Mat_WallWarmWhite")
 
-add_box(col_fl2_furn, "Sister2_Rug", 3.26, 13.65, Z2, 5.18, 15.55, Z2 + 0.025, "Mat_RugWarm", bevel=0.008)
-add_detailed_bed(col_fl2_furn, "Sister2_Bed", 3.24, 13.66, Z2 + 0.02, 5.10, 14.86, head_side='X_MIN', duvet_mat="Mat_CushionBlush")
-add_nightstand(col_fl2_furn, "Sister2_Nightstand", 3.46, 15.12, Z2 + 0.02)
-add_study_desk_set(col_fl2_furn, "Sister2_Desk", 5.28, 13.62, Z2, 6.66, 14.22, chair_side='Y_MAX')
-add_box(col_fl2_furn, "Sister2_Shelf", 5.36, 13.58, Z2 + 1.45, 6.62, 13.78, Z2 + 1.50, "Mat_WoodOakTable")
-add_books_row(col_fl2_furn, "Sister2_Books", 5.44, 13.60, Z2 + 1.50, count=9, axis='X')
-add_wardrobe(col_fl2_furn, "Sister2_Wardrobe", 5.72, 15.16, Z2, 6.74, 15.72, h=2.40, door_face='Y_MIN')
-add_framed_art(col_fl2_furn, "Sister2_Art", 3.24, 14.26, Z2 + 1.85, 0.95, 0.65, wall_axis='X', canvas_mat="Mat_ArtCanvasBlue")
+# 1. Thảm & Giường ngủ (đầu Tây Y=15.76 thấp 1.02m gọn dưới bệ cửa sổ ban công, cuối giường hướng Đông Y=13.90)
+add_box(col_fl2_furn, "Sister2_Rug", 4.22, 13.78, Z2, 6.04, 15.70, Z2 + 0.025, "Mat_RugWarm", bevel=0.008)
+add_detailed_bed(col_fl2_furn, "Sister2_Bed", 4.58, 13.90, Z2 + 0.02, 5.82, 15.76, head_side='Y_MAX', duvet_mat="Mat_CushionBlush", headboard_h=1.02)
+# 2. Bàn nhỏ bên cạnh giường ngủ (X=4.16..4.54, Y=15.38..15.76) để sách & điện thoại rồi ngủ!
+add_nightstand(col_fl2_furn, "Sister2_Nightstand", 4.35, 15.57, Z2 + 0.02)
+add_box(col_fl2_furn, "Sister2_BedsideBook1", 4.20, 15.42, Z2 + 0.50, 4.36, 15.58, Z2 + 0.535, "Mat_BookRed", bevel=0.003)
+add_box(col_fl2_furn, "Sister2_BedsideBook2", 4.22, 15.44, Z2 + 0.535, 4.34, 15.56, Z2 + 0.56, "Mat_BookGreen", bevel=0.003)
+add_box(col_fl2_furn, "Sister2_BedsidePhone", 4.40, 15.41, Z2 + 0.50, 4.48, 15.55, Z2 + 0.515, "Mat_MetalMatteBlack", bevel=0.003)
+add_box(col_fl2_furn, "Sister2_BedsidePhoneScr", 4.41, 15.42, Z2 + 0.514, 4.47, 15.54, Z2 + 0.518, "Mat_SmartCyanLED")
+# 3. Tủ quần áo dài suốt tường hướng Bắc (X=6.28..6.78, Y=13.60..15.74, dài 2.14m, mặt mở hướng Nam!)
+add_wardrobe(col_fl2_furn, "Sister2_Wardrobe", 6.28, 13.60, Z2, 6.78, 15.74, h=2.45, door_face='X_MIN')
+# 4. Bàn làm việc áp tường hướng Nam ngay dưới cửa sổ tường Nam (X=3.24..3.74, Y=14.56..15.66)
+add_study_desk_set(col_fl2_furn, "Sister2_Desk", 3.24, 14.56, Z2, 3.74, 15.66, chair_side='X_MAX')
+# Kệ sách treo tường Tây cạnh bàn làm việc & tranh treo tường Đông đối diện giường
+add_box(col_fl2_furn, "Sister2_Shelf", 3.30, 15.58, Z2 + 1.48, 4.42, 15.77, Z2 + 1.53, "Mat_WoodOakTable")
+add_books_row(col_fl2_furn, "Sister2_Books", 3.38, 15.59, Z2 + 1.53, count=8, axis='X')
+add_framed_art(col_fl2_furn, "Sister2_Art", 5.20, 13.57, Z2 + 1.85, 0.95, 0.65, wall_axis='Y', canvas_mat="Mat_ArtCanvasBlue")
 add_pendant_chandelier(col_lights, "Sister2_Lamp", 4.95, 14.65, H2 - 0.02, drop=0.45, count=1)
 
-# --- E. BAN CÔNG SAU TẦNG 2 GỌN ĐÚNG 5M x 5M (X = 2.0..7.0, Y = 16.0..21.0 = 25m²!) ---
-# Lan can kính cường lực khép kín quanh đúng khuôn viên 5m x 5m (không lan ra khu mái che kỹ thuật Nam & mái Chòi bếp!)
-add_box(col_fl2_arch, "BalconyRear_Rail_South", 2.00, 16.00, Z2, 2.06, 21.00, Z2 + 1.12, "Mat_BalconyGlassBronze")
-add_box(col_fl2_arch, "BalconyRear_Top_South", 1.98, 16.00, Z2 + 1.10, 2.08, 21.02, Z2 + 1.16, "Mat_MetalMatteBlack")
-add_box(col_fl2_arch, "BalconyRear_Rail_West", 2.00, 20.94, Z2, 7.00, 21.00, Z2 + 1.12, "Mat_BalconyGlassBronze")
-add_box(col_fl2_arch, "BalconyRear_Top_West", 1.98, 20.92, Z2 + 1.10, 7.02, 21.02, Z2 + 1.16, "Mat_MetalMatteBlack")
-add_box(col_fl2_arch, "BalconyRear_Rail_North", 6.94, 16.00, Z2, 7.00, 21.00, Z2 + 1.12, "Mat_BalconyGlassBronze")
-add_box(col_fl2_arch, "BalconyRear_Top_North", 6.92, 16.00, Z2 + 1.10, 7.02, 21.02, Z2 + 1.16, "Mat_MetalMatteBlack")
+# --- E. BAN CÔNG SAU TẦNG 2 GỌN ĐÚNG 5M x 4M (X = 2.0..7.0, Y = 16.0..20.0 = 20m², THẲNG MỐC 20.0M!):
+#     - LỢP MÁI TÔN che mưa nắng trọn ban công sau + RÀO LƯỚI SẮT bao quanh 3 mặt (Nam, Tây, Bắc) để phơi đồ không bị bay xuống lầu!
+#     - Thiết kế 1 CHỖ ĐẶT MÁY GIẶT TƯƠNG LAI ở góc Đông-Bắc (X=6.08..6.90, Y=16.04..16.90, thẳng trục nước Tầng 1, tránh cửa sổ Phòng Chị Hai X=4.60..5.80) + Giàn phơi đồ 2 thanh! ---
+add_box(col_fl2_arch, "BalconyRear_Rail_South", 2.00, 16.00, Z2, 2.06, 20.00, Z2 + 1.12, "Mat_BalconyGlassBronze")
+add_box(col_fl2_arch, "BalconyRear_Top_South", 1.98, 16.00, Z2 + 1.10, 2.08, 20.02, Z2 + 1.16, "Mat_MetalMatteBlack")
+add_box(col_fl2_arch, "BalconyRear_Rail_West", 2.00, 19.94, Z2, 7.00, 20.00, Z2 + 1.12, "Mat_BalconyGlassBronze")
+add_box(col_fl2_arch, "BalconyRear_Top_West", 1.98, 19.92, Z2 + 1.10, 7.02, 20.02, Z2 + 1.16, "Mat_MetalMatteBlack")
+add_box(col_fl2_arch, "BalconyRear_Rail_North", 6.94, 16.00, Z2, 7.00, 20.00, Z2 + 1.12, "Mat_BalconyGlassBronze")
+add_box(col_fl2_arch, "BalconyRear_Top_North", 6.92, 16.00, Z2 + 1.10, 7.02, 20.02, Z2 + 1.16, "Mat_MetalMatteBlack")
 
-# Góc Yoga ngoài trời & Khu Lounge Chill xếp gọn hoàn toàn bên trong ban công sau 5m x 5m (X=2.2..6.7, Y=16.6..20.5)
-add_box(col_fl2_furn, "BalconyRear_YogaDeck", 4.95, 16.60, Z2, 6.65, 19.80, Z2 + 0.05, "Mat_WoodOakTable")
-add_box(col_fl2_furn, "BalconyRear_YogaMat", 5.30, 17.10, Z2 + 0.05, 6.30, 19.30, Z2 + 0.08, "Mat_CushionMustard", bevel=0.01)
-add_cyl(col_fl2_furn, "BalconyRear_Cushion", 5.80, 18.20, Z2 + 0.08, Z2 + 0.20, 0.22, 0.20, "Mat_CushionSage", segs=18)
+# Khung trụ sắt & RÀO LƯỚI SẮT BẢO VỆ 3 MẶT (Z2+1.16..H2-0.20) để phơi đồ thoáng gió không bị bay xuống lầu!
+mesh_z1, mesh_z2 = Z2 + 1.16, H2 - 0.22
+for pi, (px, py) in enumerate([(2.04, 18.00), (2.04, 19.95), (4.50, 19.95), (6.95, 19.95), (6.95, 18.00)]):
+    add_box(col_fl2_arch, f"BalconyRear_RoofPost_{pi}", px - 0.04, py - 0.04, Z2, px + 0.04, py + 0.04, H2 - 0.16, "Mat_MetalMatteBlack")
+# Thanh ngang lưới sắt 3 mặt (6 tầng)
+for hmi in range(6):
+    hmz = mesh_z1 + (hmi + 0.5) * ((mesh_z2 - mesh_z1) / 6.0)
+    add_box(col_fl2_arch, f"BalconyRear_MeshH_S_{hmi}", 2.01, 16.02, hmz - 0.009, 2.05, 19.96, hmz + 0.009, "Mat_MetalStainless")
+    add_box(col_fl2_arch, f"BalconyRear_MeshH_W_{hmi}", 2.02, 19.94, hmz - 0.009, 6.98, 19.98, hmz + 0.009, "Mat_MetalStainless")
+    add_box(col_fl2_arch, f"BalconyRear_MeshH_N_{hmi}", 6.94, 16.02, hmz - 0.009, 6.98, 19.96, hmz + 0.009, "Mat_MetalStainless")
+# Thanh đứng lưới sắt 3 mặt (ô lưới ~30cm chống bay đồ mà cực thoáng gió!)
+for vmi in range(13):
+    vmy = 16.28 + vmi * 0.295
+    add_box(col_fl2_arch, f"BalconyRear_MeshV_S_{vmi}", 2.01, vmy - 0.009, mesh_z1, 2.05, vmy + 0.009, mesh_z2, "Mat_MetalStainless")
+    add_box(col_fl2_arch, f"BalconyRear_MeshV_N_{vmi}", 6.94, vmy - 0.009, mesh_z1, 6.98, vmy + 0.009, mesh_z2, "Mat_MetalStainless")
+for wmi in range(16):
+    wmx = 2.28 + wmi * 0.295
+    add_box(col_fl2_arch, f"BalconyRear_MeshV_W_{wmi}", wmx - 0.009, 19.94, mesh_z1, wmx + 0.009, 19.98, mesh_z2, "Mat_MetalStainless")
 
-add_box(col_fl2_furn, "BalconyRear_LoungeBench", 2.25, 16.80, Z2 + 0.08, 3.15, 19.60, Z2 + 0.45, "Mat_WoodOakTable", bevel=0.02)
-add_box(col_fl2_furn, "BalconyRear_LoungeBack", 2.22, 16.80, Z2 + 0.45, 2.46, 19.60, Z2 + 0.88, "Mat_WoodLouverFacade")
-add_box(col_fl2_furn, "BalconyRear_LoungePad", 2.46, 16.86, Z2 + 0.45, 3.10, 19.54, Z2 + 0.55, "Mat_BeddingCream", bevel=0.02)
-add_box(col_fl2_furn, "BalconyRear_CoffeeTable", 3.45, 17.45, Z2 + 0.36, 4.20, 18.95, Z2 + 0.42, "Mat_WhiteMarble", bevel=0.012)
-for i, (lx, ly) in enumerate([(3.53, 17.53), (4.12, 17.53), (3.53, 18.87), (4.12, 18.87)]):
+# 🧺 CHỖ ĐẶT MÁY GIẶT TƯƠNG LAI TRÊN BAN CÔNG SAU (Góc Đông-Bắc X=6.08..6.90, Y=16.04..16.90 — thẳng trục cấp/thoát nước T1, tránh cửa sổ Chị Hai!)
+add_box(col_fl2_furn, "BalconyRear_WasherPlinth", 6.08, 16.04, Z2, 6.90, 16.90, Z2 + 0.08, "Mat_StepStone", bevel=0.008)
+add_box(col_fl2_furn, "BalconyRear_WasherShelfFrameL", 6.10, 16.06, Z2 + 0.08, 6.15, 16.12, Z2 + 1.80, "Mat_MetalMatteBlack")
+add_box(col_fl2_furn, "BalconyRear_WasherShelfFrameR", 6.84, 16.06, Z2 + 0.08, 6.89, 16.12, Z2 + 1.80, "Mat_MetalMatteBlack")
+add_box(col_fl2_furn, "BalconyRear_WasherShelfFrameFL", 6.10, 16.82, Z2 + 0.08, 6.15, 16.88, Z2 + 1.80, "Mat_MetalMatteBlack")
+add_box(col_fl2_furn, "BalconyRear_WasherShelfFrameFR", 6.84, 16.82, Z2 + 0.08, 6.89, 16.88, Z2 + 1.80, "Mat_MetalMatteBlack")
+add_box(col_fl2_furn, "BalconyRear_WasherShelfMid", 6.08, 16.06, Z2 + 1.02, 6.90, 16.88, Z2 + 1.07, "Mat_WoodOakTable", bevel=0.006)
+add_box(col_fl2_furn, "BalconyRear_WasherShelfTop", 6.08, 16.06, Z2 + 1.75, 6.90, 16.88, Z2 + 1.80, "Mat_WoodOakTable", bevel=0.006)
+# Đầu chờ nước cấp + ổ cắm chống nước + phễu thoát sàn sẵn cho máy giặt tương lai + giỏ đựng bột giặt trên kệ
+add_box(col_fl2_furn, "BalconyRear_WasherWaterTap", 6.32, 16.00, Z2 + 0.72, 6.37, 16.14, Z2 + 0.78, "Mat_MetalStainless")
+add_box(col_fl2_furn, "BalconyRear_WasherOutlet", 6.56, 16.00, Z2 + 0.72, 6.68, 16.06, Z2 + 0.84, "Mat_CeramicWhite", bevel=0.005)
+add_cyl(col_fl2_furn, "BalconyRear_WasherFloorDrain", 6.48, 16.48, Z2 + 0.075, Z2 + 0.086, 0.055, 0.055, "Mat_MetalStainless", segs=14)
+add_box(col_fl2_furn, "BalconyRear_WasherBasket", 6.18, 16.22, Z2 + 1.07, 6.54, 16.66, Z2 + 1.32, "Mat_WoodOakCabinet", bevel=0.012)
+add_cyl(col_fl2_furn, "BalconyRear_WasherDetergent", 6.72, 16.46, Z2 + 1.07, Z2 + 1.38, 0.075, 0.060, "Mat_CeramicTeal", segs=14)
+
+# 👕 GIÀN PHƠI ĐỒ INOX 2 THANH TRÊN CAO BAN CÔNG SAU (X=4.35..6.75, Y=17.55 & 18.45 — có lưới sắt xung quanh & mái tôn che mưa!)
+for dri, dry in enumerate([17.55, 18.45]):
+    add_box(col_fl2_furn, f"BalconyRear_DryPoleBar_{dri}", 4.35, dry - 0.018, Z2 + 2.08, 6.75, dry + 0.018, Z2 + 2.12, "Mat_MetalStainless")
+    for hxi in [4.55, 6.55]:
+        add_cyl(col_fl2_furn, f"BalconyRear_DryHangerRod_{dri}_{hxi:.1f}", hxi, dry, Z2 + 2.12, H2 - 0.14, 0.010, 0.010, "Mat_MetalStainless", segs=8)
+    for dci, dcx in enumerate([4.75, 5.30, 5.85, 6.38]):
+        add_box(col_fl2_furn, f"BalconyRear_DryCloth_{dri}_{dci}", dcx - 0.19, dry - 0.022, Z2 + 1.48, dcx + 0.19, dry + 0.022, Z2 + 2.07,
+                ["Mat_BeddingWhite", "Mat_CushionSage", "Mat_CushionBlush", "Mat_CushionNavy"][(dri + dci) % 4], bevel=0.012)
+
+# Khu Lounge Chill xếp gọn nửa Nam Ban công sau (X=2.25..4.15, Y=16.60..19.10)
+add_box(col_fl2_furn, "BalconyRear_LoungeBench", 2.25, 16.60, Z2 + 0.08, 3.12, 19.05, Z2 + 0.45, "Mat_WoodOakTable", bevel=0.02)
+add_box(col_fl2_furn, "BalconyRear_LoungeBack", 2.22, 16.60, Z2 + 0.45, 2.46, 19.05, Z2 + 0.88, "Mat_WoodLouverFacade")
+add_box(col_fl2_furn, "BalconyRear_LoungePad", 2.46, 16.66, Z2 + 0.45, 3.08, 18.99, Z2 + 0.55, "Mat_BeddingCream", bevel=0.02)
+add_box(col_fl2_furn, "BalconyRear_CoffeeTable", 3.38, 17.20, Z2 + 0.36, 4.08, 18.50, Z2 + 0.42, "Mat_WhiteMarble", bevel=0.012)
+for i, (lx, ly) in enumerate([(3.46, 17.28), (4.00, 17.28), (3.46, 18.42), (4.00, 18.42)]):
     add_cyl(col_fl2_furn, f"BalconyRear_TableLeg_{i}", lx, ly, Z2, Z2 + 0.36, 0.025, 0.025, "Mat_MetalMatteBlack")
-add_potted_plant(col_fl2_furn, "BalconyRear_Plant1", 6.50, 20.45, Z2, scale=1.05, pot_mat="Mat_TerracottaPot")
-add_potted_plant(col_fl2_furn, "BalconyRear_Plant2", 2.50, 20.45, Z2, scale=1.05, pot_mat="Mat_CeramicWhite")
+add_potted_plant(col_fl2_furn, "BalconyRear_Plant1", 6.50, 19.55, Z2, scale=0.90, pot_mat="Mat_TerracottaPot")
+add_potted_plant(col_fl2_furn, "BalconyRear_Plant2", 2.50, 19.55, Z2, scale=0.90, pot_mat="Mat_CeramicWhite")
 
 # ---------------------------------------------------------------------------
-# 8. TẦNG MÁI KHỐI NHÀ CHÍNH 5M (X=2.0..7.0, KHÔNG CHE ĐƯỜNG LUỒNG 2M NAM!) & 6 TẤM PIN SOLAR PV
+# 8. TẦNG MÁI KHỐI NHÀ CHÍNH 5M (X=2.0..7.0) + MÁI TÔN CHE BAN CÔNG TRƯỚC & BAN CÔNG SAU TẦNG 2 + 6 TẤM PIN SOLAR PV
 # ---------------------------------------------------------------------------
 ZR = 6.95
 add_box(col_roof, "Roof_Fascia", 1.75, -0.35, ZR, 7.25, 16.35, ZR + 0.24, "Mat_RoofCharcoal")
 add_box(col_lights, "Roof_Fascia_LED", 1.78, -0.36, ZR - 0.04, 7.22, -0.32, ZR, "Mat_WarmLED")
 add_box(col_roof, "Roof_Slab", 2.05, 0.05, ZR + 0.24, 6.95, 15.95, ZR + 0.30, "Mat_WallWarmWhite")
+
+# 🏠 MÁI TÔN CHE BAN CÔNG TRƯỚC TẦNG 2 (X=1.96..7.04, Y=-3.18..0.05 — chống mưa tạt vào cửa sổ Phòng Chị Ba!)
+front_roof_pitch = math.atan2(0.22, 3.23)  # Dốc nhẹ về hướng Đông (-Y): Y=0.05 cao 6.99m -> Y=-3.18 thấp 6.77m
+for fpi, fpx in enumerate([2.06, 6.94]):
+    add_box(col_roof, f"BalconyFront_RoofPost_{fpi}", fpx - 0.04, -2.96, Z2 + 1.14, fpx + 0.04, -2.88, ZR - 0.16, "Mat_MetalMatteBlack")
+add_box(col_roof, "BalconyFront_RoofEaveBeam", 1.98, -3.02, ZR - 0.22, 7.02, -2.90, ZR - 0.14, "Mat_MetalMatteBlack")
+add_box(col_roof, "BalconyFront_RoofSideBeamS", 1.98, -3.02, ZR - 0.14, 2.08, 0.02, ZR - 0.04, "Mat_MetalMatteBlack", rot=(front_roof_pitch, 0, 0))
+add_box(col_roof, "BalconyFront_RoofSideBeamN", 6.92, -3.02, ZR - 0.14, 7.02, 0.02, ZR - 0.04, "Mat_MetalMatteBlack", rot=(front_roof_pitch, 0, 0))
+for fpy in [-2.15, -1.10]:
+    fpz = ZR - 0.18 + ((fpy + 3.18) / 3.23) * 0.22 - 0.06
+    add_box(col_roof, f"BalconyFront_RoofPurlin_{fpy:.1f}", 2.02, fpy - 0.03, fpz, 6.98, fpy + 0.03, fpz + 0.06, "Mat_MetalMatteBlack")
+add_box(col_roof, "BalconyFront_MetalRoof", 1.96, -3.18, ZR - 0.09, 7.04, 0.05, ZR - 0.03, "Mat_RoofCharcoal", rot=(front_roof_pitch, 0, 0))
+for fri in range(9):
+    frx = 2.12 + fri * 0.59
+    add_box(col_roof, f"BalconyFront_RoofRib_{fri}", frx - 0.022, -3.18, ZR - 0.035, frx + 0.022, 0.05, ZR - 0.008, "Mat_MetalMatteBlack", rot=(front_roof_pitch, 0, 0))
+add_box(col_roof, "BalconyFront_RoofGutter", 1.94, -3.22, ZR - 0.25, 7.06, -3.14, ZR - 0.15, "Mat_MetalMatteBlack")
+add_box(col_lights, "BalconyFront_RoofLED", 2.20, -2.92, ZR - 0.24, 6.80, -2.88, ZR - 0.21, "Mat_WarmLED")
+
+# 🏠 MÁI TÔN CHE BAN CÔNG SAU TẦNG 2 (X=1.96..7.04, Y=15.95..20.18 — che mưa nắng trọn khu máy giặt & phơi đồ!)
+rear_roof_pitch = -math.atan2(0.24, 4.23)  # Dốc nhẹ về hướng Tây (+Y): Y=15.95 cao 6.99m -> Y=20.18 thấp 6.75m
+add_box(col_roof, "BalconyRear_RoofEaveBeam", 1.98, 19.90, ZR - 0.24, 7.02, 20.02, ZR - 0.16, "Mat_MetalMatteBlack")
+add_box(col_roof, "BalconyRear_RoofSideBeamS", 1.98, 15.98, ZR - 0.14, 2.08, 20.02, ZR - 0.04, "Mat_MetalMatteBlack", rot=(rear_roof_pitch, 0, 0))
+add_box(col_roof, "BalconyRear_RoofSideBeamN", 6.92, 15.98, ZR - 0.14, 7.02, 20.02, ZR - 0.04, "Mat_MetalMatteBlack", rot=(rear_roof_pitch, 0, 0))
+for rpy in [17.25, 18.60]:
+    rpz = ZR + 0.02 - ((rpy - 15.95) / 4.23) * 0.24 - 0.06
+    add_box(col_roof, f"BalconyRear_RoofPurlin_{rpy:.1f}", 2.02, rpy - 0.03, rpz, 6.98, rpy + 0.03, rpz + 0.06, "Mat_MetalMatteBlack")
+add_box(col_roof, "BalconyRear_MetalRoof", 1.96, 15.95, ZR - 0.10, 7.04, 20.18, ZR - 0.04, "Mat_RoofCharcoal", rot=(rear_roof_pitch, 0, 0))
+for rri in range(9):
+    rrx = 2.12 + rri * 0.59
+    add_box(col_roof, f"BalconyRear_RoofRib_{rri}", rrx - 0.022, 15.95, ZR - 0.045, rrx + 0.022, 20.18, ZR - 0.018, "Mat_MetalMatteBlack", rot=(rear_roof_pitch, 0, 0))
+add_box(col_roof, "BalconyRear_RoofGutter", 1.94, 20.14, ZR - 0.27, 7.06, 20.22, ZR - 0.17, "Mat_MetalMatteBlack")
+add_box(col_lights, "BalconyRear_RoofLED", 2.20, 19.86, ZR - 0.26, 6.80, 19.90, ZR - 0.23, "Mat_WarmLED")
 add_box(col_roof, "Roof_SkylightFrame", 3.45, 7.15, ZR + 0.30, 5.65, 10.05, ZR + 0.62, "Mat_MetalMatteBlack")
 add_box(col_roof, "Roof_SkylightGlass", 3.55, 7.25, ZR + 0.56, 5.55, 9.95, ZR + 0.66, "Mat_GlassClear")
 add_cyl(col_roof, "Roof_WaterTank", 5.65, 13.8, ZR + 0.55, ZR + 1.95, 0.65, 0.65, "Mat_MetalStainless", rot=(math.pi / 2, 0, 0))
@@ -2014,7 +2273,7 @@ for wname, wx, wy, wz in wifi_nodes:
 ac_units = [
     ("AC_Living", 2.22, 3.70, Z1 + 2.32, 'X'),
     ("AC_Parents", 3.22, 7.60, Z1 + 2.32, 'X'),
-    ("AC_Master", 2.14, 1.60, Z2 + 2.75, 'X'),
+    ("AC_Master", 3.22, 1.60, Z2 + 2.75, 'X'),
     ("AC_Seu", 3.22, 11.95, Z2 + 2.75, 'X'),
     ("AC_Sister2", 3.22, 14.25, Z2 + 2.75, 'X'),
 ]
@@ -2024,7 +2283,7 @@ for aname, ax, ay, az, _ in ac_units:
 
 # 6 Camera An Ninh PoE AI
 cams = [
-    ("Cam1_MainGate", 6.65, -17.85, 2.55, (0.3, 0, 0.5)),
+    ("Cam1_MainGate", 6.65, -19.35, 2.55, (0.3, 0, 0.5)),
     ("Cam2_FrontYard", 2.10, -0.15, 3.05, (0.4, 0, 2.5)),
     ("Cam3_SideCorridor", 1.80, 8.0, 2.72, (0.35, 0, 0.2)),
     ("Cam4_RearGarden", 2.20, 16.10, 3.05, (0.4, 0, -0.3)),
